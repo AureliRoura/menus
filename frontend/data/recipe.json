@@ -1,0 +1,17 @@
+{
+  "name" : "Espinacs saltejats amb all",
+  "ingredients" : [
+      {
+          "name" : "Espinacs",
+          "quantity" : 100,
+          "unit" : "grams"
+      },
+      {
+          "name" : "All",
+          "quantity" : 1,
+          "unit" : "gra"
+      }
+  ],
+  "desc" : "Salteja els espinacs amb all en una paella amb una mica d'oli d'oliva durant 5 minuts.",
+  "time" : "5 min"
+}

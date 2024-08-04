@@ -1,0 +1,185 @@
+[
+  {
+    "Dia": "Dilluns",
+    "Dinar": {
+      "Plat": "Pit de pollastre a la planxa amb quinoa i verdures al vapor",
+      "Ingredients": {
+        "Pit de pollastre": "1 unitat",
+        "Quinoa": "75 grams",
+        "Bròquil": "100 grams",
+        "Pastanagues": "1 unitat",
+        "Mongetes verdes": "100 grams"
+      },
+      "Recepta": "Cuina el pit de pollastre a la planxa durant 10 minuts. Cou la quinoa segons les instruccions del paquet durant 15 minuts. Cuina les verdures al vapor fins que estiguin tendres, uns 10 minuts.",
+      "Temps de cocció": "35 minuts"
+    },
+    "Sopar": {
+      "Plat": "Crema de carbassa amb llavors de carbassa i amanida de tomàquet i alvocat",
+      "Ingredients": {
+        "Carbassa": "200 grams",
+        "Llavors de carbassa": "1 cullerada",
+        "Tomàquet": "1 unitat",
+        "Alvocat": "1/2 unitat"
+      },
+      "Recepta": "Cuina la carbassa fins que estigui tova, uns 20 minuts, i tritura-la fins obtenir una crema. Serveix amb llavors de carbassa per sobre. Prepara una amanida amb tomàquet i alvocat, amanida amb oli d'oliva i sal.",
+      "Temps de cocció": "20 minuts"
+    }
+  },
+  {
+    "Dia": "Dimarts",
+    "Dinar": {
+      "Plat": "Salmó al forn amb patates al caliu i espinacs saltejats amb all",
+      "Ingredients": {
+        "Salmó": "150 grams",
+        "Patates": "200 grams",
+        "Espinacs": "100 grams",
+        "All": "1 gra"
+      },
+      "Recepta": "Cuina el salmó al forn durant 20 minuts amb una mica de sal i pebre. Cou les patates al caliu durant 30 minuts. Salteja els espinacs amb all en una paella amb una mica d'oli d'oliva durant 5 minuts.",
+      "Temps de cocció": "30 minuts"
+    },
+    "Sopar": {
+      "Plat": "Truita de carabassó amb una amanida verda",
+      "Ingredients": {
+        "Carabassó": "1 unitat petita",
+        "Ous": "2 unitats",
+        "Enciam": "100 grams",
+        "Cogombre": "1/2 unitat",
+        "Ceba": "1/4 unitat"
+      },
+      "Recepta": "Ratlla el carabassó i barreja'l amb els ous batuts. Cuina la truita en una paella durant 10 minuts. Prepara una amanida amb enciam, cogombre i ceba, amanida amb oli d'oliva i sal.",
+      "Temps de cocció": "10 minuts"
+    }
+  },
+  {
+    "Dia": "Dimecres",
+    "Dinar": {
+      "Plat": "Lluç a la planxa amb arròs integral i espàrrecs a la planxa",
+      "Ingredients": {
+        "Lluç": "150 grams",
+        "Arròs integral": "75 grams",
+        "Espàrrecs": "100 grams"
+      },
+      "Recepta": "Cuina el lluç a la planxa amb una mica de sal i pebre durant 10 minuts. Cou l'arròs integral segons les instruccions del paquet durant 30 minuts. Cuina els espàrrecs a la planxa fins que estiguin tendres, uns 10 minuts.",
+      "Temps de cocció": "30 minuts"
+    },
+    "Sopar": {
+      "Plat": "Sopa de verdures i cigrons amb una llesca de pa integral",
+      "Ingredients": {
+        "Verdures variades": "200 grams",
+        "Cigrons": "80 grams",
+        "Pa integral": "1 llesca"
+      },
+      "Recepta": "Cuina les verdures i els cigrons en aigua fins que estiguin tendres, uns 20 minuts. Tritura parcialment per obtenir una sopa espessa. Serveix amb una llesca de pa integral.",
+      "Temps de cocció": "20 minuts"
+    }
+  },
+  {
+    "Dia": "Dijous",
+    "Dinar": {
+      "Plat": "Amanida de quinoa amb pollastre, tomàquet, cogombre, blat de moro i cigrons, amanida amb oli d'oliva i llimona",
+      "Ingredients": {
+        "Quinoa": "75 grams",
+        "Pollastre": "100 grams",
+        "Tomàquet": "1 unitat",
+        "Cogombre": "1/2 unitat",
+        "Blat de moro": "50 grams",
+        "Cigrons": "50 grams",
+        "Oli d'oliva": "1 cullerada",
+        "Llimona": "1/2 unitat"
+      },
+      "Recepta": "Cuina la quinoa segons les instruccions del paquet durant 15 minuts. Cou el pollastre a la planxa durant 10 minuts i talla'l a tires. Barreja tots els ingredients i amaneix amb oli d'oliva i suc de llimona.",
+      "Temps de cocció": "25 minuts"
+    },
+    "Sopar": {
+      "Plat": "Peix blanc al forn amb verdures",
+      "Ingredients": {
+        "Peix blanc": "150 grams",
+        "Carbassa": "100 grams",
+        "Carbassó": "1/2 unitat",
+        "Pebrot": "1/2 unitat"
+      },
+      "Recepta": "Cuina el peix blanc al forn amb una mica de sal i pebre durant 20 minuts. Talla les verdures i cuina-les al forn fins que estiguin tendres, uns 20 minuts.",
+      "Temps de cocció": "20 minuts"
+    }
+  },
+  {
+    "Dia": "Divendres",
+    "Dinar": {
+      "Plat": "Estofat de llenties amb verdures i arròs integral",
+      "Ingredients": {
+        "Llenties": "80 grams",
+        "Pastanaga": "1 unitat",
+        "Api": "1 tija",
+        "Espinacs": "50 grams",
+        "Arròs integral": "75 grams"
+      },
+      "Recepta": "Cuina les llenties amb les verdures tallades fins que estiguin tendres, uns 30 minuts. Serveix amb arròs integral cuit durant 30 minuts.",
+      "Temps de cocció": "30 minuts"
+    },
+    "Sopar": {
+      "Plat": "Pollastre al curri amb llet de coco i verdures, servit amb arròs basmati",
+      "Ingredients": {
+        "Pollastre": "100 grams",
+        "Curri": "1 cullerada",
+        "Llet de coco": "100 ml",
+        "Verdures variades": "150 grams",
+        "Arròs basmati": "75 grams"
+      },
+      "Recepta": "Cuina el pollastre amb curri en una paella durant 10 minuts. Afegeix les verdures i la llet de coco i cuina fins que estiguin tendres, uns 15 minuts. Serveix amb arròs basmati cuit durant 15 minuts.",
+      "Temps de cocció": "25 minuts"
+    }
+  },
+  {
+    "Dia": "Dissabte",
+    "Dinar": {
+      "Plat": "Pasta integral amb salsa de tomàquet casolana, albergínies, xampinyons i parmesà",
+      "Ingredients": {
+        "Pasta integral": "75 grams",
+        "Tomàquet": "2 unitats",
+        "Albergínies": "1/2 unitat",
+        "Xampinyons": "100 grams",
+        "Parmesà": "30 grams"
+      },
+      "Recepta": "Cuina la pasta segons les instruccions del paquet durant 10 minuts. Prepara una salsa de tomàquet casolana i afegeix les albergínies i els xampinyons cuits durant 20 minuts. Barreja amb la pasta i serveix amb parmesà ratllat per sobre.",
+      "Temps de cocció": "30 minuts"
+    },
+    "Sopar": {
+      "Plat": "Filet de vedella amb puré de patates i bròquil al vapor",
+      "Ingredients": {
+        "Filet de vedella": "150 grams",
+        "Patates": "200 grams",
+        "Bròquil": "100 grams"
+      },
+      "Recepta": "Cuina el filet de vedella a la planxa durant 10 minuts. Prepara un puré de patates cuinant-les durant 20 minuts i cuina el bròquil al vapor durant 10 minuts.",
+      "Temps de cocció": "30 minuts"
+    }
+  },
+  {
+    "Dia": "Diumenge",
+    "Dinar": {
+      "Plat": "Paella de marisc amb arròs integral i verdures",
+      "Ingredients": {
+        "Marisc": "150 grams",
+        "Arròs integral": "75 grams",
+        "Pebrot": "1/2 unitat",
+        "Pèsols": "50 grams",
+        "Tomàquet": "1 unitat"
+      },
+      "Recepta": "Cuina el marisc en una paella durant 10 minuts. Afegeix l'arròs integral i les verdures i cuina fins que estiguin tendres, uns 30 minuts.",
+      "Temps de cocció": "40 minuts"
+    },
+    "Sopar": {
+      "Plat": "Amanida de cuscús amb verdures rostides i formatge feta",
+      "Ingredients": {
+        "Cuscús": "75 grams",
+        "Carbassó": "1/2 unitat",
+        "Pebrot": "1/2 unitat",
+        "Ceba": "1/4 unitat",
+        "Formatge feta": "30 grams"
+      },
+      "Recepta": "Prepara el cuscús segons les instruccions del paquet durant 10 minuts. Rosteix les verdures al forn durant 20 minuts i barreja-les amb el cuscús. Afegeix el formatge feta esmicolat per sobre.",
+      "Temps de cocció": "30 minuts"
+    }
+  }
+]
