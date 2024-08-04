@@ -13,6 +13,8 @@ interface ICategories {
 }
 
 
+
+
 interface IRecipe {
   _id?: string | ObjectId;
   name: string;
@@ -20,7 +22,7 @@ interface IRecipe {
   ingredients?: IIngredientList[];
   category?: ICategories[];
   time?: string;
-  rating?: number;
+  rating?: {};
   recipes_id?: string[];
 }
 

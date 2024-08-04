@@ -46,7 +46,7 @@
             @mouseleave="hover = null" :class="hover === index ? 'bg-blue-grey-darken-1' : ''" rounded density="compact">
             <div class="d-flex justify-space-between">
               <div class="d-flex align-left align-center ">
-                <select-rating :rating="recipe.rating"
+                <select-rating :rating="recipe?.rating?.[userStore.account] ?? 0"
                   @update:rating="updateRating($event, recipe._id)"></select-rating>
                 <v-list-item-title class="cursor-pointer ml-3" v-text="recipe.name"
                   @click="selectRecipe(recipe)"></v-list-item-title>
@@ -67,6 +67,7 @@
 <script setup>
 import { ref, inject, reactive, computed, nextTick } from 'vue';
 import { useRecipesStore } from '@/stores/recipesStore';
+import { useUserStore } from '@/stores/userStore';
 import { addMessage } from '@/modules/arrMessage';
 import EditRecipe from '@/components/EditRecipe.vue';
 import recipes from '@/modules/recipes';
@@ -74,6 +75,7 @@ import SelectRating from '@/components/SelectRating.vue'
 import arrxios from '@/modules/arrxios';
 
 const recipesStore = useRecipesStore();
+const userStore = useUserStore();
 
 const confirmMessage = inject('confirmMessage');
 const autoCompleteRef = ref(null);
@@ -230,7 +232,7 @@ const addRecipe = () => {
     time: '',
     ingredients: [],
     categories: [],
-    rating: 0
+    rating: []
   });
 
   selectedRecipe.value = recipe;
@@ -251,13 +253,19 @@ const closeDropdown = () => {
 };
 
 const updateRating = (newRating, recipeId) => {
-  arrxios.put(`/api/recipes/${recipeId}`, { rating: newRating })
+  const aux = `rating.${userStore.account}`;
+  console.log('updateRating', newRating, recipeId, aux  );
+  arrxios.put(`/api/recipes/${recipeId}`, { [aux] : newRating })
     .then(() => {
       addMessage('Valoració actualitzada');
       const rec = recipesStore.searchById(recipeId)[0];
-      rec.rating = newRating;
+      if (!rec.rating) {
+        rec.rating = {};
+      }
+      rec.rating[userStore.account] = newRating;
     })
-    .catch(() => {
+    .catch((error) => {
+      console.log(error);
       addMessage('Error al modificar la valoració', 'error');
     });
 }

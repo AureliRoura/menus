@@ -22,7 +22,7 @@
               </v-col>
               <v-col cols="4" sm="4" md="1" class="d-flex align-center justify-center">
                 <v-sheet class="pa-2 border mb-4"  elevation="4" rounded  >
-                <select-rating :rating="state.recipe.rating" @update:rating="state.recipe.rating = $event" ></select-rating>
+                <select-rating :rating="state.recipe?.rating?.[userStore.account] ?? 0" @update:rating="state.recipe.rating[userStore.account] = $event" ></select-rating>
                 </v-sheet>
               </v-col>
             </v-row>
@@ -55,19 +55,22 @@ import EditIngredients from './EditIngredients.vue';
 import EditCategories from './EditCategories.vue';
 import SelectRating from './SelectRating.vue';
 import rating from '@/modules/rating.js';
+import { useUserStore } from '@/stores/userStore';
+
+const userStore = useUserStore();
 
 
 const props = defineProps({
   dialog: Boolean,
   recipe: {
     type: Object,
-    default: () => ({ name: '', desc: '', time: '', ingredients: [], categories: [], rating: 0 }),
+    default: () => ({ name: '', desc: '', time: '', ingredients: [], categories: [], rating: [] }),
   },
 });
 
 let state = reactive({
   dialog: props.dialog,
-  recipe: props.recipe || { name: '', desc: '', time: '', ingredients: [], categories: [], rating: 0 },
+  recipe: props.recipe || { name: '', desc: '', time: '', ingredients: [], categories: [], rating: [] },
 });
 const valid = ref(false);
 const tab   = ref('general');
@@ -84,8 +87,11 @@ watch(() => props.recipe, (value) => {
   if (state.recipe.categories === undefined) {
     state.recipe.categories = [];
   }
-  if (state.recipe.rating === undefined || state.recipe.rating === null) {
-    state.recipe.rating = 0;
+  if (state.recipe.rating === undefined) {
+    state.recipe.rating = {};
+  }
+  if (state.recipe.rating[userStore.account] === undefined) {
+    state.recipe.rating[userStore.account] = 0;
   }
 });
 
