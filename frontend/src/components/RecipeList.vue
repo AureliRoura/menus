@@ -47,6 +47,7 @@
             <div class="d-flex justify-space-between">
               <div class="d-flex align-left align-center ">
                 <select-rating :rating="recipe?.rating?.[userStore.account] ?? 0"
+                  :ratingList="recipe?.rating ?? {}"
                   @update:rating="updateRating($event, recipe._id)"></select-rating>
                 <v-list-item-title class="cursor-pointer ml-3" v-text="recipe.name"
                   @click="selectRecipe(recipe)"></v-list-item-title>
@@ -232,7 +233,7 @@ const addRecipe = () => {
     time: '',
     ingredients: [],
     categories: [],
-    rating: []
+    rating: {}
   });
 
   selectedRecipe.value = recipe;
@@ -244,7 +245,6 @@ const closeDropdown = () => {
 
   nextTick(() => {
     if (autoCompleteRef.value) {
-      console.log(autoCompleteRef.value);
       autoCompleteRef.value.blur();
       
     }
@@ -254,7 +254,6 @@ const closeDropdown = () => {
 
 const updateRating = (newRating, recipeId) => {
   const aux = `rating.${userStore.account}`;
-  console.log('updateRating', newRating, recipeId, aux  );
   arrxios.put(`/api/recipes/${recipeId}`, { [aux] : newRating })
     .then(() => {
       addMessage('Valoració actualitzada');

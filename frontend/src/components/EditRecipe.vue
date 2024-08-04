@@ -13,31 +13,33 @@
           <v-form ref="form" v-model="valid" @submit.prevent="submit">
             <v-tabs-window v-model="tab">
               <v-tabs-window-item value="general">
-            <v-row>
-              <v-col cols="12" sm="12" md="9">
-                <v-text-field v-model="state.recipe.name" label="Nom" required></v-text-field>
-              </v-col>
-              <v-col cols="8" sm="8" md="2">
-                <v-text-field v-model="state.recipe.time" label="Temps de Cocció" required></v-text-field>
-              </v-col>
-              <v-col cols="4" sm="4" md="1" class="d-flex align-center justify-center">
-                <v-sheet class="pa-2 border mb-4"  elevation="4" rounded  >
-                <select-rating :rating="state.recipe?.rating?.[userStore.account] ?? 0" @update:rating="state.recipe.rating[userStore.account] = $event" ></select-rating>
-                </v-sheet>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
-                <v-textarea v-model="state.recipe.desc" label="Descripció" required rows="3">
-                </v-textarea>
-              </v-col>
-            </v-row>
-            <edit-ingredients v-model:ingredients="state.recipe.ingredients"></edit-ingredients>
-          </v-tabs-window-item>
-          <v-tabs-window-item value="category">
-            <edit-categories v-model:categories="state.recipe.categories"></edit-categories>
-          </v-tabs-window-item>
-          </v-tabs-window>
+                <v-row>
+                  <v-col cols="12" sm="12" md="9">
+                    <v-text-field v-model="state.recipe.name" label="Nom" required></v-text-field>
+                  </v-col>
+                  <v-col cols="8" sm="8" md="2">
+                    <v-text-field v-model="state.recipe.time" label="Temps de Cocció" required></v-text-field>
+                  </v-col>
+                  <v-col cols="4" sm="4" md="1" class="d-flex align-center justify-center">
+                    <v-sheet class="pa-2 border mb-4" elevation="4" rounded>
+                      <select-rating :rating="state.recipe?.rating?.[userStore.account] ?? 0"
+                        :ratingList="state.recipe?.rating ?? {}"
+                        @update:rating="state.recipe.rating[userStore.account] = $event"></select-rating>
+                    </v-sheet>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12">
+                    <v-textarea v-model="state.recipe.desc" label="Descripció" required rows="3">
+                    </v-textarea>
+                  </v-col>
+                </v-row>
+                <edit-ingredients v-model:ingredients="state.recipe.ingredients"></edit-ingredients>
+              </v-tabs-window-item>
+              <v-tabs-window-item value="category">
+                <edit-categories v-model:categories="state.recipe.categories"></edit-categories>
+              </v-tabs-window-item>
+            </v-tabs-window>
           </v-form>
         </v-card-text>
       </div>
@@ -73,7 +75,7 @@ let state = reactive({
   recipe: props.recipe || { name: '', desc: '', time: '', ingredients: [], categories: [], rating: [] },
 });
 const valid = ref(false);
-const tab   = ref('general');
+const tab = ref('general');
 
 
 const ratingOptions = ref(rating)
