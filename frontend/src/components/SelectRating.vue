@@ -4,7 +4,7 @@
     <v-menu>
       <template v-slot:activator="{ props }">
         <span v-bind="props" class="cursor-pointer">
-          <h2>{{ rating[itemSelected]?.title ?? 'undefined' }}
+          <h2> {{ rating[itemSelected]?.title ?? 'undefined' }}
             <v-tooltip v-if="hasRatings" activator="parent" location="bottom" open-on-hover>
               <!--  show list key value pairs  -->
               <v-list>
@@ -29,6 +29,10 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
 import rating from '@/modules/rating';
+import { useUserStore } from '@/stores/userStore';
+
+const userStore = useUserStore();
+
 const props = defineProps({
   rating: {
     type: Number,
@@ -42,7 +46,18 @@ const props = defineProps({
 const items = ref(rating)
 const menuVisible = ref(false);
 const itemSelected = ref(props.rating || 0);
-const ratingList = computed(() => props.ratingList || {});
+
+const ratingList = computed(() => {
+  var list = {}; 
+  if (Object.keys(props.ratingList).length == 0) return {};
+  // extract current user rating from list
+  for (const key in props.ratingList) {
+    if (key !== userStore.account && props.ratingList[key] !== 0) {
+      list[key] = props.ratingList[key];
+    }
+  }
+  return list || {}
+});
 
 const emit = defineEmits(['update:rating']);
 
@@ -57,12 +72,5 @@ const selectItem = (item) => {
   emit('update:rating', item.value); // Emit the selected value
 };
 
-const hasRatings = computed(() => {
- if (Object.keys(props.ratingList).length == 0) return false;
- // verify all ratings are 0
-  for (const key in props.ratingList) {
-    if (props.ratingList[key] !== 0) return true;
-  }
-  return false;
-});
+const hasRatings = computed(() =>   Object.keys(ratingList.value).length > 0);
 </script>
