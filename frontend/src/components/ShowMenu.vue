@@ -16,15 +16,28 @@
         </span>
         <v-slide-y-transition>
           <div v-if="showText[index]">
-            <br>
-            <v-list density="compact" class="text-justify">
-              <v-list-item v-for="(value, key) in dish.ingredients" :key="key">
-                {{ key + ': ' + value.name + ' - ' + value.quantity + ' ' + value.unit }}
-              </v-list-item>
-            </v-list>
-            <br>
-            <p v-html="dish.desc.replace(/\./g, '.<br>')"></p>
-            <br>
+            <div v-if="dish.ingredients && dish.ingredients.length">
+              <h3>Ingredients:</h3>
+              <v-list density="compact" class="text-justify">
+                <v-list-item v-for="(value, key) in dish.ingredients" :key="key">
+                  {{ key + ': ' + value.name + ' - ' + value.quantity + ' ' + value.unit }}
+                </v-list-item>
+              </v-list>
+            </div>
+            <div v-if="dish.steps && dish.steps.length">
+              <h3>Passos:</h3>
+              <v-list density="compact" class="text-justify">
+                <v-list-item v-for="(step, index) in dish.steps" :key="index">
+                  {{ index + 1 }}. {{ step }}
+                </v-list-item>
+              </v-list>
+            </div>
+            <div v-if="dish.desc">
+
+              <br>
+              <p v-html="dish.desc.replace(/\./g, '.<br>')"></p>
+              <br>
+            </div>
             <p>Temps de cocció: {{ dish.time }}</p>
           </div>
         </v-slide-y-transition>
@@ -47,7 +60,7 @@ watch(props.menu, (newMenu) => {
   console.log('New menu', newMenu);
 
   showText.value = [];
-  });
+});
 </script>
 
 <style scoped>
