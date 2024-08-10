@@ -1,13 +1,13 @@
 <template>
   <v-card>
-    <v-container>
-      <v-text-field v-model="filter" label="Filtrar per Nom" outlined></v-text-field>
+      <v-row cols="12" md="6">
+        <v-text-field v-model="filter" label="Filtrar per Nom" outlined></v-text-field>
+      </v-row>
       <v-row>
-        <v-col cols="12" md="6" >
+        <v-col cols="12" md="6">
           <v-autocomplete v-model="selectedIngredients" :items="ingredientsList" item-title="name"
-          label="Filtrar per Ingredients"
-            multiple clearable chips closable-chips return-object @update:model-value="closeDropdown"
-            ref="autoCompleteRef"  >
+            label="Filtrar per Ingredients" multiple clearable chips closable-chips return-object
+            @update:model-value="closeDropdown" ref="autoCompleteRef">
             <template v-slot:chip="{ props, item }">
               <v-chip v-bind="props" :text="item.raw.name"></v-chip>
             </template>
@@ -16,10 +16,10 @@
             </template>
           </v-autocomplete>
         </v-col>
-        <v-col cols="12" md="6" >
+        <v-col cols="12" md="6">
           <v-autocomplete v-model="selectedCategory" :items="categoriesList" item-title="name" item-value="_id"
             label="Filtrar per Categories" multiple clearable chips closable-chips return-object
-            @update:model-value="closeDropdown" ref="autoCompleteRef" >
+            @update:model-value="closeDropdown" ref="autoCompleteRef">
             <template v-slot:chip="{ props, item }">
               <v-chip v-bind="props" :text="item.raw.value"></v-chip>
             </template>
@@ -43,13 +43,13 @@
         <div style="max-height: calc(100vh - 370px); overflow-y: auto;">
           <!-- Utilitzem recipesFiltered en lloc de recipesList -->
           <v-list-item v-for="(recipe, index) in recipesFiltered" :key="recipe.id" @mouseover="hover = index"
-            @mouseleave="hover = null" :class="hover === index ? 'bg-blue-grey-darken-1' : ''" rounded density="compact">
+            @mouseleave="hover = null" :class="hover === index ? 'bg-blue-grey-darken-1' : ''" rounded
+            density="compact">
             <div class="d-flex justify-space-between">
               <div class="d-flex align-left align-center ">
-                <select-rating :rating="recipe?.rating?.[userStore.account] ?? 0"
-                  :ratingList="recipe?.rating ?? {}"
+                <select-rating :rating="recipe?.rating?.[userStore.account] ?? 0" :ratingList="recipe?.rating ?? {}"
                   @update:rating="updateRating($event, recipe._id)"></select-rating>
-                <v-list-item-title class="cursor-pointer ml-3" v-text="recipe.name"
+                <v-list-item-title class="cursor-pointer ml-3 text-wrap" v-text="recipe.name"
                   @click="selectRecipe(recipe)"></v-list-item-title>
               </div>
               <v-list-item-action>
@@ -60,7 +60,6 @@
         </div>
         <edit-recipe v-model:dialog="dialog" :recipe="selectedRecipe" @submit="handleFormSubmit" />
       </v-list>
-    </v-container>
   </v-card>
 </template>
 
@@ -246,15 +245,15 @@ const closeDropdown = () => {
   nextTick(() => {
     if (autoCompleteRef.value) {
       autoCompleteRef.value.blur();
-      
+
     }
   });
-  
+
 };
 
 const updateRating = (newRating, recipeId) => {
   const aux = `rating.${userStore.account}`;
-  arrxios.put(`/api/recipes/${recipeId}`, { [aux] : newRating })
+  arrxios.put(`/api/recipes/${recipeId}`, { [aux]: newRating })
     .then(() => {
       addMessage('Valoració actualitzada');
       const rec = recipesStore.searchById(recipeId)[0];
@@ -270,3 +269,10 @@ const updateRating = (newRating, recipeId) => {
 }
 
 </script>
+
+<style scoped>
+.text-wrap {
+  white-space: normal; /* Allows text to wrap */
+  word-wrap: break-word; /* Breaks long words */
+}
+</style>
