@@ -105,8 +105,6 @@ const validateMenu = (data: string) => {
     }
   }
 
- 
-
   const name = menuJson.name;
   const menu = menuJson.menu;
 
@@ -140,7 +138,7 @@ const validateMenu = (data: string) => {
 
         for (const ingredient of recipe.ingredients) {
           if (!ingredient.name || !ingredient.quantity || !ingredient.unit) {
-            throw new Error(`Invalid menu data: ingredient is missing name, quantity or unit`);
+            throw new Error(`Invalid menu data: Recipe ${recipe.name} - ingredient is missing name, quantity or unit`);
           }
         }
       }
