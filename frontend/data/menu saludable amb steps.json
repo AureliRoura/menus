@@ -5,7 +5,7 @@
       "lunch": [
         {
           "name": "Amanida de quinoa amb alvocat i tonyina",
-          "description": "Una amanida fresca i nutritiva amb quinoa, alvocat i tonyina ideal per a un dinar lleuger.",
+          "desc": "Una amanida fresca i nutritiva amb quinoa, alvocat i tonyina ideal per a un dinar lleuger.",
           "ingredients": [
             {
               "name": "Quinoa",
@@ -32,7 +32,7 @@
         },
         {
           "name": "Sopa de verdures amb pollastre",
-          "description": "Una sopa reconfortant i saludable amb verdures fresques i pollastre.",
+          "desc": "Una sopa reconfortant i saludable amb verdures fresques i pollastre.",
           "ingredients": [
             {
               "name": "Pollastre",
@@ -83,7 +83,7 @@
       "dinner": [
         {
           "name": "Truita de patates amb amanida verda",
-          "description": "Una truita de patates clàssica acompanyada d'una amanida verda fresca.",
+          "desc": "Una truita de patates clàssica acompanyada d'una amanida verda fresca.",
           "ingredients": [
             {
               "name": "Patates",
@@ -131,7 +131,7 @@
       "lunch": [
         {
           "name": "Salmó a la planxa amb espinacs saltats",
-          "description": "Un plat sa i saborós de salmó a la planxa acompanyat d'espinacs saltats amb all.",
+          "desc": "Un plat sa i saborós de salmó a la planxa acompanyat d'espinacs saltats amb all.",
           "ingredients": [
             {
               "name": "Salmó",
@@ -174,7 +174,7 @@
         },
         {
           "name": "Amanida de pasta amb tonyina i oli de llimona",
-          "description": "Una amanida ràpida i saborosa de pasta, tonyina i oli de llimona.",
+          "desc": "Una amanida ràpida i saborosa de pasta, tonyina i oli de llimona.",
           "ingredients": [
             {
               "name": "Pasta",
@@ -208,7 +208,7 @@
       "dinner": [
         {
           "name": "Amanida de quinoa amb alvocat i tonyina",
-          "description": "Una amanida fresca i nutritiva amb quinoa, alvocat i tonyina ideal per a un sopar lleuger.",
+          "desc": "Una amanida fresca i nutritiva amb quinoa, alvocat i tonyina ideal per a un sopar lleuger.",
           "ingredients": [
             {
               "name": "Quinoa",
@@ -239,7 +239,7 @@
       "lunch": [
         {
           "name": "Amanida de cuscús amb verdures rostides i formatge feta",
-          "description": "Una amanida de cuscús amb verdures rostides i formatge feta, perfecta per a un dinar nutritiu.",
+          "desc": "Una amanida de cuscús amb verdures rostides i formatge feta, perfecta per a un dinar nutritiu.",
           "ingredients": [
             {
               "name": "Cuscús",
@@ -277,7 +277,7 @@
         },
         {
           "name": "Truita de patates amb amanida verda",
-          "description": "Una truita de patates clàssica acompanyada d'una amanida verda fresca.",
+          "desc": "Una truita de patates clàssica acompanyada d'una amanida verda fresca.",
           "ingredients": [
             {
               "name": "Patates",
@@ -325,7 +325,7 @@
       "dinner": [
         {
           "name": "Sopa de verdures amb pollastre",
-          "description": "Una sopa reconfortant i saludable amb verdures fresques i pollastre.",
+          "desc": "Una sopa reconfortant i saludable amb verdures fresques i pollastre.",
           "ingredients": [
             {
               "name": "Pollastre",
@@ -378,7 +378,7 @@
       "lunch": [
         {
           "name": "Amanida de cuscús amb verdures rostides i formatge feta",
-          "description": "Una amanida de cuscús amb verdures rostides i formatge feta, perfecta per a un dinar nutritiu.",
+          "desc": "Una amanida de cuscús amb verdures rostides i formatge feta, perfecta per a un dinar nutritiu.",
           "ingredients": [
             {
               "name": "Cuscús",
@@ -416,7 +416,7 @@
         },
         {
           "name": "Sopa de verdures amb pollastre",
-          "description": "Una sopa reconfortant i saludable amb verdures fresques i pollastre.",
+          "desc": "Una sopa reconfortant i saludable amb verdures fresques i pollastre.",
           "ingredients": [
             {
               "name": "Pollastre",
@@ -467,7 +467,7 @@
       "dinner": [
         {
           "name": "Truita de patates amb amanida verda",
-          "description": "Una truita de patates clàssica acompanyada d'una amanida verda fresca.",
+          "desc": "Una truita de patates clàssica acompanyada d'una amanida verda fresca.",
           "ingredients": [
             {
               "name": "Patates",
@@ -515,7 +515,7 @@
       "lunch": [
         {
           "name": "Salmó a la planxa amb espinacs saltats",
-          "description": "Un plat sa i saborós de salmó a la planxa acompanyat d'espinacs saltats amb all.",
+          "desc": "Un plat sa i saborós de salmó a la planxa acompanyat d'espinacs saltats amb all.",
           "ingredients": [
             {
               "name": "Salmó",
@@ -558,7 +558,7 @@
         },
         {
           "name": "Amanida de pasta amb tonyina i oli de llimona",
-          "description": "Una amanida ràpida i saborosa de pasta, tonyina i oli de llimona.",
+          "desc": "Una amanida ràpida i saborosa de pasta, tonyina i oli de llimona.",
           "ingredients": [
             {
               "name": "Pasta",
@@ -592,7 +592,7 @@
       "dinner": [
         {
           "name": "Amanida de quinoa amb alvocat i tonyina",
-          "description": "Una amanida fresca i nutritiva amb quinoa, alvocat i tonyina ideal per a un sopar lleuger.",
+          "desc": "Una amanida fresca i nutritiva amb quinoa, alvocat i tonyina ideal per a un sopar lleuger.",
           "ingredients": [
             {
               "name": "Quinoa",
@@ -623,7 +623,7 @@
       "lunch": [
         {
           "name": "Amanida de cuscús amb verdures rostides i formatge feta",
-          "description": "Una amanida de cuscús amb verdures rostides i formatge feta, perfecta per a un dinar nutritiu.",
+          "desc": "Una amanida de cuscús amb verdures rostides i formatge feta, perfecta per a un dinar nutritiu.",
           "ingredients": [
             {
               "name": "Cuscús",
@@ -661,7 +661,7 @@
         },
         {
           "name": "Truita de patates amb amanida verda",
-          "description": "Una truita de patates clàssica acompanyada d'una amanida verda fresca.",
+          "desc": "Una truita de patates clàssica acompanyada d'una amanida verda fresca.",
           "ingredients": [
             {
               "name": "Patates",
@@ -707,7 +707,7 @@
       "dinner": [
         {
           "name": "Sopa de verdures amb pollastre",
-          "description": "Una sopa reconfortant i saludable amb verdures fresques i pollastre.",
+          "desc": "Una sopa reconfortant i saludable amb verdures fresques i pollastre.",
           "ingredients": [
             {
               "name": "Pollastre",
@@ -760,7 +760,7 @@
       "lunch": [
         {
           "name": "Salmó a la planxa amb espinacs saltats",
-          "description": "Un plat sa i saborós de salmó a la planxa acompanyat d'espinacs saltats amb all.",
+          "desc": "Un plat sa i saborós de salmó a la planxa acompanyat d'espinacs saltats amb all.",
           "ingredients": [
             {
               "name": "Salmó",
@@ -803,7 +803,7 @@
         },
         {
           "name": "Amanida de pasta amb tonyina i oli de llimona",
-          "description": "Una amanida ràpida i saborosa de pasta, tonyina i oli de llimona.",
+          "desc": "Una amanida ràpida i saborosa de pasta, tonyina i oli de llimona.",
           "ingredients": [
             {
               "name": "Pasta",
@@ -837,7 +837,7 @@
       "dinner": [
         {
           "name": "Amanida de quinoa amb alvocat i tonyina",
-          "description": "Una amanida fresca i nutritiva amb quinoa, alvocat i tonyina ideal per a un sopar lleuger.",
+          "desc": "Una amanida fresca i nutritiva amb quinoa, alvocat i tonyina ideal per a un sopar lleuger.",
           "ingredients": [
             {
               "name": "Quinoa",
