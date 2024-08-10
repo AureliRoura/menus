@@ -1,0 +1,868 @@
+
+{  "name": "Menú saludable 2",
+  "menu": {
+    "monday": {
+      "lunch": [
+        {
+          "name": "Amanida de quinoa amb alvocat i tonyina",
+          "description": "Una amanida fresca i nutritiva amb quinoa, alvocat i tonyina ideal per a un dinar lleuger.",
+          "ingredients": [
+            {
+              "name": "Quinoa",
+              "quantity": 75,
+              "unit": "grams"
+            },
+            {
+              "name": "Alvocat",
+              "quantity": 0.5,
+              "unit": "unitat"
+            },
+            {
+              "name": "Tonyina",
+              "quantity": 0.5,
+              "unit": "llauna"
+            }
+          ],
+          "steps": [
+            "Bulla la quinoa durant 10 minuts i escorre-la.",
+            "Barreja la quinoa amb l'alvocat tallat i la tonyina.",
+            "Serveix immediatament."
+          ],
+          "time": "15 min"
+        },
+        {
+          "name": "Sopa de verdures amb pollastre",
+          "description": "Una sopa reconfortant i saludable amb verdures fresques i pollastre.",
+          "ingredients": [
+            {
+              "name": "Pollastre",
+              "quantity": 1,
+              "unit": "pit"
+            },
+            {
+              "name": "Pastanaga",
+              "quantity": 1,
+              "unit": "unitat"
+            },
+            {
+              "name": "Ceba",
+              "quantity": 1,
+              "unit": "unitat"
+            },
+            {
+              "name": "Api",
+              "quantity": 2,
+              "unit": "tiges"
+            },
+            {
+              "name": "Aigua",
+              "quantity": 1,
+              "unit": "litre"
+            },
+            {
+              "name": "Sal",
+              "quantity": 1,
+              "unit": "al gust"
+            },
+            {
+              "name": "Pebre",
+              "quantity": 1,
+              "unit": "al gust"
+            }
+          ],
+          "steps": [
+            "Talla el pollastre a trossos petits.",
+            "Pela i talla les verdures a trossos petits.",
+            "Posa el pollastre i les verdures en una olla amb aigua.",
+            "Cuina a foc mitjà durant 30 minuts fins que les verdures estiguin tendres.",
+            "Salpebra al gust i serveix calent."
+          ],
+          "time": "40 min"
+        }
+      ],
+      "dinner": [
+        {
+          "name": "Truita de patates amb amanida verda",
+          "description": "Una truita de patates clàssica acompanyada d'una amanida verda fresca.",
+          "ingredients": [
+            {
+              "name": "Patates",
+              "quantity": 200,
+              "unit": "grams"
+            },
+            {
+              "name": "Ceba",
+              "quantity": 0.5,
+              "unit": "unitat"
+            },
+            {
+              "name": "Ous",
+              "quantity": 2,
+              "unit": "unitats"
+            },
+            {
+              "name": "Oli d'oliva",
+              "quantity": 2,
+              "unit": "cullerades"
+            },
+            {
+              "name": "Sal",
+              "quantity": 1,
+              "unit": "al gust"
+            },
+            {
+              "name": "Pebre",
+              "quantity": 1,
+              "unit": "al gust"
+            }
+          ],
+          "steps": [
+            "Pela i talla les patates i la ceba a trossos petits.",
+            "Frega les patates i la ceba en una paella amb oli d'oliva fins que estiguin toves.",
+            "Bat els ous i afegeix les patates i la ceba.",
+            "Cuina la barreja en una paella fins que estigui quallada.",
+            "Serveix amb una amanida verda."
+          ],
+          "time": "30 min"
+        }
+      ]
+    },
+    "tuesday": {
+      "lunch": [
+        {
+          "name": "Salmó a la planxa amb espinacs saltats",
+          "description": "Un plat sa i saborós de salmó a la planxa acompanyat d'espinacs saltats amb all.",
+          "ingredients": [
+            {
+              "name": "Salmó",
+              "quantity": 1,
+              "unit": "filet"
+            },
+            {
+              "name": "Espinacs",
+              "quantity": 100,
+              "unit": "grams"
+            },
+            {
+              "name": "All",
+              "quantity": 1,
+              "unit": "gra"
+            },
+            {
+              "name": "Oli d'oliva",
+              "quantity": 1,
+              "unit": "cullerada"
+            },
+            {
+              "name": "Sal",
+              "quantity": 1,
+              "unit": "al gust"
+            },
+            {
+              "name": "Pebre",
+              "quantity": 1,
+              "unit": "al gust"
+            }
+          ],
+          "steps": [
+            "Salpebra el salmó.",
+            "Cuina el salmó a la planxa durant 4-5 minuts per cada costat fins que estigui cuit.",
+            "Salta els espinacs amb all i oli d'oliva durant 3-4 minuts.",
+            "Serveix el salmó amb els espinacs saltats."
+          ],
+          "time": "20 min"
+        },
+        {
+          "name": "Amanida de pasta amb tonyina i oli de llimona",
+          "description": "Una amanida ràpida i saborosa de pasta, tonyina i oli de llimona.",
+          "ingredients": [
+            {
+              "name": "Pasta",
+              "quantity": 75,
+              "unit": "grams"
+            },
+            {
+              "name": "Tonyina",
+              "quantity": 0.5,
+              "unit": "llauna"
+            },
+            {
+              "name": "Enciam",
+              "quantity": 0.25,
+              "unit": "unitat"
+            },
+            {
+              "name": "Oli de llimona",
+              "quantity": 1,
+              "unit": "cullerada"
+            }
+          ],
+          "steps": [
+            "Bulla la pasta durant 10 minuts i escorre-la.",
+            "Barreja-la amb la tonyina i l'enciam tallat.",
+            "Afegeix oli de llimona al gust."
+          ],
+          "time": "15 min"
+        }
+      ],
+      "dinner": [
+        {
+          "name": "Amanida de quinoa amb alvocat i tonyina",
+          "description": "Una amanida fresca i nutritiva amb quinoa, alvocat i tonyina ideal per a un sopar lleuger.",
+          "ingredients": [
+            {
+              "name": "Quinoa",
+              "quantity": 75,
+              "unit": "grams"
+            },
+            {
+              "name": "Alvocat",
+              "quantity": 0.5,
+              "unit": "unitat"
+            },
+            {
+              "name": "Tonyina",
+              "quantity": 0.5,
+              "unit": "llauna"
+            }
+          ],
+          "steps": [
+            "Bulla la quinoa durant 10 minuts i escorre-la.",
+            "Barreja la quinoa amb l'alvocat tallat i la tonyina.",
+            "Serveix immediatament."
+          ],
+          "time": "15 min"
+        }
+      ]
+    },
+    "wednesday": {
+      "lunch": [
+        {
+          "name": "Amanida de cuscús amb verdures rostides i formatge feta",
+          "description": "Una amanida de cuscús amb verdures rostides i formatge feta, perfecta per a un dinar nutritiu.",
+          "ingredients": [
+            {
+              "name": "Cuscús",
+              "quantity": 75,
+              "unit": "grams"
+            },
+            {
+              "name": "Carbassó",
+              "quantity": 0.5,
+              "unit": "unitat"
+            },
+            {
+              "name": "Pebrot",
+              "quantity": 0.5,
+              "unit": "unitat"
+            },
+            {
+              "name": "Ceba",
+              "quantity": 0.25,
+              "unit": "unitat"
+            },
+            {
+              "name": "Formatge feta",
+              "quantity": 30,
+              "unit": "grams"
+            }
+          ],
+          "steps": [
+            "Prepara el cuscús segons les instruccions del paquet durant 10 minuts.",
+            "Rosteix les verdures al forn durant 20 minuts.",
+            "Barreja les verdures amb el cuscús.",
+            "Afegeix el formatge feta esmicolat per sobre."
+          ],
+          "time": "30 min"
+        },
+        {
+          "name": "Truita de patates amb amanida verda",
+          "description": "Una truita de patates clàssica acompanyada d'una amanida verda fresca.",
+          "ingredients": [
+            {
+              "name": "Patates",
+              "quantity": 
+
+200,
+              "unit": "grams"
+            },
+            {
+              "name": "Ceba",
+              "quantity": 0.5,
+              "unit": "unitat"
+            },
+            {
+              "name": "Ous",
+              "quantity": 2,
+              "unit": "unitats"
+            },
+            {
+              "name": "Oli d'oliva",
+              "quantity": 2,
+              "unit": "cullerades"
+            },
+            {
+              "name": "Sal",
+              "quantity": 1,
+              "unit": "al gust"
+            },
+            {
+              "name": "Pebre",
+              "quantity": 1,
+              "unit": "al gust"
+            }
+          ],
+          "steps": [
+            "Pela i talla les patates i la ceba a trossos petits.",
+            "Frega les patates i la ceba en una paella amb oli d'oliva fins que estiguin toves.",
+            "Bat els ous i afegeix les patates i la ceba.",
+            "Cuina la barreja en una paella fins que estigui quallada.",
+            "Serveix amb una amanida verda."
+          ],
+          "time": "30 min"
+        }
+      ],
+      "dinner": [
+        {
+          "name": "Sopa de verdures amb pollastre",
+          "description": "Una sopa reconfortant i saludable amb verdures fresques i pollastre.",
+          "ingredients": [
+            {
+              "name": "Pollastre",
+              "quantity": 1,
+              "unit": "pit"
+            },
+            {
+              "name": "Pastanaga",
+              "quantity": 1,
+              "unit": "unitat"
+            },
+            {
+              "name": "Ceba",
+              "quantity": 1,
+              "unit": "unitat"
+            },
+            {
+              "name": "Api",
+              "quantity": 2,
+              "unit": "tiges"
+            },
+            {
+              "name": "Aigua",
+              "quantity": 1,
+              "unit": "litre"
+            },
+            {
+              "name": "Sal",
+              "quantity": 1,
+              "unit": "al gust"
+            },
+            {
+              "name": "Pebre",
+              "quantity": 1,
+              "unit": "al gust"
+            }
+          ],
+          "steps": [
+            "Talla el pollastre a trossos petits.",
+            "Pela i talla les verdures a trossos petits.",
+            "Posa el pollastre i les verdures en una olla amb aigua.",
+            "Cuina a foc mitjà durant 30 minuts fins que les verdures estiguin tendres.",
+            "Salpebra al gust i serveix calent."
+          ],
+          "time": "40 min"
+        }
+      ]
+    },
+    "thursday": {
+      "lunch": [
+        {
+          "name": "Amanida de cuscús amb verdures rostides i formatge feta",
+          "description": "Una amanida de cuscús amb verdures rostides i formatge feta, perfecta per a un dinar nutritiu.",
+          "ingredients": [
+            {
+              "name": "Cuscús",
+              "quantity": 75,
+              "unit": "grams"
+            },
+            {
+              "name": "Carbassó",
+              "quantity": 0.5,
+              "unit": "unitat"
+            },
+            {
+              "name": "Pebrot",
+              "quantity": 0.5,
+              "unit": "unitat"
+            },
+            {
+              "name": "Ceba",
+              "quantity": 0.25,
+              "unit": "unitat"
+            },
+            {
+              "name": "Formatge feta",
+              "quantity": 30,
+              "unit": "grams"
+            }
+          ],
+          "steps": [
+            "Prepara el cuscús segons les instruccions del paquet durant 10 minuts.",
+            "Rosteix les verdures al forn durant 20 minuts.",
+            "Barreja les verdures amb el cuscús.",
+            "Afegeix el formatge feta esmicolat per sobre."
+          ],
+          "time": "30 min"
+        },
+        {
+          "name": "Sopa de verdures amb pollastre",
+          "description": "Una sopa reconfortant i saludable amb verdures fresques i pollastre.",
+          "ingredients": [
+            {
+              "name": "Pollastre",
+              "quantity": 1,
+              "unit": "pit"
+            },
+            {
+              "name": "Pastanaga",
+              "quantity": 1,
+              "unit": "unitat"
+            },
+            {
+              "name": "Ceba",
+              "quantity": 1,
+              "unit": "unitat"
+            },
+            {
+              "name": "Api",
+              "quantity": 2,
+              "unit": "tiges"
+            },
+            {
+              "name": "Aigua",
+              "quantity": 1,
+              "unit": "litre"
+            },
+            {
+              "name": "Sal",
+              "quantity": 1,
+              "unit": "al gust"
+            },
+            {
+              "name": "Pebre",
+              "quantity": 1,
+              "unit": "al gust"
+            }
+          ],
+          "steps": [
+            "Talla el pollastre a trossos petits.",
+            "Pela i talla les verdures a trossos petits.",
+            "Posa el pollastre i les verdures en una olla amb aigua.",
+            "Cuina a foc mitjà durant 30 minuts fins que les verdures estiguin tendres.",
+            "Salpebra al gust i serveix calent."
+          ],
+          "time": "40 min"
+        }
+      ],
+      "dinner": [
+        {
+          "name": "Truita de patates amb amanida verda",
+          "description": "Una truita de patates clàssica acompanyada d'una amanida verda fresca.",
+          "ingredients": [
+            {
+              "name": "Patates",
+              "quantity": 200,
+              "unit": "grams"
+            },
+            {
+              "name": "Ceba",
+              "quantity": 0.5,
+              "unit": "unitat"
+            },
+            {
+              "name": "Ous",
+              "quantity": 2,
+              "unit": "unitats"
+            },
+            {
+              "name": "Oli d'oliva",
+              "quantity": 2,
+              "unit": "cullerades"
+            },
+            {
+              "name": "Sal",
+              "quantity": 1,
+              "unit": "al gust"
+            },
+            {
+              "name": "Pebre",
+              "quantity": 1,
+              "unit": "al gust"
+            }
+          ],
+          "steps": [
+            "Pela i talla les patates i la ceba a trossos petits.",
+            "Frega les patates i la ceba en una paella amb oli d'oliva fins que estiguin toves.",
+            "Bat els ous i afegeix les patates i la ceba.",
+            "Cuina la barreja en una paella fins que estigui quallada.",
+            "Serveix amb una amanida verda."
+          ],
+          "time": "30 min"
+        }
+      ]
+    },
+    "friday": {
+      "lunch": [
+        {
+          "name": "Salmó a la planxa amb espinacs saltats",
+          "description": "Un plat sa i saborós de salmó a la planxa acompanyat d'espinacs saltats amb all.",
+          "ingredients": [
+            {
+              "name": "Salmó",
+              "quantity": 1,
+              "unit": "filet"
+            },
+            {
+              "name": "Espinacs",
+              "quantity": 100,
+              "unit": "grams"
+            },
+            {
+              "name": "All",
+              "quantity": 1,
+              "unit": "gra"
+            },
+            {
+              "name": "Oli d'oliva",
+              "quantity": 1,
+              "unit": "cullerada"
+            },
+            {
+              "name": "Sal",
+              "quantity": 1,
+              "unit": "al gust"
+            },
+            {
+              "name": "Pebre",
+              "quantity": 1,
+              "unit": "al gust"
+            }
+          ],
+          "steps": [
+            "Salpebra el salmó.",
+            "Cuina el salmó a la planxa durant 4-5 minuts per cada costat fins que estigui cuit.",
+            "Salta els espinacs amb all i oli d'oliva durant 3-4 minuts.",
+            "Serveix el salmó amb els espinacs saltats."
+          ],
+          "time": "20 min"
+        },
+        {
+          "name": "Amanida de pasta amb tonyina i oli de llimona",
+          "description": "Una amanida ràpida i saborosa de pasta, tonyina i oli de llimona.",
+          "ingredients": [
+            {
+              "name": "Pasta",
+              "quantity": 75,
+              "unit": "grams"
+            },
+            {
+              "name": "Tonyina",
+              "quantity": 0.5,
+              "unit": "llauna"
+            },
+            {
+              "name": "Enciam",
+              "quantity": 0.25,
+              "unit": "unitat"
+            },
+            {
+              "name": "Oli de llimona",
+              "quantity": 1,
+              "unit": "cullerada"
+            }
+          ],
+          "steps": [
+            "Bulla la pasta durant 10 minuts i escorre-la.",
+            "Barreja-la amb la tonyina i l'enciam tallat.",
+            "Afegeix oli de llimona al gust."
+          ],
+          "time": "15 min"
+        }
+      ],
+      "dinner": [
+        {
+          "name": "Amanida de quinoa amb alvocat i tonyina",
+          "description": "Una amanida fresca i nutritiva amb quinoa, alvocat i tonyina ideal per a un sopar lleuger.",
+          "ingredients": [
+            {
+              "name": "Quinoa",
+              "quantity": 75,
+              "unit": "grams"
+            },
+            {
+              "name": "Alvocat",
+              "quantity": 0.5,
+              "unit": "unitat"
+            },
+            {
+              "name": "Tonyina",
+              "quantity": 0.5,
+              "unit": "llauna"
+            }
+          ],
+          "steps": [
+            "Bulla la quinoa durant 10 minuts i escorre-la.",
+            "Barreja la quinoa amb l'alvocat tallat i la tonyina.",
+            "Serveix immediatament."
+          ],
+          "time": "15 min"
+        }
+      ]
+    },
+    "saturday": {
+      "lunch": [
+        {
+          "name": "Amanida de cuscús amb verdures rostides i formatge feta",
+          "description": "Una amanida de cuscús amb verdures rostides i formatge feta, perfecta per a un dinar nutritiu.",
+          "ingredients": [
+            {
+              "name": "Cuscús",
+              "quantity": 75,
+              "unit": "grams"
+            },
+            {
+              "name": "Carbassó",
+              "quantity": 0.5,
+              "unit": "unitat"
+            },
+            {
+              "name": "Pebrot",
+              "quantity": 0.5,
+              "unit": "unitat"
+            },
+            {
+              "name": "Ceba",
+              "quantity": 0.25,
+              "unit": "unitat"
+            },
+            {
+              "name": "Formatge feta",
+              "quantity": 30,
+              "unit": "grams"
+            }
+          ],
+          "steps": [
+            "Prepara el cuscús segons les instruccions del paquet durant 10 minuts.",
+            "Rosteix les verdures al forn durant 20 minuts.",
+            "Barreja les verdures amb el cuscús.",
+            "Afegeix el formatge feta esmicolat per sobre."
+          ],
+          "time": "30 min"
+        },
+        {
+          "name": "Truita de patates amb amanida verda",
+          "description": "Una truita de patates clàssica acompanyada d'una amanida verda fresca.",
+          "ingredients": [
+            {
+              "name": "Patates",
+              "quantity": 200,
+              "unit": "grams"
+            },
+            {
+              "name": "Ceba",
+              "quantity": 0.5,
+              "unit": "unitat"
+            },
+            {
+              "name": "Ous",
+              "quantity": 2,
+              "unit": "unitats"
+            },
+            {
+              "name": "Oli d'oliva",
+              "quantity": 2,
+              "unit": "cullerades"
+            },
+            {
+              "name": "Sal",
+              "quantity": 1,
+              "unit": "al gust"
+            },
+            {
+              "name": "Pebre",
+              "quantity": 1,
+              "unit": "al gust"
+            }
+          ],
+          "steps": [
+            "Pela i talla les patates i la ceba a trossos petits.",
+            "Frega les patates i la ceba en una paella amb oli d'oliva fins que estiguin toves.",
+            "Bat els ous i afegeix les patates i la ceba.",
+            "Cuina la barreja en una paella fins que estigui quallada.",
+            "Serveix amb una amanida verda."
+          ],
+          "time": "30 min"
+        }
+      ],
+      "dinner": [
+        {
+          "name": "Sopa de verdures amb pollastre",
+          "description": "Una sopa reconfortant i saludable amb verdures fresques i pollastre.",
+          "ingredients": [
+            {
+              "name": "Pollastre",
+              "quantity": 1,
+              "unit": "pit"
+            },
+            {
+              "name": "Pastanaga",
+              "quantity": 1,
+              "unit": "unitat"
+            },
+            {
+              "name": "Ceba",
+              "quantity": 1,
+              "unit": "unitat"
+            },
+            {
+              "name": "Api",
+              "quantity": 2,
+              "unit": "tiges"
+            },
+            {
+              "name": "Aigua",
+              "quantity": 1,
+              "unit": "litre"
+            },
+            {
+              "name": "Sal",
+              "quantity": 1,
+              "unit": "al gust"
+            },
+            {
+              "name": "Pebre",
+              "quantity": 1,
+              "unit": "al gust"
+            }
+          ],
+          "steps": [
+            "Talla el pollastre a trossos petits.",
+            "Pela i talla les verdures a trossos petits.",
+            "Posa el pollastre i les verdures en una olla amb aigua.",
+            "Cuina a foc mitjà durant 30 minuts fins que les verdures estiguin tendres.",
+            "Salpebra al gust i serveix calent."
+          ],
+          "time": "40 min"
+        }
+      ]
+    },
+    "sunday": {
+      "lunch": [
+        {
+          "name": "Salmó a la planxa amb espinacs saltats",
+          "description": "Un plat sa i saborós de salmó a la planxa acompanyat d'espinacs saltats amb all.",
+          "ingredients": [
+            {
+              "name": "Salmó",
+              "quantity": 1,
+              "unit": "filet"
+            },
+            {
+              "name": "Espinacs",
+              "quantity": 100,
+              "unit": "grams"
+            },
+            {
+              "name": "All",
+              "quantity": 1,
+              "unit": "gra"
+            },
+            {
+              "name": "Oli d'oliva",
+              "quantity": 1,
+              "unit": "cullerada"
+            },
+            {
+              "name": "Sal",
+              "quantity": 1,
+              "unit": "al gust"
+            },
+            {
+              "name": "Pebre",
+              "quantity": 1,
+              "unit": "al gust"
+            }
+          ],
+          "steps": [
+            "Salpebra el salmó.",
+            "Cuina el salmó a la planxa durant 4-5 minuts per cada costat fins que estigui cuit.",
+            "Salta els espinacs amb all i oli d'oliva durant 3-4 minuts.",
+            "Serveix el salmó amb els espinacs saltats."
+          ],
+          "time": "20 min"
+        },
+        {
+          "name": "Amanida de pasta amb tonyina i oli de llimona",
+          "description": "Una amanida ràpida i saborosa de pasta, tonyina i oli de llimona.",
+          "ingredients": [
+            {
+              "name": "Pasta",
+              "quantity": 75,
+              "unit": "grams"
+            },
+            {
+              "name": "Tonyina",
+              "quantity": 0.5,
+              "unit": "llauna"
+            },
+            {
+              "name": "Enciam",
+              "quantity": 0.25,
+              "unit": "unitat"
+            },
+            {
+              "name": "Oli de llimona",
+              "quantity": 1,
+              "unit": "cullerada"
+            }
+          ],
+          "steps": [
+            "Bulla la pasta durant 10 minuts i escorre-la.",
+            "Barreja-la amb la tonyina i l'enciam tallat.",
+            "Afegeix oli de llimona al gust."
+          ],
+          "time": "15 min"
+        }
+      ],
+      "dinner": [
+        {
+          "name": "Amanida de quinoa amb alvocat i tonyina",
+          "description": "Una amanida fresca i nutritiva amb quinoa, alvocat i tonyina ideal per a un sopar lleuger.",
+          "ingredients": [
+            {
+              "name": "Quinoa",
+              "quantity": 75,
+              "unit": "grams"
+            },
+            {
+              "name": "Alvocat",
+              "quantity": 0.5,
+              "unit": "unitat"
+            },
+            {
+              "name": "Tonyina",
+              "quantity": 0.5,
+              "unit": "llauna"
+            }
+          ],
+          "steps": [
+            "Bulla la quinoa durant 10 minuts i escorre-la.",
+            "Barreja la quinoa amb l'alvocat tallat i la tonyina.",
+            "Serveix immediatament."
+          ],
+          "time": "15 min"
+        }
+      ]
+    }
+  }
+}
