@@ -3,11 +3,11 @@
     <v-card-title>Passos</v-card-title>
     <v-card-text>
       <v-row>
-        <v-col cols="12">
+        <v-col cols="12" md="10">
           <v-textarea v-model="newStep" label="Pas" required></v-textarea>
         </v-col>
-        <v-col cols="12">
-          <v-chip @click="addStep" :disabled="!valid" color="primary">Add Step</v-chip>
+        <v-col cols="12" md="2">
+          <v-chip @click="addStep" :disabled="!valid" color="primary">Afegir Pas</v-chip>
         </v-col>
       </v-row>
       <v-list class="list-container flex-grow-1">

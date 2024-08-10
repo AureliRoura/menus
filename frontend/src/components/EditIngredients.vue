@@ -3,22 +3,22 @@
     <v-card-title>Ingredients</v-card-title>
     <v-card-text>
       <v-row>
-        <v-col cols="12" sm="5">
+        <v-col cols="12" sm="6" md="4">
           <v-autocomplete v-model="newIngredient._id" :items="globalIngredients" item-title="name" item-value="_id"
             label="Ingredient" auto-select-first required @input="selectIngredientsButton"
             @update:search="updateSearchInput" style="min-width: 200px;">
           </v-autocomplete>
         </v-col>
-        <v-col cols="12" sm="2">
+        <v-col cols="12" sm="3" md="3">
           <v-text-field v-model="newIngredient.quantity" label="Cuantitat" type="number" required @change="fixDecimals"
             style="min-width: 100px;"></v-text-field>
         </v-col>
-        <v-col cols="12" sm="2">
+        <v-col cols="12" sm="3" md="3">
           <v-autocomplete v-model="newIngredient.unit" :items="units" item-title="unit" item-value="unit"
             label="Unitats" auto-select-first required style="min-width: 100px;"
             @keyup.enter="addIngredient"></v-autocomplete>
         </v-col>
-        <v-col cols="12" sm="2" style="min-width: 100px;" class="d-flex align-self-center mb-3">
+        <v-col cols="12" sm="12" md="2" style="min-width: 100px;" class="d-flex align-self-center mb-3">
           <v-chip @click="addIngredient" color="primary" :disabled="!valid"  class="mr-3">Add</v-chip>
           <v-chip color="primary" @click="addGlobalIngredient" :disabled="!newIngredientbutton" >
             <v-icon>mdi-plus</v-icon>
