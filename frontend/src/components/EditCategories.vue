@@ -55,10 +55,10 @@ let newCategory = reactive({ category: '', value: '' });
 newCategory.category = '';
 newCategory.value = '';
 
-const emit = defineEmits(['update:categories']);
+const emit = defineEmits(['update:steps']);
 
 watch(() => categories.value, (newCategorie) => {
-  emit('update:categories', newCategorie);
+  emit('update:steps', newCategorie);
 });
 
 let valid = computed(() => {

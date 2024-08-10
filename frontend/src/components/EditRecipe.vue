@@ -5,7 +5,8 @@
       <v-card-title>Recepta</v-card-title>
       <v-tabs v-model="tab" bg-color="primary">
         <v-tab value="general">General </v-tab>
-        <v-tab value="category">Categories ({{ numCategories }})</v-tab>
+        <v-tab value="category">Cats ({{ numCategories }})</v-tab>
+        <v-tab value="steps">Passos ({{ numSteps }})</v-tab>
       </v-tabs>
       <div class="content-container">
         <v-card-text>
@@ -39,6 +40,9 @@
               <v-tabs-window-item value="category">
                 <edit-categories v-model:categories="state.recipe.categories"></edit-categories>
               </v-tabs-window-item>
+              <v-tabs-window-item value="steps">
+                <edit-steps v-model:steps="state.recipe.steps"></edit-steps>
+              </v-tabs-window-item>
             </v-tabs-window>
           </v-form>
         </v-card-text>
@@ -55,6 +59,7 @@
 import { ref, reactive, watch, computed } from 'vue';
 import EditIngredients from './EditIngredients.vue';
 import EditCategories from './EditCategories.vue';
+import EditSteps from './EditSteps.vue';
 import SelectRating from './SelectRating.vue';
 import rating from '@/modules/rating.js';
 import { useUserStore } from '@/stores/userStore';
@@ -66,13 +71,13 @@ const props = defineProps({
   dialog: Boolean,
   recipe: {
     type: Object,
-    default: () => ({ name: '', desc: '', time: '', ingredients: [], categories: [], rating: [] }),
+    default: () => ({ name: '', desc: '', time: '', ingredients: [], categories: [], steps: [], rating: [] }),
   },
 });
 
 let state = reactive({
   dialog: props.dialog,
-  recipe: props.recipe || { name: '', desc: '', time: '', ingredients: [], categories: [], rating: [] },
+  recipe: props.recipe || { name: '', desc: '', time: '', ingredients: [], categories: [],  steps: [], rating: [] },
 });
 const valid = ref(false);
 const tab = ref('general');
@@ -95,6 +100,9 @@ watch(() => props.recipe, (value) => {
   if (state.recipe.rating[userStore.account] === undefined) {
     state.recipe.rating[userStore.account] = 0;
   }
+  if (state.recipe.steps === undefined) {
+    state.recipe.steps = [];
+  }
 });
 
 watch(() => state.dialog, (value) => {
@@ -103,6 +111,7 @@ watch(() => state.dialog, (value) => {
 });
 
 const numCategories = computed(() => state.recipe.categories.length);
+const numSteps = computed(() => state.recipe.steps.length);
 
 const emit = defineEmits(['update:dialog', 'submit']);
 

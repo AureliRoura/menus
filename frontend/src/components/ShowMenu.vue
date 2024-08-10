@@ -20,7 +20,9 @@
               <h3>Ingredients:</h3>
               <v-list density="compact" class="text-justify">
                 <v-list-item v-for="(value, key) in dish.ingredients" :key="key">
-                  {{ key + ': ' + value.name + ' - ' + value.quantity + ' ' + value.unit }}
+                  {{ key + 1 + ': ' + value.name + ' - ' }}
+                  <span v-if="value.quantity > 0"> {{ value.quantity + ' ' }}</span>
+                  <span> {{ value.unit }} </span>
                 </v-list-item>
               </v-list>
             </div>

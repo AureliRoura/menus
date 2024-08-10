@@ -1,0 +1,111 @@
+<template>
+  <v-card>
+    <v-card-title>Passos</v-card-title>
+    <v-card-text>
+      <v-row>
+        <v-col cols="12">
+          <v-textarea v-model="newStep" label="Pas" required></v-textarea>
+        </v-col>
+        <v-col cols="12">
+          <v-chip @click="addStep" :disabled="!valid" color="primary">Add Step</v-chip>
+        </v-col>
+      </v-row>
+      <v-list class="list-container flex-grow-1">
+        <v-list-item v-for="(step, index) in steps" :key="index" density="compact">
+          <div class="d-flex justify-space-between">
+            <template v-if="editIndex === index">
+              <v-row>
+                <v-col cols="12" md="9">
+                  <v-textarea v-model="editedStep" label="Edita Pas" dense></v-textarea>
+                </v-col>
+                <v-col cols="12" md="3">
+                  <v-chip @click="cancelEdit" color="red" class="ml-2">Cancel</v-chip>
+                  <v-chip @click="saveStep(index)" color="primary" class="ml-2">Save</v-chip>
+                </v-col>
+              </v-row>
+            </template>
+            <template v-else>
+              {{ index + 1 }}. {{ step }}
+              <v-list-item-action>
+                <v-icon color="blue" @click="editStep(index, step)">mdi-pencil</v-icon>
+                <v-icon color="red" @click="removeStep(index)" class="ml-4">mdi-delete</v-icon>
+              </v-list-item-action>
+            </template>
+          </div>
+        </v-list-item>
+      </v-list>
+    </v-card-text>
+  </v-card>
+</template>
+
+<script setup>
+import { ref, reactive, watch, computed, toRef } from 'vue';
+import { useCategoriesStore } from '@/stores/categoriesStore';
+import { addMessage } from '@/modules/arrMessage';
+
+const categoriesStore = useCategoriesStore();
+
+const props = defineProps({
+  steps: Array
+});
+
+let steps = toRef(props, 'steps');
+
+//let valid = ref(false);
+let newStep = ref('');
+const editIndex = ref(-1);
+let editedStep = ref('');
+
+const emit = defineEmits(['update:steps']);
+
+watch(() => steps, (newVal) => {
+  emit('update:steps', newVal);
+});
+
+let valid = computed(() => {
+  // verifty if the step is not empty
+  return newStep.value !== '';
+});
+
+let newStepbutton = ref(true);
+
+const addStep = () => {
+  // add the step to the list
+  steps.value.push(newStep.value);
+  newStep.value = '';
+  addMessage('Pas afegit');
+};
+
+const removeStep = (index) => {
+  // remove the step from the list
+  steps.value.splice(index, 1);
+  addMessage('Pas eliminat');
+};
+
+const editStep = (index, step) => {
+  editIndex.value = index;
+  editedStep.value = step;
+};
+
+const saveStep = (index) => {
+  if (editIndex.value !== -1) {
+    steps.value[index] = editedStep.value;
+    addMessage('Pas editat');
+    editIndex.value = -1;
+    editedStep.value = '';
+  }
+};
+
+const cancelEdit = () => {
+  editIndex.value = -1;
+  editedStep.value = '';
+};
+
+</script>
+
+<style scoped>
+.list-container {
+  overflow-y: auto;
+  /* Add a vertical scrollbar */
+}
+</style>

@@ -21,6 +21,7 @@ interface IRecipe {
   desc?: string;
   ingredients?: IIngredientList[];
   category?: ICategories[];
+  steps?: string[];
   time?: string;
   rating?: {};
   recipes_id?: string[];

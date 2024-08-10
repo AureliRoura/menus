@@ -1,4 +1,11 @@
 <template>
+      <v-progress-linear
+        :active="working"
+        :indeterminate="working"
+        color="deep-orange"
+        absolute
+        bottom
+      ></v-progress-linear>
   <v-list>
     <!-- Camp de filtre -->
     <v-text-field v-model="filter" label="Filtrar Menús" outlined dense></v-text-field>
@@ -48,6 +55,7 @@ const router = useRouter();
 const menusStore = useMenusStore();
 const confirmMessage = inject('confirmMessage');
 const menusWeek = ref([]);
+const working = ref(false);
 
 
 menusWeek.value = menusStore.menus;
@@ -114,6 +122,7 @@ const createMenu = (formData) => {
 };
 
 const selectMenu = (menu) => {
+  working.value = true;
   operation = 'edit';
   selectedMenu.value = menu;
   menus.getMenu(selectedMenu.value._id)
