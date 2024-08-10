@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref, computed, defineProps, watch, defineEmits } from 'vue';
+import { ref, computed, watch } from 'vue';
 import aggregateIngredients from '@/modules/aggregateIngredients';
 // Props
 const props = defineProps({
