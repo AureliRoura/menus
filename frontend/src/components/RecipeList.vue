@@ -7,7 +7,7 @@
         <v-col cols="12" md="6">
           <v-autocomplete v-model="selectedIngredients" :items="ingredientsList" item-title="name"
             label="Filtrar per Ingredients" multiple clearable chips closable-chips return-object
-            @update:model-value="closeDropdown" ref="autoCompleteRef">
+            @update:model-value="closeDropdownIngredient" ref="autoCompleteRefIngredient">
             <template v-slot:chip="{ props, item }">
               <v-chip v-bind="props" :text="item.raw.name"></v-chip>
             </template>
@@ -19,7 +19,7 @@
         <v-col cols="12" md="6">
           <v-autocomplete v-model="selectedCategory" :items="categoriesList" item-title="name" item-value="_id"
             label="Filtrar per Categories" multiple clearable chips closable-chips return-object
-            @update:model-value="closeDropdown" ref="autoCompleteRef">
+            @update:model-value="closeDropdownCategory" ref="autoCompleteRefCategory">
             <template v-slot:chip="{ props, item }">
               <v-chip v-bind="props" :text="item.raw.value"></v-chip>
             </template>
@@ -78,7 +78,8 @@ const recipesStore = useRecipesStore();
 const userStore = useUserStore();
 
 const confirmMessage = inject('confirmMessage');
-const autoCompleteRef = ref(null);
+const autoCompleteRefIngredient = ref(null);
+const autoCompleteRefCategory = ref(null);
 const recipesList = ref([]);
 recipesList.value = recipesStore.recipes;
 const selectedIngredients = ref([]);
@@ -240,17 +241,27 @@ const addRecipe = () => {
   //console.log('addRecipe');
 };
 
-const closeDropdown = () => {
+const closeDropdownIngredient = () => {
 
   nextTick(() => {
-    if (autoCompleteRef.value) {
-      autoCompleteRef.value.blur();
+    if (autoCompleteRefIngredient.value) {
+      autoCompleteRefIngredient.value.blur();
 
     }
   });
 
 };
 
+const closeDropdownCategory = () => {
+
+nextTick(() => {
+  if (autoCompleteRefCategory.value) {
+    autoCompleteRefCategory.value.blur();
+
+  }
+});
+
+};
 const updateRating = (newRating, recipeId) => {
   const aux = `rating.${userStore.account}`;
   arrxios.put(`/api/recipes/${recipeId}`, { [aux]: newRating })
