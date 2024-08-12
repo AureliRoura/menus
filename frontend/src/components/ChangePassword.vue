@@ -99,17 +99,17 @@ onMounted(async () => {
       router.push('/login');
       return;
     }
-    const response = await arrxios.get(`/api/usuaris/${userStore.account}`)
+    const response = await arrxios.get(`/api/users/${userStore.account}`)
       .then((response) => {
         user = response.data;
       })
       .catch((error) => {
-        addMessage("Error recuperant informació d'usuar", 'error');
+        addMessage("Error recuperant informació d'usuari", 'error');
       });
 
   } catch (error) {
     console.error(error);
-    addMessage("Error recuperant informació d'usuar", 'error');
+    addMessage("Error recuperant informació d'usuari", 'error');
 
   }
 });
