@@ -1,5 +1,5 @@
 <template>
-  <div id="main-window" >
+  <div id="main-window" class="fill-height">
       <MainMenu />
       <arr-message />
       <arr-confirm />

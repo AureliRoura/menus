@@ -53,7 +53,7 @@ const textAreaRows = computed(() => {
   const baseHeight = 480; // Base screen height for minimum row count
   const rowHeight = 24; // Approximate height per text area row
   const additionalRows = Math.max(0, Math.floor((screenHeight.value - baseHeight) / rowHeight));
-  return 5 + additionalRows; // Start with a base of 5 rows and add additional rows based on screen height
+  return 4 + additionalRows; // Start with a base of 4 rows and add additional rows based on screen height
 });
 
 

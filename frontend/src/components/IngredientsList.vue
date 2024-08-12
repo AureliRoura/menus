@@ -11,7 +11,7 @@
             </v-list-item-action>
           </div>
         </v-list-item>
-        <div style="max-height: calc(100vh - 280px); overflow-y: auto;">
+        <div style="max-height: calc(100vh - 300px); overflow-y: auto;" class="fill-height">
           <v-list-item v-for="(ingredient, index) in ingredientsFiltered" :key="ingredient._id" @mouseover="hover = index"
             @mouseleave="hover = null" :class="hover === index ? 'bg-blue-grey-darken-1' : ''" rounded>
             <div class="d-flex justify-space-between">
