@@ -24,6 +24,11 @@ const router = createRouter({
       component: () => import('../views/EditCategoriesToRecipeView.vue')
     },
     {
+      path: '/editingredientstorecipe',
+      name: 'Edita Ingredients de Receptes',
+      component: () => import('../views/EditIngredientsToRecipeView.vue')
+    },
+    {
       path: '/menuweek/:menuId',
       name: 'Menu Setmanal',
       component: () => import('../components/ShowWeek.vue')

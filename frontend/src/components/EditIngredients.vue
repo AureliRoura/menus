@@ -4,13 +4,18 @@
     <v-card-text>
       <v-row>
         <v-col cols="12" sm="6" md="4">
-          <v-autocomplete v-model="newIngredient._id" :items="globalIngredients" item-title="name" item-value="_id"
-            label="Ingredient" auto-select-first required @input="selectIngredientsButton"
-            @update:search="updateSearchInput" style="min-width: 200px;">
+          <v-autocomplete ref="refIngredient" v-model="newIngredient._id" :items="filteredIngredients" item-title="name"
+            item-value="_id" label="Ingredient" auto-select-first required @update:search="updateSearchInput"
+            style="min-width: 200px;">
+            <template v-slot:append-inner>
+              <v-chip @click="appendButton" :disabled="!isEmptyList">
+                <v-icon style="font-size: 12px;">mdi-plus</v-icon>
+              </v-chip>
+            </template>
           </v-autocomplete>
         </v-col>
         <v-col cols="12" sm="3" md="3">
-          <v-text-field v-model="newIngredient.quantity" label="Cuantitat" type="number" required @change="fixDecimals"
+          <v-text-field v-model="newIngredient.quantity" label="Quantitat" type="number" required @change="fixDecimals"
             style="min-width: 100px;"></v-text-field>
         </v-col>
         <v-col cols="12" sm="3" md="3">
@@ -19,10 +24,7 @@
             @keyup.enter="addIngredient"></v-autocomplete>
         </v-col>
         <v-col cols="12" sm="12" md="2" style="min-width: 100px;" class="d-flex align-self-center mb-3">
-          <v-chip @click="addIngredient" color="primary" :disabled="!valid"  class="mr-3">Add</v-chip>
-          <v-chip color="primary" @click="addGlobalIngredient" :disabled="!newIngredientbutton" >
-            <v-icon>mdi-plus</v-icon>
-          </v-chip>
+          <v-chip @click="addIngredient" color="primary" :disabled="!valid" class="mr-3">Add</v-chip>
         </v-col>
       </v-row>
 
@@ -41,13 +43,12 @@
   </v-card>
   <edit-ingredient v-model:dialog="dialog" :ingredient="selectedIngredient" @submit="handleFormSubmit">
   </edit-ingredient>
-
 </template>
 
 <script setup>
 
 
-import { ref, reactive, watch, computed, toRef } from 'vue';
+import { ref, reactive, watch, computed, toRef, nextTick } from 'vue';
 import { useIngredientsStore } from '@/stores/ingredientsStore';
 import { useUnitsStore } from '@/stores/unitsStore';
 
@@ -55,29 +56,22 @@ import EditIngredient from './EditIngredient.vue';
 import { addMessage } from '@/modules/arrMessage';
 import apiIngredients from '@/modules/apiIngredients';
 
-
-
 const props = defineProps({
   ingredients: Array
 });
 
 let ingredients = toRef(props, 'ingredients');
 
-
-
-//let valid = ref(false);
 let newIngredient = reactive({ _id: '', name: '', quantity: '', unit: '' });
 const selectedIngredient = ref(null);
 const searchInput = ref('');
 const dialog = ref(false);
+const refIngredient = ref(null);
 let operation = '';
 
 const unitsStore = useUnitsStore();
 
 let units = unitsStore.units;
-
-//let units = [{ unit: 'grams' }, { unit: 'liters' }, { unit: 'pieces' }];
-//let units = ['grams', 'liters', 'pieces'];
 
 const emit = defineEmits(['update:ingredients']);
 
@@ -85,26 +79,38 @@ watch(() => ingredients.value, (newIngredients) => {
   emit('update:ingredients', newIngredients);
 });
 
-
 let valid = computed(() => {
   //search if ingredient exists in Ingredients
 
   return Object.values(newIngredient).every(value => value !== '');
 });
 
-let newIngredientbutton = ref(true);
-
 const ingredientsStore = useIngredientsStore();
 let globalIngredients = ingredientsStore.ingredients;
+
+
+
+const filteredIngredients = computed(() => {
+  return globalIngredients.filter(ingredient =>
+    ingredient.name.toLowerCase().includes((searchInput.value || '').toLowerCase())
+  );
+});
+
+const isEmptyList = computed(() => {
+  return filteredIngredients.value.length === 0;
+});
 
 
 watch(() => newIngredient._id, (newId) => {
   const ingredient = ingredientsStore.searchById(newId)[0];
   newIngredient.name = ingredient ? ingredient.name : '';
-  newIngredientbutton.value = false;
 });
 
-
+const appendButton = () => {
+  operation = 'add';
+  selectedIngredient.value = { _id: '', name: searchInput.value, alergenics: [] };
+  dialog.value = true;
+};
 
 const fixDecimals = () => {
   let quantity = parseFloat(newIngredient.quantity);
@@ -113,24 +119,6 @@ const fixDecimals = () => {
   }
 };
 
-const selectIngredientsButton = (value) => {
-  if (value.target.value === '') {
-    newIngredientbutton.value = true;
-  } else {
-    if (ingredientsStore.searchByIngredient(value.target.value).length === 0) {
-      newIngredientbutton.value = true;
-    } else {
-      newIngredientbutton.value = false;
-    }
-  }
-  return true;
-}
-
-const addGlobalIngredient = () => {
-  operation = 'add';
-  selectedIngredient.value = { _id: '', name: searchInput.value, alergenics: [] };
-  dialog.value = true;
-};
 
 const handleFormSubmit = (formData) => {
   const api = apiIngredients();
@@ -142,9 +130,13 @@ const handleFormSubmit = (formData) => {
     }
     api.addIngredient(formData)
       .then(updatedIngredient => {
-        console.log('Ingredient added successfully:', updatedIngredient);
         ingredientsStore.addIngredient(formData)
         addMessage('Ingredient afegit');
+        newIngredient._id = updatedIngredient._id;
+        newIngredient.name = updatedIngredient.name;
+        nextTick(() => {
+          refIngredient.value.focus();
+        });
       })
       .catch(error => {
         console.error('Error adding ingredient:', error);
@@ -152,7 +144,7 @@ const handleFormSubmit = (formData) => {
   } else {
     api.updateIngredient(formData)
       .then(updatedIngredient => {
-        console.log('Ingredient updated successfully:', updatedIngredient);
+//        console.log('Ingredient updated successfully:', updatedIngredient);
         ingredientsStore.updateIngredient(formData);
         addMessage('Ingredient actualitzat');
       })
