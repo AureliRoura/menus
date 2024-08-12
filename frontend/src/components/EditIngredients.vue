@@ -8,8 +8,9 @@
             item-value="_id" label="Ingredient" auto-select-first required @update:search="updateSearchInput"
             style="min-width: 200px;">
             <template v-slot:append-inner>
-              <v-chip @click="appendButton" :disabled="!isEmptyList">
+              <v-chip v-if="isEmptyList" @click="appendButton" :disabled="!isEmptyList" >
                 <v-icon style="font-size: 12px;">mdi-plus</v-icon>
+                <v-tooltip activator="parent">Crear ingredient</v-tooltip>
               </v-chip>
             </template>
           </v-autocomplete>
@@ -109,6 +110,9 @@ watch(() => newIngredient._id, (newId) => {
 const appendButton = () => {
   operation = 'add';
   selectedIngredient.value = { _id: '', name: searchInput.value, alergenics: [] };
+  if (refIngredient.value)  {
+    refIngredient.value.blur();
+  }
   dialog.value = true;
 };
 
