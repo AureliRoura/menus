@@ -246,7 +246,6 @@ const closeDropdownIngredient = () => {
   nextTick(() => {
     if (autoCompleteRefIngredient.value) {
       autoCompleteRefIngredient.value.blur();
-
     }
   });
 
@@ -257,7 +256,6 @@ const closeDropdownCategory = () => {
 nextTick(() => {
   if (autoCompleteRefCategory.value) {
     autoCompleteRefCategory.value.blur();
-
   }
 });
 
