@@ -65,8 +65,8 @@ app.use('/api', recipesRouter);
 import { menusRouter } from './routes/menus';
 app.use('/api', menusRouter);
 
-import { alergenicsRouter } from './routes/alergenics';
-app.use('/api', alergenicsRouter);
+import { allergenicsRouter } from './routes/allergenics';
+app.use('/api', allergenicsRouter);
 
 import { categoriesRouter } from './routes/categories';
 app.use('/api', categoriesRouter);

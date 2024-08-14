@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 interface IIngredient {
   _id?: string;
   name: string;
-  alergenics: string[];
+  allergenics: string[];
 }
 
 class Ingredient {

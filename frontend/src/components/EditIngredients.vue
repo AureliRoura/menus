@@ -109,7 +109,7 @@ watch(() => newIngredient._id, (newId) => {
 
 const appendButton = () => {
   operation = 'add';
-  selectedIngredient.value = { _id: '', name: searchInput.value, alergenics: [] };
+  selectedIngredient.value = { _id: '', name: searchInput.value, allergenics: [] };
   if (refIngredient.value)  {
     refIngredient.value.blur();
   }

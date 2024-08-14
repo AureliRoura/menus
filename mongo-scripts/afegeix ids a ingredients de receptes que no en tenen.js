@@ -18,7 +18,7 @@ db.recipes.find().forEach(recipe => {
         db.ingredients.insertOne({
           _id: newIngredientId,
           name: ingredient.name,
-          alergenics: []
+          allergenics: []
         });
 
         // Asignar el nuevo _id al ingrediente en la receta

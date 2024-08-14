@@ -5,7 +5,7 @@
       <v-card-text>
         <v-form ref="form" v-model="valid" @submit.prevent="submit">
           <v-text-field v-model="state.ingredient.name" label="Name" required></v-text-field>
-          <v-select v-model="selectedAlergenicsModel" :items="alergenics" item-value="_id" item-title="name"
+          <v-select v-model="selectedAlergenicsModel" :items="allergenics" item-value="_id" item-title="name"
             label="Alergenics" multiple clearable chips return-object/>
         </v-form>
       </v-card-text>
@@ -20,10 +20,10 @@
 
 <script setup>
 import { ref, reactive, watch, computed } from 'vue';
-import { useAlergenicsStore } from '@/stores/alergenicsStore';
+import { useAlergenicsStore } from '@/stores/allergenicsStore';
 
-const alergenicsStore = useAlergenicsStore();
-const alergenics = alergenicsStore.alergenics;
+const allergenicsStore = useAlergenicsStore();
+const allergenics = allergenicsStore.allergenics;
 
 
 
@@ -31,7 +31,7 @@ const props = defineProps({
   dialog: Boolean,
   ingredient: {
     type: Object,
-    default: () => ({ _id: '', name: '', alergenics: [] }),
+    default: () => ({ _id: '', name: '', allergenics: [] }),
   },
 });
 
@@ -49,17 +49,17 @@ const selectedAlergenicsModel = computed({
       name: item.name
     }));
     // Update the state or emit an event as necessary
-    //state.ingredient.alergenics = selectedAlergenics.value;
+    //state.ingredient.allergenics = selectedAlergenics.value;
   }
 });
 
-// Watch for changes in props.ingredient.alergenics and update selectedAlergenics accordingly
+// Watch for changes in props.ingredient.allergenics and update selectedAlergenics accordingly
 watch (() => props.ingredient, (newVal) => {
-  if (!newVal.alergenics) {
+  if (!newVal.allergenics) {
     selectedAlergenics.value = [];
     return;
   }
-  selectedAlergenics.value = newVal.alergenics.map(item => ({
+  selectedAlergenics.value = newVal.allergenics.map(item => ({
     _id: item._id,
     name: item.name
   }));
@@ -67,7 +67,7 @@ watch (() => props.ingredient, (newVal) => {
 
 let state = reactive({
   dialog: props.dialog,
-  ingredient: props.ingredient || { _id: '', name: '', alergenics: [] },
+  ingredient: props.ingredient || { _id: '', name: '', allergenics: [] },
 });
 let valid = ref(false);
 
@@ -89,7 +89,7 @@ const emit = defineEmits(['update:dialog', 'submit']);
 
 const submit = () => {
   if (valid.value) {
-    state.ingredient.alergenics = selectedAlergenics.value;
+    state.ingredient.allergenics = selectedAlergenics.value;
     emit('submit', state.ingredient);
     emit('update:dialog', false);
     

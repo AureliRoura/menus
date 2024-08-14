@@ -5,17 +5,17 @@ import { basicAuthMiddleware } from '../lib/basicauth';
 
 
 
-export const alergenicsRouter = Router();
+export const allergenicsRouter = Router();
 
-alergenicsRouter.get('/alergenics',  basicAuthMiddleware, async (req: Request, res: Response) => {
+allergenicsRouter.get('/allergenics',  basicAuthMiddleware, async (req: Request, res: Response) => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
-        const alergenics = await db.getAlergenics(); 
-        res.json(alergenics);
+        const allergenics = await db.getAlergenics(); 
+        res.json(allergenics);
     } catch (error) {
         console.error('Error en recuperar Alergenics:', error);
         res.status(500).json({ error: 'Error en recuperar Alergenics.' });
     }
 });
 
-export default alergenicsRouter;
+export default allergenicsRouter;

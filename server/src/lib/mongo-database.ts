@@ -8,7 +8,7 @@ import { IIngredient } from './ingredients';
 import { IUnit } from './units';
 import { IRecipe, ICategories } from './recipes';
 import { IMenu } from './menus';
-import { IAlergenic } from './alergenics';
+import { IAlergenic } from './allergenics';
 
 
 type MealType = 'lunch' | 'dinner';
@@ -23,7 +23,7 @@ export class MongoDatabase {
   private unitsCollection?: Collection<IUnit>;
   private recipesCollection?: Collection<IRecipe>;
   private menusCollection?: Collection<IMenu>;
-  private alergenicsCollection?: Collection<IAlergenic>;
+  private allergenicsCollection?: Collection<IAlergenic>;
 
   constructor(mongoURI: string) {
     this.client = new MongoClient(mongoURI);
@@ -58,7 +58,7 @@ export class MongoDatabase {
       this.unitsCollection = this.db.collection('units');
       this.recipesCollection = this.db.collection('recipes');
       this.menusCollection = this.db.collection('menus');
-      this.alergenicsCollection = this.db.collection('alergenics');
+      this.allergenicsCollection = this.db.collection('allergenics');
       console.log('Connected to database');
     } catch (error) {
       console.error('Error connecting to database:', error);
@@ -255,24 +255,24 @@ export class MongoDatabase {
     return result.deletedCount === 1;
   }
 
-  async checkAlergenics(_id: string | ObjectId, alergenics: string[]): Promise<boolean> {
+  async checkAlergenics(_id: string | ObjectId, allergenics: string[]): Promise<boolean> {
     if (!this.ingredientsCollection) {
       throw new Error('Database not connected');
     }
     const ingredient = await this.ingredientsCollection.findOne({ _id: new ObjectId(_id) as any });
-    return ingredient ? ingredient.alergenics === alergenics : false;
+    return ingredient ? ingredient.allergenics === allergenics : false;
   }
 
-  async updateAlergenics(_id: string | ObjectId, alergenics: string[]): Promise<boolean> {
+  async updateAlergenics(_id: string | ObjectId, allergenics: string[]): Promise<boolean> {
     if (!this.ingredientsCollection) {
       throw new Error('Database not connected');
     }
     const result = await this.ingredientsCollection.findOneAndUpdate(
       { _id: new ObjectId(_id) as any },
-      { $set: { alergenics } },
+      { $set: { allergenics } },
       { returnDocument: 'after' }
     );
-    return result ? result.alergenics === alergenics : false;
+    return result ? result.allergenics === allergenics : false;
   }
 
   async deleteAlergenics(_id: string): Promise<boolean> {
@@ -281,10 +281,10 @@ export class MongoDatabase {
     }
     const result = await this.ingredientsCollection.findOneAndUpdate(
       { id: new ObjectId(_id) as any },
-      { $unset: { alergenics: '' } },
+      { $unset: { allergenics: '' } },
       { returnDocument: 'after' }
     );
-    return result ? result.alergenics === undefined : false;
+    return result ? result.allergenics === undefined : false;
   }
 
   async getUnits(): Promise<IUnit[]> {
@@ -559,10 +559,10 @@ export class MongoDatabase {
   }
 
   async getAlergenics(): Promise<IAlergenic[]> {
-    if (!this.alergenicsCollection) {
+    if (!this.allergenicsCollection) {
       throw new Error('Database not connected');
     }
-    return this.alergenicsCollection.find().toArray();
+    return this.allergenicsCollection.find().toArray();
   }
 
   async getMenus(): Promise<IMenu[]> {

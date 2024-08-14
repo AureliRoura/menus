@@ -1,36 +1,36 @@
 import { defineStore } from 'pinia'
 import { reactive, computed } from 'vue';
 
-export const useAlergenicsStore = defineStore('alergenics', () => {
+export const useAlergenicsStore = defineStore('allergenics', () => {
   const state = reactive({
-    alergenics: [],
+    allergenics: [],
   });
 
   const clear = () => {
-    state.alergenics = [];
+    state.allergenics = [];
   };
 
   const addAlergenic = (alergenic) => {
-    state.alergenics.push(alergenic);
+    state.allergenics.push(alergenic);
   };
 
   const removeAlergenic = (index) => {
-    state.alergenics.splice(index, 1);
+    state.allergenics.splice(index, 1);
   };
 
   const updateAlergenic = (index, updatedalergenic) => {
-    state.alergenics[index] = updatedalergenic;
+    state.allergenics[index] = updatedalergenic;
   };
 
   const searchByName = (searchTerm) => {
-    return state.alergenics.filter(alergenic => alergenic.name.toLowerCase() === searchTerm.toLowerCase());
+    return state.allergenics.filter(alergenic => alergenic.name.toLowerCase() === searchTerm.toLowerCase());
   };
 
   const searchById = (searchTerm) => {
-    return state.alergenics.filter(alergenic => alergenic.id === searchTerm);
+    return state.allergenics.filter(alergenic => alergenic.id === searchTerm);
   };
 
-  const alergenics = computed(() => state.alergenics)
+  const allergenics = computed(() => state.allergenics)
 
   return {
     clear,
@@ -39,6 +39,6 @@ export const useAlergenicsStore = defineStore('alergenics', () => {
     updateAlergenic,
     searchById,
     searchByName,
-    alergenics,
+    allergenics,
   };
 });

@@ -3,7 +3,7 @@ import { useCategoriesStore } from "@/stores/categoriesStore";
 import { useUnitsStore } from "@/stores/unitsStore";
 import { useRecipesStore } from "@/stores/recipesStore";
 import { useMenusStore } from "@/stores/menusStore";
-import { useAlergenicsStore } from "@/stores/alergenicsStore";
+import { useAlergenicsStore } from "@/stores/allergenicsStore";
 import arrxios from './arrxios';
 
 export const loadIngredients = async () => {
@@ -49,12 +49,12 @@ export const loadUints = async () => {
 };
 
 export const loadAlergenics = async () => {
-  const alergenicsStore = useAlergenicsStore();
-  alergenicsStore.clear();
-  arrxios.get('/api/alergenics')
+  const allergenicsStore = useAlergenicsStore();
+  allergenicsStore.clear();
+  arrxios.get('/api/allergenics')
     .then(response => {
       for (const alergenic of response.data) {
-        alergenicsStore.addAlergenic(alergenic);
+        allergenicsStore.addAlergenic(alergenic);
       }
     })
     .catch(error => {
