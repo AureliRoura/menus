@@ -39,9 +39,9 @@ export const useIngredientsStore = defineStore('ingredients', () => {
   return state.ingredients.findIndex(ingredient => ingredient._id === searchTerm);
 };
 
-  const getAllergens = (_id) => {
+  const getAllergenics = (_id) => {
     const ingredient = state.ingredients.find(ingredient => ingredient._id === _id);
-    return ingredient ? ingredient.allergens : [];
+    return ingredient ? ingredient.allergenics : [];
   };
 
   return {
@@ -52,7 +52,7 @@ export const useIngredientsStore = defineStore('ingredients', () => {
     updateIngredient,
     searchByIngredient,
     searchById,
-    getAllergens,
+    getAllergenics: getAllergenics,
     getIndexById,
   };
 });

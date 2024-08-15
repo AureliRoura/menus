@@ -20,9 +20,9 @@
 
 <script setup>
 import { ref, reactive, watch, computed } from 'vue';
-import { useAlergenicsStore } from '@/stores/allergenicsStore';
+import { useAllergenicsStore } from '@/stores/allergenicsStore';
 
-const allergenicsStore = useAlergenicsStore();
+const allergenicsStore = useAllergenicsStore();
 const allergenics = allergenicsStore.allergenics;
 
 

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { reactive, computed } from 'vue';
 
-export const useAlergenicsStore = defineStore('allergenics', () => {
+export const useAllergenicsStore = defineStore('allergenics', () => {
   const state = reactive({
     allergenics: [],
   });
@@ -27,7 +27,7 @@ export const useAlergenicsStore = defineStore('allergenics', () => {
   };
 
   const searchById = (searchTerm) => {
-    return state.allergenics.filter(alergenic => alergenic.id === searchTerm);
+    return state.allergenics.filter(alergenic => alergenic._id === searchTerm);
   };
 
   const allergenics = computed(() => state.allergenics)
