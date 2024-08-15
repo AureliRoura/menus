@@ -5,8 +5,8 @@
       <v-card-text>
         <v-form ref="form" v-model="valid" @submit.prevent="submit">
           <v-text-field v-model="state.ingredient.name" label="Name" required></v-text-field>
-          <v-select v-model="selectedAlergenicsModel" :items="allergenics" item-value="_id" item-title="name"
-            label="Alergenics" multiple clearable chips return-object/>
+          <v-autocomplete ref="autoCompleteRefAllergenic" v-model="selectedAlergenicsModel" :items="allergenics" item-value="_id" item-title="name"
+            label="Alergenics" @update:model-value="closeDropdownAllergenic" multiple clearable chips closable-chips return-object />
         </v-form>
       </v-card-text>
       <v-card-actions class="absolute bottom-0 w-full justify-end">
@@ -19,12 +19,12 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed } from 'vue';
+import { ref, reactive, watch, computed, nextTick } from 'vue';
 import { useAllergenicsStore } from '@/stores/allergenicsStore';
 
 const allergenicsStore = useAllergenicsStore();
 const allergenics = allergenicsStore.allergenics;
-
+const autoCompleteRefAllergenic = ref(null);
 
 
 const props = defineProps({
@@ -83,7 +83,15 @@ watch(() => state.dialog, (value) => {
   emit('update:dialog', value);
 });
 
+const closeDropdownAllergenic = () => {
 
+nextTick(() => {
+  if (autoCompleteRefAllergenic.value) {
+    autoCompleteRefAllergenic.value.blur();
+  }
+});
+
+};
 
 const emit = defineEmits(['update:dialog', 'submit']);
 
