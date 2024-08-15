@@ -7,7 +7,9 @@
             <td>{{ recipe.name }}</td>
             <span v-if="allergenics.length" class="allergenics-container">
               <div v-for="(allergenic, index) in allergenics" :key="index" class="symbol-text">
+                <div  style="min-width: 30px;">
                   {{ allergenic.symbol }}
+                </div>
                   <v-tooltip bottom activator="parent">
                     <div class="bg-primary">
                       {{ allergenic.name }}
@@ -101,7 +103,7 @@ const allergenics = computed(() => {
 .allergenics-container {
   display: flex;
   flex-wrap: wrap;
-  min-width: 35px; /* Adjust the width as needed */
+
 }
 
 .symbol-text {
