@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title>Edit Ingredient</v-card-title>
       <v-card-text>
-        <v-form ref="form" v-model="valid" @submit.prevent="submit">
+        <v-form  v-model="valid" @submit.prevent="submit">
           <v-text-field v-model="state.ingredient.name" label="Name" required></v-text-field>
           <v-autocomplete ref="autoCompleteRefAllergenic" v-model="selectedAlergenicsModel" :items="allergenics" item-value="_id" item-title="name"
             label="Alergenics" @update:model-value="closeDropdownAllergenic" multiple clearable chips closable-chips return-object />
