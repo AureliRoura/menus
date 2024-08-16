@@ -4,7 +4,7 @@
       <v-table>
         <tbody>
           <tr class="bg-grey text-black d-flex">
-            <td>{{ recipe.name }}</td>
+            {{ recipe.name }}
             <span v-if="allergenics.length" class="allergenics-container">
               <div v-for="(allergenic, index) in allergenics" :key="index" class="symbol-text">
                 <div  style="min-width: 30px;">
