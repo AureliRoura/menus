@@ -4,17 +4,19 @@
       <v-table>
         <tbody>
           <tr class="bg-grey text-black d-flex">
-            {{ recipe.name }}
-            <span v-if="allergenics.length" class="allergenics-container">
+            <div class="ml-1">
+              {{ recipe.name }}
+            </div>
+            <span v-if="allergenics.length" class="allergenics-container mr-1">
               <div v-for="(allergenic, index) in allergenics" :key="index" class="symbol-text">
-                <div  style="min-width: 30px;">
+                <div style="min-width: 30px;">
                   {{ allergenic.symbol }}
                 </div>
-                  <v-tooltip bottom activator="parent">
-                    <div class="bg-primary">
-                      {{ allergenic.name }}
-                    </div>
-                  </v-tooltip>
+                <v-tooltip bottom activator="parent">
+                  <div class="bg-primary">
+                    {{ allergenic.name }}
+                  </div>
+                </v-tooltip>
               </div>
             </span>
           </tr>
@@ -103,7 +105,9 @@ const allergenics = computed(() => {
 .allergenics-container {
   display: flex;
   flex-wrap: wrap;
-
+  width: fit-content;
+  max-width: 30px;
+  justify-content: flex-end;
 }
 
 .symbol-text {
@@ -111,6 +115,7 @@ const allergenics = computed(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: normal;
-  width: 50%; /* Each item takes up 50% of the container width */
+  width: 50%;
+  /* Each item takes up 50% of the container width */
 }
 </style>
