@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="state.dialog">
+  <v-dialog v-model="state.dialog" >
     <v-card>
 
       <v-card-title>Recepta</v-card-title>
@@ -11,7 +11,7 @@
       <div class="content-container">
         <v-card-text>
 
-          <v-form ref="form" v-model="valid" @submit.prevent="submit">
+          <v-form v-model="valid" @submit.prevent="submit" :disabled="props.readonly">
             <v-tabs-window v-model="tab">
               <v-tabs-window-item value="general">
                 <v-row>
@@ -56,7 +56,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed } from 'vue';
+import { ref, reactive, watch, computed, readonly } from 'vue';
 import EditIngredients from './EditIngredients.vue';
 import EditCategories from './EditCategories.vue';
 import EditSteps from './EditSteps.vue';
@@ -72,6 +72,10 @@ const props = defineProps({
   recipe: {
     type: Object,
     default: () => ({ name: '', desc: '', time: '', ingredients: [], categories: [], steps: [], rating: [] }),
+  },
+  readonly: {
+    type: Boolean,
+    default: false,
   },
 });
 
