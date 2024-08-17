@@ -17,8 +17,10 @@ import { loadAllData } from './modules/loadData.js';
 
 console.log(import.meta.env.VITE_APP_TITLE);
 provide('confirmMessage', confirmMessage);
+
+const userStore = useUserStore();
+
 if (localStorage.getItem('MenuAccount') && localStorage.getItem('MenuAuthentication')) {
-  const userStore = useUserStore();
   userStore.setAccount(localStorage.getItem('MenuAccount'));
   userStore.setAuthentication(localStorage.getItem('MenuAuthentication'));
   arrxios.get('/api/checksession')
@@ -40,6 +42,7 @@ if (localStorage.getItem('MenuAccount') && localStorage.getItem('MenuAuthenticat
     });
 }
 
-onMounted(() => {
+ onMounted(() => {
   document});
+   
 </script>
