@@ -6,7 +6,7 @@
         <v-col cols="12" md="10">
           <v-textarea v-model="newStep" label="Pas" required></v-textarea>
         </v-col>
-        <v-col cols="12" md="2">
+        <v-col cols="12" md="2" ensity="compact">
           <v-chip @click="addStep" :disabled="!valid" color="primary">Afegir Pas</v-chip>
         </v-col>
       </v-row>
@@ -16,7 +16,7 @@
               <template v-if="editIndex === index">
                 <v-row>
                   <v-col cols="12" md="9">
-                    <v-textarea v-model="editedStep" label="Edita Pas" dense></v-textarea>
+                    <v-textarea v-model="editedStep" label="Edita Pas" density="compact"></v-textarea>
                   </v-col>
                   <v-col cols="12" md="3">
                     <v-chip @click="cancelEdit" color="red" class="ml-2">Cancel</v-chip>
