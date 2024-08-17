@@ -7,7 +7,7 @@
         absolute
         bottom
       ></v-progress-linear>
-    <v-form ref="form">
+    <v-form>
       <!-- File Input -->
       <v-file-input v-model="file" label="Upload file" prepend-icon="mdi-paperclip"></v-file-input>
 
