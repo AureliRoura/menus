@@ -111,7 +111,7 @@ const addIngredient = () => {
   const ingredient = reactive({
     _id: '',
     name: '',
-    allergenics: []
+    alergenics: []
   });
 
   selectedIngredient.value = ingredient;
