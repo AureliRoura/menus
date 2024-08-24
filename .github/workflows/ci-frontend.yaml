@@ -11,22 +11,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: change directory
-      run: cd ./frontend
-
-    - name: Set up vue
-      uses: actions/setup-vue
-      with:
-        vue-version: '3.x'
-
     - name: Install dependencies
       run: npm install
-
 
     - name: build
       run: npm run build
