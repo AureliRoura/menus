@@ -101,13 +101,13 @@ jobs:
       run: sleep 10
 
     - name: ping server
-      run: ping -c 5 10.8.0.1
+      run: ping -c 1 10.8.0.1
        
     - name: status of VPN
       run: sudo systemctl list-units --type=service | grep openvpn
 
-    - name: test VPN connection
-      run:  sudo grep openvpn /var/log/syslog
+    - name: ls server-dist
+      run: ls -l server-dist*
 
     - name: Upload via SFTP
       uses: wlixcc/SFTP-Deploy-Action@v1.2.4
