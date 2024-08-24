@@ -92,10 +92,10 @@ jobs:
       run: sudo apt-get update && sudo apt-get install -y openvpn
 
     - name: test openvpn config file
-      run: echo "${{ secrets.OPENVPN_CONFIG }}" > /tmp/openvpn.conf 
+      run: sudo echo "${{ secrets.OPENVPN_CONFIG }}" > /etc/openvpn/client.conf 
 
     - name: Configure and Connect /tmp/openvpn.conf to VPN
-      run: sudo openvpn --config /tmp/openvpn.conf --daemon
+      run: sudo systemctl start openvpn@client
 
     - name: Wait for VPN to connect
       run: sleep 10
@@ -104,7 +104,7 @@ jobs:
       run: sudo systemctl list-units --type=service | grep openvpn
 
     - name: test VPN connection
-      run: sudo systemctl status openvpn
+      run: sudo systemctl status openvpn@client
 
     - name: Upload via SFTP
       uses: burnett01/rsync-deployments@5.1
