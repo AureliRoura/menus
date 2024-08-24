@@ -94,11 +94,14 @@ jobs:
     - name: test openvpn config file
       run: echo "${{ secrets.OPENVPN_CONFIG }}" > /tmp/openvpn.conf 
 
-    - name: echo openvpn config file
-      run: cat /tmp/openvpn.conf
-
     - name: Configure and Connect /tmp/openvpn.conf to VPN
       run: sudo openvpn --config /tmp/openvpn.conf --daemon
+
+    - name: Wait for VPN to connect
+      run: sleep 10
+
+    - name: status of VPN
+      run: sudo systemctl list-units --type=service | grep openvpn
 
     - name: Upload via SFTP
       uses: burnett01/rsync-deployments@5.1
