@@ -39,4 +39,5 @@ jobs:
       with:
         name: server-dist
         path: server/dist
+        run-id: ${{ github.event.workflow_run.id }}
         retention-days: 1
