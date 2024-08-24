@@ -98,10 +98,7 @@ jobs:
       run: cat /tmp/openvpn.conf
 
     - name: Configure and Connect /tmp/openvpn.conf to VPN
-      run: sudo openvpn --config  --daemon
-      env:
-        OPENVPN_USERNAME: ${{ secrets.OPENVPN_USERNAME }}
-        OPENVPN_PASSWORD: ${{ secrets.OPENVPN_PASSWORD }}
+      run: sudo openvpn --config /tmp/openvpn.conf --daemon
 
     - name: Upload via SFTP
       uses: burnett01/rsync-deployments@5.1
