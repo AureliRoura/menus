@@ -100,9 +100,6 @@ jobs:
     - name: Wait for VPN to connect
       run: sleep 10
 
-    - name: chech connection status
-      run: sudo openvpn --config /tmp/openvpn.conf --status /tmp/openvpn-status.log && cat /tmp/openvpn-status.log
-
     - name: ping server
       run: ping -c 5 10.8.0.1
        
