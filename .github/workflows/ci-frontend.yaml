@@ -16,7 +16,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name change directory
+    - name: change directory
       run: cd ./frontend
 
     - name: Set up vue
