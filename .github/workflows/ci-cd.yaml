@@ -112,7 +112,7 @@ jobs:
     - name: Upload via SFTP
       uses: wlixcc/SFTP-Deploy-Action@v1.2.4
       with:
-        local_path: ./server-dist/
+        local_path: ./server-dist/*
         remote_path: ./server-dist/
         server: ${{ secrets.SFTP_HOST }}
         username: ${{ secrets.SFTP_USER }}
