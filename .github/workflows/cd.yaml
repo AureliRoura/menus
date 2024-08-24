@@ -14,10 +14,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Download server artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: server-dist
 
 
     - name: Download frontend artifact
