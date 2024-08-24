@@ -22,6 +22,9 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    - name: Audit for vulnerabilities
+      run: npm audit
+
     - name: build
       run: npm run build
 
@@ -77,14 +80,12 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: server-dist
-        run-id: ${{ github.event.workflow_run.id }}
 
 
     - name: Download frontend artifact
       uses: actions/download-artifact@v4
       with:
         name: frontend-dist
-        run-id: ${{ github.event.workflow_run.id }}
 
 
     - name: Install OpenVPN
