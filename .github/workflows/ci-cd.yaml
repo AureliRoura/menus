@@ -103,6 +103,9 @@ jobs:
     - name: status of VPN
       run: sudo systemctl list-units --type=service | grep openvpn
 
+    - name: test VPN connection
+      run: sudo systemctl status openvpn
+
     - name: Upload via SFTP
       uses: burnett01/rsync-deployments@5.1
       with:
