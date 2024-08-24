@@ -30,10 +30,10 @@ jobs:
     - name: Audit for vulnerabilities
       run: npm audit
 
-    - run build
+    - name: run build
       run: npm run build
 
-    name: change directory
+    - name: change directory
       run: cd ..
 
     - name: save dist folder as artifact
