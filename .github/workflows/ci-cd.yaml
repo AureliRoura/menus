@@ -91,12 +91,12 @@ jobs:
     - name: Install OpenVPN
       run: sudo apt-get update && sudo apt-get install -y openvpn
 
-    - name test openvpn config file
+    - name: test openvpn config file
       run: echo "${{ secrets.OPENVPN_CONFIG }}" > /tmp/openvpn.conf 
 
-    - name echo openvpn config file
+    - name: echo openvpn config file
       run: cat /tmp/openvpn.conf
-      
+
     - name: Configure and Connect /tmp/openvpn.conf to VPN
       run: sudo openvpn --config  --daemon
       env:
