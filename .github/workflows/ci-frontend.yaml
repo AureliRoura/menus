@@ -33,6 +33,5 @@ jobs:
       with:
         name: frontend-dist
         path: frontend/dist
-        run-id: ${{ github.event.workflow_run.id }}
         retention-days: 1
 
