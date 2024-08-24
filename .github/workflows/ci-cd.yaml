@@ -117,4 +117,4 @@ jobs:
         remote_path: ./server-dist/
         remote_host: ${{ secrets.SFTP_HOST }}
         remote_user: ${{ secrets.SFTP_USER }}
-        remote_key: ${{ secrets.SFTP_KEY }}
+        remote_password: ${{ secrets.SFTP_PASSWORD }}
