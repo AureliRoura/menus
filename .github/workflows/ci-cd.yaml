@@ -109,7 +109,7 @@ jobs:
       run: sudo systemctl list-units --type=service | grep openvpn
 
     - name: ls server-dist
-      run: ls -l server-dist*
+      run: ls -l /home/runner/work/menus/menus/server-dist
 
     - name: Upload via SFTP
       uses: wlixcc/SFTP-Deploy-Action@v1.2.4
