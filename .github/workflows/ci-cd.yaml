@@ -131,7 +131,6 @@ jobs:
         remote_key: ${{ secrets.SSH_KEY }}
 
     - name: send package.json server to temp folder via rsync
-      uses: actions/checkout@v3
       uses: burnett01/rsync-deployments@7.0.1
       with:
         switches: -avzr --delete
@@ -142,7 +141,6 @@ jobs:
         remote_key: ${{ secrets.SSH_KEY }}
 
     - name: send dist frontend to temp folder via rsync
-      uses: actions/checkout@v3
       uses: burnett01/rsync-deployments@7.0.1
       with:
         switches: -avzr --delete
