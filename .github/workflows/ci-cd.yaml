@@ -133,7 +133,7 @@ jobs:
       uses: burnett01/rsync-deployments@7.0.1
       with:
         switches: -avzr --delete
-        path: server-package-json
+        path: server-package-json/package.json
         remote_path: ./deploy/server-dist/package.json
         remote_host: ${{ secrets.SSH_HOST }}
         remote_user: ${{ secrets.SSH_USER }}
@@ -160,4 +160,5 @@ jobs:
           echo "Intalling changes..."
           cd deploy
           sh ./install.sh
+          exit
  
