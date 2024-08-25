@@ -120,7 +120,6 @@ jobs:
       run: ls -l /home/runner/work/menus/menus/server-dist
 
     - name: send dist server to temp folder via rsync
-      uses: actions/checkout@v3
       uses: burnett01/rsync-deployments@7.0.1
       with:
         switches: -avzr --delete
