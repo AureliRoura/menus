@@ -25,6 +25,11 @@ jobs:
     - name: Audit for vulnerabilities
       run: npm audit
 
+    -name: create .env.production file
+      run: |
+        echo "VITE_APP_TITLE=Menus
+        VITE_API_RELATIVE_PATH=/menus/" > .env.production
+
     - name: build
       run: npm run build
 
