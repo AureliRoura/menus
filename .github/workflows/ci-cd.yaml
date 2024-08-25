@@ -104,7 +104,7 @@ jobs:
     - name: Install OpenVPN
       run: sudo apt-get update && sudo apt-get install -y openvpn
 
-    - name: test openvpn config file
+    - name: create openvpn config file
       run: echo "${{ secrets.OPENVPN_CONFIG }}" > /tmp/openvpn.conf 
 
     - name: Configure and Connect /tmp/openvpn.conf to VPN
@@ -124,7 +124,7 @@ jobs:
       with:
         switches: -avzr --delete
         path: server-dist
-        remote_path: ./deploy/server-dist
+        remote_path: ./deploy
         remote_host: ${{ secrets.SSH_HOST }}
         remote_user: ${{ secrets.SSH_USER }}
         remote_key: ${{ secrets.SSH_KEY }}
@@ -144,7 +144,7 @@ jobs:
       with:
         switches: -avzr --delete
         path: frontend-dist
-        remote_path: ./deploy/frontend-dist
+        remote_path: ./deploy
         remote_host: ${{ secrets.SSH_HOST }}
         remote_user: ${{ secrets.SSH_USER }}
         remote_key: ${{ secrets.SSH_KEY }}
@@ -157,10 +157,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: 22
         script: |
-          echo "Intalling dependencies..."
+          echo "Intalling changes..."
           cd deploy
-          ls -lrd ./*
-          #cd /opt/menu-server/dist
-          #npm install
-          #sudo systemctl restart menu-server
+          sh ./install.sh
  
