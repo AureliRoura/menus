@@ -67,6 +67,13 @@ jobs:
         path: server/dist
         retention-days: 1
 
+    - name: save package.json as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: server-package-json
+        path: server/package.json
+        retention-days: 1
+
   sftp-upload:
     needs: [build-frontend, build-server]
 
@@ -82,13 +89,17 @@ jobs:
         name: server-dist
         path: server-dist
 
+    - name: Download server package.json
+      uses: actions/download-artifact@v4
+      with:
+        name: server-package-json
+        path: server-package-json
 
     - name: Download frontend artifact
       uses: actions/download-artifact@v4
       with:
         name: frontend-dist
         path: frontend-dist
-
 
     - name: Install OpenVPN
       run: sudo apt-get update && sudo apt-get install -y openvpn
@@ -105,17 +116,54 @@ jobs:
     - name: ping server
       run: ping -c 1 10.8.0.1
        
-    - name: status of VPN
-      run: sudo systemctl list-units --type=service | grep openvpn
-
     - name: ls server-dist
       run: ls -l /home/runner/work/menus/menus/server-dist
 
-    - name: Upload via SFTP
-      uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+    - name: send dist server to temp folder via rsync
+      uses: actions/checkout@v3
+      uses: burnett01/rsync-deployments@7.0.1
       with:
-        local_path: server-dist.zip
-        remote_path: .
-        server: ${{ secrets.SFTP_HOST }}
-        username: ${{ secrets.SFTP_USER }}
-        password: ${{ secrets.SFTP_PASSWORD }}
+        switches: -avzr --delete
+        path: /home/runner/work/menus/menus/server-dist
+        remote_path: ./deploy/server-dist
+        remote_host: ${{ secrets.SSH_HOST }}
+        remote_user: ${{ secrets.SSH_USER }}
+        remote_key: ${{ secrets.SSH_KEY }}
+
+    - name: send package.json server to temp folder via rsync
+      uses: actions/checkout@v3
+      uses: burnett01/rsync-deployments@7.0.1
+      with:
+        switches: -avzr --delete
+        path: /home/runner/work/menus/menus/server-package-json
+        remote_path: ./deploy/server-dist/package.json
+        remote_host: ${{ secrets.SSH_HOST }}
+        remote_user: ${{ secrets.SSH_USER }}
+        remote_key: ${{ secrets.SSH_KEY }}
+
+    - name: send dist frontend to temp folder via rsync
+      uses: actions/checkout@v3
+      uses: burnett01/rsync-deployments@7.0.1
+      with:
+        switches: -avzr --delete
+        path: /home/runner/work/menus/menus/frontend-dist
+        remote_path: ./deploy/frontend-dist
+        remote_host: ${{ secrets.SSH_HOST }}
+        remote_user: ${{ secrets.SSH_USER }}
+        remote_key: ${{ secrets.SSH_KEY }}
+
+    - name: install dependencies
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: 22
+        script: |
+          echo "Intalling dependencies..."
+          cd deploy
+          ls -lrd ./*
+          #cd /opt/menu-server/dist
+          #npm install
+          #sudo systemctl restart menu-server
+ 
