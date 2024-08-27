@@ -76,9 +76,9 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: server-package-json
-        path: 
-          - server/package.json
-          - server/package-lock.json
+        path: |
+          server/package.json
+          server/package-lock.json
         retention-days: 1
 
   sftp-upload:
