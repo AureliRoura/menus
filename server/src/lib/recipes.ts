@@ -25,6 +25,8 @@ interface IRecipe {
   time?: string;
   rating?: {};
   recipes_id?: string[];
+  difficulty?: string;
+  servings?: number;
 }
 
 class Recipe {

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="state.dialog" >
+  <v-dialog v-model="state.dialog">
     <v-card>
 
       <v-card-title>Recepta</v-card-title>
@@ -30,9 +30,17 @@
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col cols="12">
+                  <v-col cols="12" sm="12" md="10">
                     <v-textarea v-model="state.recipe.desc" label="Descripció" required rows="3">
                     </v-textarea>
+                  </v-col>
+                  <v-col cols="12" sm="12" md="2">
+                    <v-row class="mr-2">
+                      <v-text-field v-model="state.recipe.servings"  label="Comensals" required type="number" min="1"></v-text-field>
+                    </v-row>
+                    <v-row class="mr-2">
+                      <v-text-field v-model="state.recipe.difficulty" label="Dificultat" required></v-text-field>
+                    </v-row>
                   </v-col>
                 </v-row>
                 <edit-ingredients v-model:ingredients="state.recipe.ingredients"></edit-ingredients>
@@ -71,7 +79,7 @@ const props = defineProps({
   dialog: Boolean,
   recipe: {
     type: Object,
-    default: () => ({ name: '', desc: '', time: '', ingredients: [], categories: [], steps: [], rating: [] }),
+    default: () => ({ name: '', desc: '', time: '', ingredients: [], categories: [], steps: [], rating: [], difficulty: '', servings: 1 }),
   },
   readonly: {
     type: Boolean,
@@ -81,7 +89,7 @@ const props = defineProps({
 
 let state = reactive({
   dialog: props.dialog,
-  recipe: props.recipe || { name: '', desc: '', time: '', ingredients: [], categories: [],  steps: [], rating: [] },
+  recipe: props.recipe || { name: '', desc: '', time: '', ingredients: [], categories: [], steps: [], rating: [], difficulty: '', servings: 1 },
 });
 const valid = ref(false);
 const tab = ref('general');
