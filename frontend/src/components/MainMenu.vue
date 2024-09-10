@@ -3,9 +3,9 @@
     <v-col>
       <v-card class="fill-height">
         <v-card-title class="bg-blue">
-          <v-btn icon class="float-right">
+<!--           <v-btn icon class="float-right">
             <v-icon>mdi-magnify</v-icon>
-          </v-btn>
+          </v-btn> -->
           <v-btn icon class="float-right mr-3" v-bind="login">
             <v-icon v-if="loggedIn" color="green">mdi-account-check</v-icon>
             <v-icon v-else>mdi-account </v-icon>

@@ -1,16 +1,16 @@
 <template>
-  <v-dialog v-model="state.dialog" >
+  <v-dialog v-model="state.dialog">
     <v-card>
 
       <v-card-title>Recepta</v-card-title>
-      <v-tabs v-model="tab" bg-color="primary">
+      <v-tabs v-model="tab" bg-color="primary" show-arrows>
         <v-tab value="general">General </v-tab>
         <v-tab value="category">Cats ({{ numCategories }})</v-tab>
         <v-tab value="steps">Passos ({{ numSteps }})</v-tab>
+        <v-tab value="images">Imatges</v-tab>
       </v-tabs>
       <div class="content-container">
         <v-card-text>
-
           <v-form v-model="valid" @submit.prevent="submit" :disabled="props.readonly">
             <v-tabs-window v-model="tab">
               <v-tabs-window-item value="general">
@@ -30,9 +30,31 @@
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col cols="12">
+                  <v-col cols="12" sm="12" md="10">
                     <v-textarea v-model="state.recipe.desc" label="Descripció" required rows="3">
                     </v-textarea>
+                  </v-col>
+                  <v-col cols="12" sm="12" md="2" v-if="isMdAndUp">
+                    <v-row class="mr-2">
+                      <v-text-field v-model="state.recipe.servings" label="Comensals" required type="number"
+                        min="1"></v-text-field>
+                    </v-row>
+                    <v-row class="mr-2">
+                      <v-select v-model="state.recipe.difficulty" :items="difficulty" item-value="value"
+                        item-title="label" required></v-select>
+                    </v-row>
+                  </v-col>
+                  <v-col v-else>
+                    <v-row>
+                    <v-col cols="6">
+                      <v-text-field v-model="state.recipe.servings" label="Comensals" required type="number"
+                        min="1"></v-text-field>
+                    </v-col>
+                    <v-col cols="6">
+                      <v-select v-model="state.recipe.difficulty" :items="difficulty" item-value="value"
+                        item-title="label" required></v-select>
+                    </v-col>
+                    </v-row>
                   </v-col>
                 </v-row>
                 <edit-ingredients v-model:ingredients="state.recipe.ingredients"></edit-ingredients>
@@ -63,15 +85,19 @@ import EditSteps from './EditSteps.vue';
 import SelectRating from './SelectRating.vue';
 import rating from '@/modules/rating.js';
 import { useUserStore } from '@/stores/userStore';
+import difficulty from '@/modules/difficulty.js';
+import { useBreakpoint } from '@/modules/usebreakpoint';
 
 const userStore = useUserStore();
+const { isMdAndUp } = useBreakpoint();
+
 
 
 const props = defineProps({
   dialog: Boolean,
   recipe: {
     type: Object,
-    default: () => ({ name: '', desc: '', time: '', ingredients: [], categories: [], steps: [], rating: [] }),
+    default: () => ({ name: '', desc: '', time: '', ingredients: [], categories: [], steps: [], rating: [], difficulty: '', servings: 1 }),
   },
   readonly: {
     type: Boolean,
@@ -81,7 +107,7 @@ const props = defineProps({
 
 let state = reactive({
   dialog: props.dialog,
-  recipe: props.recipe || { name: '', desc: '', time: '', ingredients: [], categories: [],  steps: [], rating: [] },
+  recipe: props.recipe || { name: '', desc: '', time: '', ingredients: [], categories: [], steps: [], rating: [], difficulty: '', servings: 1 },
 });
 const valid = ref(false);
 const tab = ref('general');
