@@ -40,7 +40,7 @@
                         min="1"></v-text-field>
                     </v-row>
                     <v-row class="mr-2">
-                      <v-select v-model="state.recipe.difficulty" :items="difficulty" item-value="value"
+                      <v-select v-model="state.recipe.difficulty" label="Dificultat" :items="difficulty" item-value="value"
                         item-title="label" required></v-select>
                     </v-row>
                   </v-col>
@@ -51,7 +51,7 @@
                         min="1"></v-text-field>
                     </v-col>
                     <v-col cols="6">
-                      <v-select v-model="state.recipe.difficulty" :items="difficulty" item-value="value"
+                      <v-select v-model="state.recipe.difficulty" label="Dificultat" :items="difficulty" item-value="value"
                         item-title="label" required></v-select>
                     </v-col>
                     </v-row>
