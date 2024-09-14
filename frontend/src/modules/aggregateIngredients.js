@@ -4,6 +4,9 @@ export default function aggregateIngredients(menuData, numberOfPersons) {
   Object.values(menuData).forEach(day => {
     Object.values(day).forEach(meals => {
       meals.forEach(recipe => {
+        if (!recipe.servings || recipe.servings < 1) {
+          recipe.servings = 1;
+        }
         recipe.ingredients.forEach(ingredient => {
           // Create a composite key using ingredient name and unit
           const key = `${ingredient.name}_${ingredient.unit}`;
@@ -11,7 +14,7 @@ export default function aggregateIngredients(menuData, numberOfPersons) {
             result[key] = { name: ingredient.name, quantity: 0, unit: ingredient.unit };
           }
           // Multiply ingredient quantity by the number of persons
-          result[key].quantity += ingredient.quantity * numberOfPersons;
+          result[key].quantity += ingredient.quantity / recipe.servings * numberOfPersons;
         });
       });
     });
