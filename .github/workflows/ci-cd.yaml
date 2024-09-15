@@ -81,8 +81,49 @@ jobs:
           - server/package-lock.json
         retention-days: 1
 
+  server-tests:
+    needs: [build-server]
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Download server artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: server-dist
+        path: server-dist
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        
+    - name: Install OpenVPN
+      run: sudo apt-get update && sudo apt-get install -y openvpn
+
+    - name: create openvpn config file
+      run: echo "${{ secrets.OPENVPN_CONFIG }}" > /tmp/openvpn.conf 
+
+    - name: Configure and Connect /tmp/openvpn.conf to VPN
+      run: sudo openvpn --config /tmp/openvpn.conf --daemon 
+
+    - name: Wait for VPN to connect
+      run: sleep 10
+
+    - name: ping server
+      run: ping -c 1 10.8.0.1
+
+    - name: Install server dependencies
+      run: npm install
+
+    - name: Run tests
+      run: npm run test
+        
   sftp-upload:
-    needs: [build-frontend, build-server]
+    needs: [build-frontend, build-server, server-tests]
 
     runs-on: ubuntu-latest
 
