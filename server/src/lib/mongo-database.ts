@@ -8,7 +8,7 @@ import { IIngredient } from './ingredients';
 import { IUnit } from './units';
 import { IRecipe, ICategories } from './recipes';
 import { IMenu } from './menus';
-import { IAlergenic } from './allergenics';
+import { IAllergenic } from './allergenics';
 import { Readable } from 'stream';
 
 
@@ -24,7 +24,7 @@ export class MongoDatabase {
   private unitsCollection?: Collection<IUnit>;
   private recipesCollection?: Collection<IRecipe>;
   private menusCollection?: Collection<IMenu>;
-  private allergenicsCollection?: Collection<IAlergenic>;
+  private allergenicsCollection?: Collection<IAllergenic>;
   private GridFSBucket?: GridFSBucket;
 
   constructor(mongoURI: string) {
@@ -536,7 +536,7 @@ export class MongoDatabase {
     return result ? result.ingredients === undefined : false;
   }
 
-  async getAlergenics(): Promise<IAlergenic[]> {
+  async getAlergenics(): Promise<IAllergenic[]> {
     if (!this.allergenicsCollection) {
       throw new Error('Database not connected');
     }
