@@ -1,14 +1,15 @@
 
 
 import { User } from './user';
-const uri = "mongodb+srv://aureliroura:hxndwxZsORfWp49c@cluster0.obzgga5.mongodb.net?retryWrites=true&w=majority&appName=Cluster0";
-import { MongoClient, Db, Collection, ObjectId } from 'mongodb';
+
+import { MongoClient, Db, Collection, ObjectId, GridFSBucket } from 'mongodb';
 import { IUser } from './user';
 import { IIngredient } from './ingredients';
 import { IUnit } from './units';
 import { IRecipe, ICategories } from './recipes';
 import { IMenu } from './menus';
 import { IAlergenic } from './allergenics';
+import { Readable } from 'stream';
 
 
 type MealType = 'lunch' | 'dinner';
@@ -24,6 +25,7 @@ export class MongoDatabase {
   private recipesCollection?: Collection<IRecipe>;
   private menusCollection?: Collection<IMenu>;
   private allergenicsCollection?: Collection<IAlergenic>;
+  private GridFSBucket?: GridFSBucket;
 
   constructor(mongoURI: string) {
     this.client = new MongoClient(mongoURI);
@@ -59,6 +61,7 @@ export class MongoDatabase {
       this.recipesCollection = this.db.collection('recipes');
       this.menusCollection = this.db.collection('menus');
       this.allergenicsCollection = this.db.collection('allergenics');
+      this.GridFSBucket = new GridFSBucket(this.db, { bucketName: 'images' });
       console.log('Connected to database');
     } catch (error) {
       console.error('Error connecting to database:', error);
@@ -386,31 +389,6 @@ export class MongoDatabase {
     const result = await this.recipesCollection.deleteOne({ _id: new ObjectId(_id) as any });
     return result.deletedCount === 1;
   }
-
-
-
-  /*   async checkIngredients(_id: string | ObjectId, ingredients: string[]): Promise<boolean> {
-      if (!this.recipesCollection) {
-        throw new Error('Database not connected');
-      }
-      const recipe = await this.recipesCollection.findOne({ _id: new ObjectId(_id) as any });
-      return recipe ? recipe.ingredients === ingredients : false;
-    } */
-  /* 
-    async updateIngredients(_id: string | ObjectId, ingredients: string[]): Promise<boolean> {
-      if (!this.recipesCollection) {
-        throw new Error('Database not connected');
-      }
-      const result = await this.recipesCollection.findOneAndUpdate(
-        { _id: new ObjectId(_id) as any },
-        { $set: { ingredients } },
-        { returnDocument: 'after' }
-      );
-      return result ? result.ingredients === ingredients : false;
-    }
-   */
-
-
 
   async changeRecipesIngredientUnit(oldUnit: string, newUnit: string) {
 
@@ -742,5 +720,45 @@ export class MongoDatabase {
 
     const result = await this.menusCollection.findOneAndUpdate({ _id: menuId as any }, update, { returnDocument: 'after' });
     return result ? { ...result, _id: result._id.toString() } : null;
+  }
+
+  async insertImage(imageName: string, imageStream: Readable): Promise<ObjectId> {
+
+    if (!this.GridFSBucket) {
+      throw new Error('Database not connected');
+    }
+    const uploadStream = this.GridFSBucket.openUploadStream(imageName);
+    const id = uploadStream.id;
+    await new Promise((resolve, reject) => {
+      ((imageStream as unknown) as NodeJS.ReadableStream).pipe(uploadStream)
+        .on('error', reject)
+        .on('finish', resolve);
+    });
+    return id;
+  }
+
+  async getImage(id: string) {
+    if (!this.GridFSBucket) {
+      throw new Error('Database not connected');
+    }
+  
+    try {
+      const downloadStream = this.GridFSBucket.openDownloadStream(new ObjectId(id));
+      return downloadStream;
+    } catch (error) {
+      const err = error as Error & { code?: string; name?: string };
+      if (err.name === 'MongoRuntimeError' && err.message.includes('FileNotFound')) {
+        console.log('Image not found');
+        throw new Error('Image not found');
+      }
+      throw err;
+    }
+  }
+
+  async deleteImage(id: string): Promise<void> {
+    if (!this.GridFSBucket) {
+      throw new Error('Database not connected');
+    }
+    return this.GridFSBucket.delete(new ObjectId(id));
   }
 }
