@@ -1,24 +1,24 @@
 import { ObjectId } from "mongodb";
 
-interface IAlergenic {
+interface IAllergenic {
   _id?: string | ObjectId;
   name: string;
 
 }
 
-class Alergenic {
-  private data: IAlergenic;
+class Allergenic {
+  private data: IAllergenic;
 
-  constructor(data: IAlergenic) {
+  constructor(data: IAllergenic) {
     this.data = data;
   }
 
-  get info(): IAlergenic {
+  get info(): IAllergenic {
     return this.data;
   }
 
-  update(details: Partial<IAlergenic>) {
+  update(details: Partial<IAllergenic>) {
     this.data = { ...this.data, ...details };
   }
 }
-export { Alergenic, IAlergenic };
+export { Allergenic as Allergenic, IAllergenic as IAllergenic };
