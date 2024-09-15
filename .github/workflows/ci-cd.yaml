@@ -118,9 +118,11 @@ jobs:
 
     - name: Install server dependencies
       run: npm install
+      working-directory: server-dist
 
     - name: Run tests
       run: npm run test
+      working-directory: server-dist
         
   sftp-upload:
     needs: [build-frontend, build-server, server-tests]
