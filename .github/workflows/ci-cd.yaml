@@ -115,6 +115,9 @@ jobs:
     - name: ping server
       run: ping -c 1 10.8.0.1
 
+    - name: Install server dependencies
+      run: npm install
+      
     - name: Run tests
       run: npm run test
 
