@@ -17,10 +17,11 @@
     "include": [
       "src/**/*.ts",
       "lib/**/*.ts",
-      "src/routes/**/*.ts"
+      "src/routes/**/*.ts",
+      "tests/**/*.ts"
     ],
     "exclude": [
-      "node_modules", "**/*.test.ts", "**/*.spec.ts"
+      "node_modules",  "**/*.spec.ts"
     ]
 }
   
