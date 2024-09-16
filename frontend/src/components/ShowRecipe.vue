@@ -4,10 +4,10 @@
       <v-table>
         <tbody>
           <tr class="bg-grey text-black d-flex">
-            <div class="ml-1">
+            <td class="ml-1  auto-size">
               {{ recipe.name }}
-            </div>
-            <span v-if="allergenics.length" class="allergenics-container mr-1">
+            </td>
+            <td v-if="allergenics.length" class="allergenics-container mr-1">
               <div v-for="(allergenic, index) in allergenics" :key="index" class="symbol-text">
                 <div style="min-width: 30px;">
                   {{ allergenic.symbol }}
@@ -18,7 +18,7 @@
                   </div>
                 </v-tooltip>
               </div>
-            </span>
+            </td>
           </tr>
         </tbody>
       </v-table>
@@ -117,5 +117,11 @@ const allergenics = computed(() => {
   white-space: normal;
   width: 50%;
   /* Each item takes up 50% of the container width */
+}
+
+.auto-size {
+  width: auto;
+  height: auto;
+  line-height: normal; /* Ensures text is vertically centered */
 }
 </style>
