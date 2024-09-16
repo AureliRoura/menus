@@ -16,7 +16,7 @@
           <v-chip @click="addCategory" color="primary" :disabled="!valid" class="mb-3">Add</v-chip>
         </v-col>
       </v-row>
-      <v-list class="list-container">
+      <v-list>
         <div v-for="(category, index) in categories" :key="index">
           <v-list-item v-for="(value, indexValue) in category.values" :key="indexValue" density="compact">
             <div class="d-flex justify-space-between">
@@ -156,11 +156,3 @@ const removeCategory = (category, value) => {
 
 </script>
 
-<style scoped>
-.list-container {
-  max-height: calc(3em * 3);
-  /* 3 lines of text */
-  overflow-y: auto;
-  /* Add a vertical scrollbar */
-}
-</style>
