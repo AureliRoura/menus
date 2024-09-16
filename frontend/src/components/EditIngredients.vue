@@ -2,13 +2,20 @@
   <v-card>
     <v-card-title>Ingredients</v-card-title>
     <v-card-text>
-      <v-row>
+      <div class="d-flex justify-space-between">
+        
+      <v-btn icon size="x-small" density="comfortable" @click="selectionActive = !selectionActive" color="primary"
+        class="mb-3 mr-3">
+        <v-icon v-if="!selectionActive">mdi-plus</v-icon>
+        <v-icon v-else>mdi-minus</v-icon>
+      </v-btn>
+      <v-row v-if="selectionActive">
         <v-col cols="12" sm="6" md="4">
           <v-autocomplete ref="refIngredient" v-model="newIngredient._id" :items="filteredIngredients" item-title="name"
             item-value="_id" label="Ingredient" auto-select-first required @update:search="updateSearchInput"
             style="min-width: 200px;">
             <template v-slot:append-inner>
-              <v-chip v-if="isEmptyList" @click="appendButton" :disabled="!isEmptyList" >
+              <v-chip v-if="isEmptyList" @click="appendButton" :disabled="!isEmptyList">
                 <v-icon style="font-size: 12px;">mdi-plus</v-icon>
                 <v-tooltip activator="parent">Crear ingredient</v-tooltip>
               </v-chip>
@@ -28,7 +35,7 @@
           <v-chip @click="addIngredient" color="primary" :disabled="!valid" class="mr-3">Add</v-chip>
         </v-col>
       </v-row>
-
+      </div>
       <v-list class="list-container">
         <v-list-item density="compact" v-for="(ingredient, index) in ingredients" :key="index">
           <div class="d-flex justify-space-between">
@@ -68,6 +75,7 @@ const selectedIngredient = ref(null);
 const searchInput = ref('');
 const dialog = ref(false);
 const refIngredient = ref(null);
+const selectionActive = ref(false);
 let operation = '';
 
 const unitsStore = useUnitsStore();
@@ -110,7 +118,7 @@ watch(() => newIngredient._id, (newId) => {
 const appendButton = () => {
   operation = 'add';
   selectedIngredient.value = { _id: '', name: searchInput.value, allergenics: [] };
-  if (refIngredient.value)  {
+  if (refIngredient.value) {
     refIngredient.value.blur();
   }
   dialog.value = true;
@@ -148,7 +156,7 @@ const handleFormSubmit = (formData) => {
   } else {
     api.updateIngredient(formData)
       .then(updatedIngredient => {
-//        console.log('Ingredient updated successfully:', updatedIngredient);
+        //        console.log('Ingredient updated successfully:', updatedIngredient);
         ingredientsStore.updateIngredient(formData);
         addMessage('Ingredient actualitzat');
       })
