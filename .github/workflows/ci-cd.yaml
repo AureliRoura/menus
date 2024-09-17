@@ -82,7 +82,7 @@ jobs:
         retention-days: 1
 
   server-tests:
-    needs: [build-server]
+#    needs: [build-server]
 
     runs-on: ubuntu-latest
 
