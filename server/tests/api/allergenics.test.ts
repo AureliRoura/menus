@@ -53,8 +53,6 @@ describe('GET /api/allergenics', () => {
     app.locals.db = new MongoDatabase(uri);
 
     (basicAuthMiddleware as jest.Mock).mockImplementation((req, res, next) => next());
-    const allergenicsData: IAllergenic[] = [{ _id: 'jdhdfhdj'  ,name: 'Peanuts' }];
-    mockGetAlergenics.mockResolvedValue(allergenicsData);
   });
 
   afterEach(() => {
