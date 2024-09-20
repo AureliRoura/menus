@@ -62,7 +62,7 @@ const renameIngredient = () => {
     .then((result) => {
       if (result) {
         working.value = true;
-        arrxios.put('/api/ingredients/rename', { oldUniName: selectedFromIngredient.value.name, newIngredientName: selectedToIngredient.value.name })
+        arrxios.post('/api/ingredients/rename', { oldUniName: selectedFromIngredient.value.name, newIngredientName: selectedToIngredient.value.name })
           .then((response) => {
             console.log(response);
             if (response.status === 200) {
