@@ -1,6 +1,6 @@
 // ingredients.ts
 import express, { Request, Response, Router } from 'express';
-import { MongoDatabase  as BaseDatabase }from '../lib/mongo-database';
+import { MongoDatabase as BaseDatabase } from '../lib/mongo-database';
 import { basicAuthMiddleware } from '../lib/basicauth';
 import { IIngredient, Ingredient } from '../lib/ingredients';
 import bcrypt from 'bcrypt';
@@ -10,10 +10,10 @@ const SALT_ROUNDS = 10;
 
 export const ingredientRouter = Router();
 
-ingredientRouter.get('/ingredients',  basicAuthMiddleware, async (req: Request, res: Response) => {
+ingredientRouter.get('/ingredients', basicAuthMiddleware, async (req: Request, res: Response) => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
-        const ingredients = await db.getIngredients(); 
+        const ingredients = await db.getIngredients();
         res.json(ingredients.map((ingredient) => ingredient));
     } catch (error) {
         console.error('Error en recuperar ingredients:', error);
@@ -55,18 +55,18 @@ ingredientRouter.get('/ingredients/:id', basicAuthMiddleware, async (req: Reques
 ingredientRouter.post('/ingredients', express.json(), async (req: Request, res: Response) => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
-         var ingredientObj = new Ingredient(req.body)
+        var ingredientObj = new Ingredient(req.body)
 
 
         // Validacions senzilles
-        if (!ingredientObj.info.name ) {
-            return res.status(400).json({error: 'Falten dades d\'ingredient.'});
+        if (!ingredientObj.info.name) {
+            return res.status(400).json({ error: 'Falten dades d\'ingredient.' });
         }
 
         // Comprova que l'ingredient no existeixi ja
         const existingIngredient = await db.getIngredientByName(ingredientObj.info.name);
         if (existingIngredient !== null) {
-            return res.status(409).json({error: 'L\'ingredient ja existeix.'});
+            return res.status(409).json({ error: 'L\'ingredient ja existeix.' });
         }
 
         // Crea l'ingredient
@@ -78,7 +78,7 @@ ingredientRouter.post('/ingredients', express.json(), async (req: Request, res: 
         res.status(201).json(ingredient);
     } catch (error) {
         console.error('Error en crear ingredient:', error);
-        res.status(500).json({error:'Error en crear ingredient.'});
+        res.status(500).json({ error: 'Error en crear ingredient.' });
     }
 });
 
@@ -90,18 +90,18 @@ ingredientRouter.put('/ingredients/:_id', basicAuthMiddleware, express.json(), a
         // Comprova que l'ingredient existeixi
         const ingredient = await db.getIngredientById(_id);
         if (ingredient === null) {
-            return res.status(404).json({error: 'ingredient no trobat.'});
+            return res.status(404).json({ error: 'ingredient no trobat.' });
         }
         ingredientObj.info._id = ingredient?._id
         await db.updateIngredientById(ingredient._id as string, ingredientObj.info)
-        .then((result) => {
-            console.log("result", result)
-            res.status(200).json({ _id: ingredient._id});
-        });
-       
+            .then((result) => {
+                console.log("result", result)
+                res.status(200).json({ _id: ingredient._id });
+            });
+
     } catch (error) {
         console.error('Error en actualitzar ingredient:', error);
-        res.status(500).json({error: 'Error en actualitzar ingredient.'});
+        res.status(500).json({ error: 'Error en actualitzar ingredient.' });
     }
 });
 
@@ -127,7 +127,7 @@ ingredientRouter.delete('/ingredients/:_id', basicAuthMiddleware, async (req: Re
     }
 });
 
-ingredientRouter.get('/ingredients/rename', basicAuthMiddleware, async (req: Request, res: Response) => {
+ingredientRouter.post('/ingredients/rename', basicAuthMiddleware, async (req: Request, res: Response) => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const { oldName, newName } = req.body as { oldName: string, newName: string };
@@ -136,9 +136,12 @@ ingredientRouter.get('/ingredients/rename', basicAuthMiddleware, async (req: Req
         if (!oldName || !newName) {
             return res.status(400).json({ message: "Cal proporcionar oldName i newName." });
         }
-
-        await db.changeRecipesIngredientName(oldName, newName)
-        res.status(200).json({ success: true });
+        const retValue = await db.changeRecipesIngredientName(oldName, newName)
+        if (!retValue) {
+            res.status(404).json({ error: 'ingredient no trobat.' });
+        } else {
+            res.status(200).json({ success: true });
+        }
     } catch (error) {
         console.error('Error en renombrar recipe:', error);
         res.status(500).json({ error: 'Error en renombrar recipe.' });

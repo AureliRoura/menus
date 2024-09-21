@@ -478,9 +478,11 @@ export class MongoDatabase {
       );
       await this.session.commitTransaction();
       console.log(`Updated ${updateResult.modifiedCount} documents.`);
+      return true
     } catch (error) {
       await this.session.abortTransaction();
       console.error('Error updating documents:', error);
+      return false
     }
   }
 

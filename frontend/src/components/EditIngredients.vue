@@ -1,42 +1,46 @@
 <template>
   <v-card>
-    <v-card-title>Ingredients</v-card-title>
+    <v-card-title>Ingredients
+      <v-tooltip text="Afegeix Ingredients">
+        <template v-slot:activator="{ props }">
+          <v-btn icon size="x-small" density="comfortable" @click="selectionActive = !selectionActive" color="primary"
+            class="ml-1" v-bind="props">
+            <v-icon v-if="!selectionActive">mdi-plus</v-icon>
+            <v-icon v-else>mdi-minus</v-icon>
+          </v-btn>
+        </template>
+      </v-tooltip>
+    </v-card-title>
     <v-card-text>
       <div class="d-flex justify-space-between">
-        
-      <v-btn icon size="x-small" density="comfortable" @click="selectionActive = !selectionActive" color="primary"
-        class="mb-3 mr-3">
-        <v-icon v-if="!selectionActive">mdi-plus</v-icon>
-        <v-icon v-else>mdi-minus</v-icon>
-      </v-btn>
-      <v-row v-if="selectionActive">
-        <v-col cols="12" sm="6" md="4">
-          <v-autocomplete ref="refIngredient" v-model="newIngredient._id" :items="filteredIngredients" item-title="name"
-            item-value="_id" label="Ingredient" auto-select-first required @update:search="updateSearchInput"
-            style="min-width: 200px;">
-            <template v-slot:append-inner>
-              <v-chip v-if="isEmptyList" @click="appendButton" :disabled="!isEmptyList">
-                <v-icon style="font-size: 12px;">mdi-plus</v-icon>
-                <v-tooltip activator="parent">Crear ingredient</v-tooltip>
-              </v-chip>
-            </template>
-          </v-autocomplete>
-        </v-col>
-        <v-col cols="12" sm="3" md="3">
-          <v-text-field v-model="newIngredient.quantity" label="Quantitat" type="number" required @change="fixDecimals"
-            style="min-width: 100px;"></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="3" md="3">
-          <v-autocomplete v-model="newIngredient.unit" :items="units" item-title="unit" item-value="unit"
-            label="Unitats" auto-select-first required style="min-width: 100px;"
-            @keyup.enter="addIngredient"></v-autocomplete>
-        </v-col>
-        <v-col cols="12" sm="12" md="2" style="min-width: 100px;" class="d-flex align-self-center mb-3">
-          <v-chip @click="addIngredient" color="primary" :disabled="!valid" class="mr-3">Add</v-chip>
-        </v-col>
-      </v-row>
+        <v-row v-if="selectionActive">
+          <v-col cols="12" sm="6" md="4">
+            <v-autocomplete ref="refIngredient" v-model="newIngredient._id" :items="filteredIngredients"
+              item-title="name" item-value="_id" label="Ingredient" auto-select-first required
+              @update:search="updateSearchInput" style="min-width: 200px;">
+              <template v-slot:append-inner>
+                <v-chip v-if="isEmptyList" @click="appendButton" :disabled="!isEmptyList">
+                  <v-icon style="font-size: 12px;">mdi-plus</v-icon>
+                  <v-tooltip activator="parent">Crear ingredient</v-tooltip>
+                </v-chip>
+              </template>
+            </v-autocomplete>
+          </v-col>
+          <v-col cols="12" sm="3" md="3">
+            <v-text-field v-model="newIngredient.quantity" label="Quantitat" type="number" required
+              @change="fixDecimals" style="min-width: 100px;"></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="3" md="3">
+            <v-autocomplete v-model="newIngredient.unit" :items="units" item-title="unit" item-value="unit"
+              label="Unitats" auto-select-first required style="min-width: 100px;"
+              @keyup.enter="addIngredient"></v-autocomplete>
+          </v-col>
+          <v-col cols="12" sm="12" md="2" style="min-width: 100px;" class="d-flex align-self-center mb-3">
+            <v-chip @click="addIngredient" color="primary" :disabled="!valid" class="mr-3">Add</v-chip>
+          </v-col>
+        </v-row>
       </div>
-      <v-list class="list-container">
+      <v-list :class="['list-container', { 'with-headers': selectionActive }]">
         <v-list-item density="compact" v-for="(ingredient, index) in ingredients" :key="index">
           <div class="d-flex justify-space-between">
             <span>{{ ingredient.name }} - {{ ingredient.quantity }} {{ ingredient.unit }}
@@ -194,9 +198,15 @@ const removeIngredient = (index) => {
 
 <style scoped>
 .list-container {
-  max-height: calc(3em * 3);
+  max-height: calc(35vh);
+  /* max-height: calc(3em * 3); */
   /* 3 lines of text */
   overflow-y: auto;
   /* Add a vertical scrollbar */
+}
+
+.with-headers {
+  max-height: calc(35vh - 100px);
+  /* Adjust height when headers are shown */
 }
 </style>
