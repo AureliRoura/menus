@@ -67,7 +67,7 @@ usersRouter.post('/users', express.json(), async (req: Request, res: Response) =
         // Crea l'usuari
         //  async createUser(user: IUser): Promise<IUser> {
         const id = await db.createUser({ '_id': '', 'name': nom, 'email': email, 'password': password });
-        res.status(201).json({ id });
+        res.status(201).json( id );
     } catch (error) {
         console.error('Error en crear usuari:', error);
         res.status(500).json({ error: 'Error en crear usuari.' });
