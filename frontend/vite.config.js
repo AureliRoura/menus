@@ -15,7 +15,6 @@ export default defineConfig({
   ],
   optimizeDeps: {
     include: ['vuetify/lib/components/VLayout/index.mjs',
-              'vuetify/lib/components/VContainer/index.mjs',
               'vuetify/lib/components/VBtn/index.mjs',
               'vuetify/lib/components/VIcon/index.mjs',
               'vuetify/lib/components/VTable/index.mjs',
