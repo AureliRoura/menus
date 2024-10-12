@@ -7,7 +7,7 @@
         <v-tab value="general">General </v-tab>
         <v-tab value="steps">Passos ({{ numSteps }})</v-tab>
         <v-tab value="category">Cats ({{ numCategories }})</v-tab>
-        <v-tab value="images">Imatges</v-tab>
+        <!--         <v-tab value="images">Imatges</v-tab>  -->
       </v-tabs>
       <div class="content-container">
         <v-card-text>
@@ -40,20 +40,20 @@
                         min="1"></v-text-field>
                     </v-row>
                     <v-row class="mr-2">
-                      <v-select v-model="state.recipe.difficulty" label="Dificultat" :items="difficulty" item-value="value"
-                        item-title="label" required></v-select>
+                      <v-select v-model="state.recipe.difficulty" label="Dificultat" :items="difficulty"
+                        item-value="value" item-title="label" required></v-select>
                     </v-row>
                   </v-col>
                   <v-col v-else>
                     <v-row>
-                    <v-col cols="6">
-                      <v-text-field v-model="state.recipe.servings" label="Comensals" required type="number"
-                        min="1"></v-text-field>
-                    </v-col>
-                    <v-col cols="6">
-                      <v-select v-model="state.recipe.difficulty" label="Dificultat" :items="difficulty" item-value="value"
-                        item-title="label" required></v-select>
-                    </v-col>
+                      <v-col cols="6">
+                        <v-text-field v-model="state.recipe.servings" label="Comensals" required type="number"
+                          min="1"></v-text-field>
+                      </v-col>
+                      <v-col cols="6">
+                        <v-select v-model="state.recipe.difficulty" label="Dificultat" :items="difficulty"
+                          item-value="value" item-title="label" required></v-select>
+                      </v-col>
                     </v-row>
                   </v-col>
                 </v-row>
