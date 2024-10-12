@@ -5,8 +5,8 @@
       <v-card-title>Recepta</v-card-title>
       <v-tabs v-model="tab" bg-color="primary" show-arrows>
         <v-tab value="general">General </v-tab>
-        <v-tab value="category">Cats ({{ numCategories }})</v-tab>
         <v-tab value="steps">Passos ({{ numSteps }})</v-tab>
+        <v-tab value="category">Cats ({{ numCategories }})</v-tab>
         <v-tab value="images">Imatges</v-tab>
       </v-tabs>
       <div class="content-container">
