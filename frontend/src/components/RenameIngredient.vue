@@ -26,6 +26,7 @@ import { ref, computed, watch , inject} from 'vue';
 import { useIngredientsStore } from '@/stores/ingredientsStore';
 import arrxios from '@/modules/arrxios';
 import { addMessage } from '@/modules/arrMessage';
+import { loadRecipes } from '@/modules/loadData';
 
 
 const confirmMessage = inject('confirmMessage');
@@ -56,16 +57,17 @@ watch(() => selectedFromIngredient.value, (value) => {
 });
 
 const renameIngredient = () => {
-  console.log('Rename ingredient', selectedFromIngredient.value, selectedToIngredient.value);
+//   console.log('Rename ingredient', selectedFromIngredient.value, selectedToIngredient.value);
 
   confirmMessage('Estàs segur que vols renombrar la ingredient?')
     .then((result) => {
       if (result) {
         working.value = true;
-        arrxios.post('/api/ingredients/rename', { oldUniName: selectedFromIngredient.value.name, newIngredientName: selectedToIngredient.value.name })
+        arrxios.post('/api/ingredients/rename', { oldName: selectedFromIngredient.value.name, newName: selectedToIngredient.value.name })
           .then((response) => {
-            console.log(response);
+//            console.log(response);
             if (response.status === 200) {
+              loadRecipes().catch (error => addMessage('Error al carregat Receptes:' + error, 'error'));
               addMessage('Ingredient renombrada correctament', 'success');
               selectedFromIngredient.value = null;
               selectedToIngredient.value = null;
