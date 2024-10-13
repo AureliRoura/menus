@@ -57,7 +57,7 @@
           </div>
         </v-list-item>
       </div>
-      <edit-recipe v-model:dialog="dialog" :recipe="selectedRecipe" :readonly="true" @submit="handleFormSubmit" />
+      <edit-recipe v-model:dialog="dialog" :recipe="selectedRecipe" :readonly=readonly @submit="handleFormSubmit" />
     </v-list>
   </v-card>
 </template>
@@ -83,6 +83,7 @@ const recipesList = ref([]);
 recipesList.value = recipesStore.recipes;
 const selectedIngredients = ref([]);
 const selectedCategory = ref([]);
+const readonly = ref(false);
 
 let filter = ref(''); // Valor del filtre
 
@@ -201,6 +202,7 @@ const handleFormSubmit = (formData) => {
 const selectRecipe = (recipe) => {
   operation = 'edit';
   selectedRecipe.value = recipe;
+  readonly.value = true
   dialog.value = true;
 };
 
@@ -236,6 +238,7 @@ const addRecipe = () => {
   });
 
   selectedRecipe.value = recipe;
+  readonly.value = false;
   dialog.value = true;
   //console.log('addRecipe');
 };

@@ -3,7 +3,7 @@
     <v-card>
       <div class="d-flex justify-space-between align-center">
         <v-card-title>Recepta</v-card-title>
-        <v-tooltip :text="readonly ? 'Edita' :'Bloqueja'">
+        <v-tooltip v-if="props.readonly" :text="readonly ? 'Edita' :'Bloqueja'">
           <template v-slot:activator="{ props }">
             <v-btn icon size="x-small" round class="mr-2" @click="readonly = !readonly" v-bind="props">
               <v-icon>{{ readonly ? 'mdi-pencil-off' : 'mdi-pencil' }}</v-icon>
