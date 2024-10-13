@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser';
 import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
+import logger from '../lib/logger';
 
 
 const SALT_ROUNDS = 10;
@@ -16,7 +17,7 @@ usersRouter.get('/checksession', basicAuthMiddleware, async (req: Request, res: 
     try {
         res.status(200).json({ message: 'Sessió vàlida' });
     } catch (error) {
-        console.error('Error en comprovar la sessió:', error);
+        logger.error('Error en comprovar la sessió:', error);
         res.status(500).json({ error: 'Error en comprovar la sessió.' });
     }
 });
@@ -27,7 +28,7 @@ usersRouter.get('/users', basicAuthMiddleware, async (req: Request, res: Respons
         const users = await db.getUsers();
         res.json(users.map((usuari) => usuari));
     } catch (error) {
-        console.error('Error en recuperar users:', error);
+        logger.error('Error en recuperar users:', error);
         res.status(500).json({ error: 'Error en recuperar users.' });
     }
 });
@@ -43,7 +44,7 @@ usersRouter.get('/users/:nom', basicAuthMiddleware, async (req: Request, res: Re
             res.json(usuari);
         }
     } catch (error) {
-        console.error('Error en recuperar usuari:', error);
+        logger.error('Error en recuperar usuari:', error);
         res.status(500).json({ error: 'Error en recuperar usuari.' });
     }
 });
@@ -69,7 +70,7 @@ usersRouter.post('/users', express.json(), async (req: Request, res: Response) =
         const id = await db.createUser({ '_id': '', 'name': nom, 'email': email, 'password': password });
         res.status(201).json( id );
     } catch (error) {
-        console.error('Error en crear usuari:', error);
+        logger.error('Error en crear usuari:', error);
         res.status(500).json({ error: 'Error en crear usuari.' });
     }
 });
@@ -96,7 +97,7 @@ usersRouter.put('/users/:nom', basicAuthMiddleware, express.json(), async (req: 
         await db.updateUserById(usuari._id as string, { '_id': usuari._id, 'name': nom, 'email': email, 'password': passwordHash });
         res.json({ _id: usuari._id });
     } catch (error) {
-        console.error('Error en actualitzar usuari:', error);
+        logger.error('Error en actualitzar usuari:', error);
         res.status(500).json({ error: 'Error en actualitzar usuari.' });
     }
 });
@@ -118,7 +119,7 @@ usersRouter.delete('/users/:nom', basicAuthMiddleware, async (req: Request, res:
             res.status(204).json({ _id: usuari._id });
         }
     } catch (error) {
-        console.error('Error en eliminar usuari:', error);
+        logger.error('Error en eliminar usuari:', error);
         res.status(500).json({ error: 'Error en eliminar usuari.' });
     }
 });
@@ -175,7 +176,7 @@ usersRouter.get('/users/mfa/:username', async (req: Request, res: Response) => {
         const hasMfa = !!usuari.secret && usuari.secret !== '';
         res.json({ mfa: hasMfa });
     } catch (error) {
-        console.error('Error en recuperar usuari:', error);
+        logger.error('Error en recuperar usuari:', error);
         res.status(500).json({ error: 'Error en recuperar usuari.' });
     }
 });

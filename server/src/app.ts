@@ -2,14 +2,15 @@ import express, { Request, Response } from 'express';
 import cors from  'cors';
 import { MongoDatabase } from './lib/mongo-database';
 import dotenvx from '@dotenvx/dotenvx'
+import logger from './lib/logger';
 
 dotenvx.config();
 const uri = process.env.MONGODB_URI;
 const dbName = process.env.MONGODB_DB;
-console.log(process.env.ENTORN);
-console.log(process.env.MONGODB_DB);
+logger.info(process.env.ENTORN);
+logger.info(process.env.MONGODB_DB);
 if (uri === undefined) {
-  console.error('No s\'ha trobat la variable d\'entorn MONGODB_URI');
+  logger.error('No s\'ha trobat la variable d\'entorn MONGODB_URI');
   process.exit(1);
 }
 
@@ -25,11 +26,11 @@ const db = new MongoDatabase(uri);
       await db.init();
       app.locals.db = db;
     } else {
-      console.error('Error en connectar amb la base de dades: BD null');
+      logger.error('Error en connectar amb la base de dades: BD null');
       process.exit(1);
     }
   } catch (error) {
-    console.error('Error en connectar amb la base de dades:', error);
+    logger.error('Error en connectar amb la base de dades:', error);
     process.exit(1);
   }
 })()
@@ -42,7 +43,7 @@ app.use(cors({
 
 // Ruta de test
 app.get('/test', (req: Request, res: Response) => {
-  console.log('request:', req.body);
+  logger.log('request:', req.body);
   res.send('Hola, aquest és un servidor web amb TypeScript!');
 });
 
@@ -72,5 +73,5 @@ import { categoriesRouter } from './routes/categories';
 app.use('/api', categoriesRouter);
 
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  logger.info(`Server is running at http://localhost:${port}`);
 });

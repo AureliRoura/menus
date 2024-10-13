@@ -4,6 +4,7 @@ import { MongoDatabase as BaseDatabase } from '../lib/mongo-database';
 import { basicAuthMiddleware } from '../lib/basicauth';
 import { IIngredient, Ingredient } from '../lib/ingredients';
 import bcrypt from 'bcrypt';
+import logger from '../lib/logger';
 
 
 const SALT_ROUNDS = 10;
@@ -16,7 +17,7 @@ ingredientRouter.get('/ingredients', basicAuthMiddleware, async (req: Request, r
         const ingredients = await db.getIngredients();
         res.json(ingredients.map((ingredient) => ingredient));
     } catch (error) {
-        console.error('Error en recuperar ingredients:', error);
+        logger.error('Error en recuperar ingredients:', error);
         res.status(500).json({ error: 'Error en recuperar ingredients.' });
     }
 });
@@ -32,7 +33,7 @@ ingredientRouter.get('/ingredients/byname/:nom', basicAuthMiddleware, async (req
             res.json(ingredient);
         }
     } catch (error) {
-        console.error('Error en recuperar ingredient:', error);
+        logger.error('Error en recuperar ingredient:', error);
         res.status(500).json({ error: 'Error en recuperar ingredient.' });
     }
 });
@@ -47,7 +48,7 @@ ingredientRouter.get('/ingredients/:id', basicAuthMiddleware, async (req: Reques
             res.json(ingredient);
         }
     } catch (error) {
-        console.error('Error en recuperar ingredient:', error);
+        logger.error('Error en recuperar ingredient:', error);
         res.status(500).json({ error: 'Error en recuperar ingredient.' });
     }
 });
@@ -77,7 +78,7 @@ ingredientRouter.post('/ingredients', express.json(), async (req: Request, res: 
         const ingredient = await db.createIngredient(ingredientObj.info);
         res.status(201).json(ingredient);
     } catch (error) {
-        console.error('Error en crear ingredient:', error);
+        logger.error('Error en crear ingredient:', error);
         res.status(500).json({ error: 'Error en crear ingredient.' });
     }
 });
@@ -95,12 +96,12 @@ ingredientRouter.put('/ingredients/:_id', basicAuthMiddleware, express.json(), a
         ingredientObj.info._id = ingredient?._id
         await db.updateIngredientById(ingredient._id as string, ingredientObj.info)
             .then((result) => {
-                console.log("result", result)
+                logger.info("result", result)
                 res.status(200).json({ _id: ingredient._id });
             });
 
     } catch (error) {
-        console.error('Error en actualitzar ingredient:', error);
+        logger.error('Error en actualitzar ingredient:', error);
         res.status(500).json({ error: 'Error en actualitzar ingredient.' });
     }
 });
@@ -122,7 +123,7 @@ ingredientRouter.delete('/ingredients/:_id', basicAuthMiddleware, async (req: Re
             res.status(204).json({ _id: ingredient._id });
         }
     } catch (error) {
-        console.error('Error en eliminar ingredient:', error);
+        logger.error('Error en eliminar ingredient:', error);
         res.status(500).json({ error: 'Error en eliminar ingredient.' });
     }
 });
@@ -143,7 +144,7 @@ ingredientRouter.post('/ingredients/rename', basicAuthMiddleware, async (req: Re
             res.status(200).json({ success: true });
         }
     } catch (error) {
-        console.error('Error en renombrar recipe:', error);
+        logger.error('Error en renombrar recipe:', error);
         res.status(500).json({ error: 'Error en renombrar recipe.' });
     }
 });

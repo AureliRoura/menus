@@ -45,6 +45,7 @@
     "typescript": "^5.5.4",
     "undefsafe": "^2.0.5",
     "v8-compile-cache-lib": "^3.0.1",
+    "winston": "^3.15.0",
     "yn": "^5.0.0"
   },
   "scripts": {

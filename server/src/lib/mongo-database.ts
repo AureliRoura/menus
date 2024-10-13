@@ -10,6 +10,7 @@ import { IRecipe, ICategories } from './recipes';
 import { IMenu } from './menus';
 import { IAllergenic } from './allergenics';
 import { Readable } from 'stream';
+import logger from './logger';
 
 
 type MealType = 'lunch' | 'dinner';
@@ -35,19 +36,19 @@ export class MongoDatabase {
     if (!this.usersCollection) {
       throw new Error('Database not connected');
     }
-    console.log('Initializing database...');
+    logger.info('Initializing database...');
     try {
       await this.getUsers();
     } catch (error) {
-      console.error('Error initializing database:', error);
+      logger.error('Error initializing database:', error);
       throw error;
     }
-    console.log('Database initialized');
+    logger.info('Database initialized');
 
   }
 
   async connect(dbName?: string) {
-    console.log('Connecting to database...');
+    logger.info('Connecting to database...');
     try {
       await this.client.connect();
       if (!dbName) {
@@ -62,9 +63,9 @@ export class MongoDatabase {
       this.menusCollection = this.db.collection('menus');
       this.allergenicsCollection = this.db.collection('allergenics');
       this.GridFSBucket = new GridFSBucket(this.db, { bucketName: 'images' });
-      console.log('Connected to database');
+      logger.info('Connected to database');
     } catch (error) {
-      console.error('Error connecting to database:', error);
+      logger.error('Error connecting to database:', error);
       throw error;
     }
   }
@@ -434,13 +435,13 @@ export class MongoDatabase {
             { _id: unitToDelete._id }
           );
         }
-        console.log(`Updated ${updateResult.modifiedCount} documents.`);
+        logger.info(`Updated ${updateResult.modifiedCount} documents.`);
       }
       await this.session.commitTransaction();
     }
     catch (error) {
       await this.session.abortTransaction();
-      console.error('Error updating documents:', error);
+      logger.error('Error updating documents:', error);
     } finally {
 
     }
@@ -477,11 +478,11 @@ export class MongoDatabase {
         { arrayFilters: [{ 'elem.name': oldName }] } // Specify which array elements to update
       );
       await this.session.commitTransaction();
-      console.log(`Updated ${updateResult.modifiedCount} documents.`);
+      logger.info(`Updated ${updateResult.modifiedCount} documents.`);
       return true
     } catch (error) {
       await this.session.abortTransaction();
-      console.error('Error updating documents:', error);
+      logger.error('Error updating documents:', error);
       return false
     }
   }
@@ -519,10 +520,10 @@ export class MongoDatabase {
         }
       );
       await this.session.commitTransaction();
-      console.log(`Updated ${updateResult.modifiedCount} documents.`);
+      logger.info(`Updated ${updateResult.modifiedCount} documents.`);
     } catch (error) {
       await this.session.abortTransaction();
-      console.error('Error updating documents:', error);
+      logger.error('Error updating documents:', error);
     }
   }
 
@@ -695,7 +696,7 @@ export class MongoDatabase {
         }
       }
     }
-    console.log('update:', update);
+    logger.info('update:', update);
     const result = await this.menusCollection.findOneAndUpdate(
       { _id: new ObjectId(_id) as any },
       { $set: update },
@@ -750,7 +751,7 @@ export class MongoDatabase {
     } catch (error) {
       const err = error as Error & { code?: string; name?: string };
       if (err.name === 'MongoRuntimeError' && err.message.includes('FileNotFound')) {
-        console.log('Image not found');
+        logger.info('Image not found');
         throw new Error('Image not found');
       }
       throw err;
