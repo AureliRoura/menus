@@ -130,7 +130,7 @@ const router = createRouter({
     {
       path: '/:pathMatch(.*)*',
       // redirect to home
-      redirect: { name: 'home' }
+      redirect: { name: 'Inici' }
     }
   ]
 })
