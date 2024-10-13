@@ -12,7 +12,6 @@
       </v-tooltip>
     </v-card-title>
     <v-card-text>
-
       <v-row v-if="selectionActive">
         <v-col cols="12" md="10">
           <v-textarea v-model="newStep" label="Pas" required></v-textarea>
@@ -36,7 +35,9 @@
               </v-row>
             </template>
             <template v-else>
-              {{ index + 1 }}. {{ step }}
+              <v-col @click="stepDone[index] = !stepDone[index]" :class="{'bg-secondary': stepDone[index], 'cursor-pointer': true}">
+                {{ index + 1 }}. {{ step }}
+              </v-col>
               <v-list-item-action v-if="selectionActive">
                 <v-icon :disabled="index == 0" color="green" @click="upStep(index)">mdi-arrow-up</v-icon>
                 <v-icon :disabled="index == steps.length - 1" color="green" @click="downStep(index)"
@@ -68,6 +69,7 @@ let newStep = ref('');
 const editIndex = ref(-1);
 let editedStep = ref('');
 const selectionActive = ref(false);
+const stepDone = ref([]);
 
 const emit = defineEmits(['update:steps']);
 
@@ -135,5 +137,9 @@ const downStep = (index) => {
 .list-container {
   overflow-y: auto;
   /* Add a vertical scrollbar */
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 </style>
