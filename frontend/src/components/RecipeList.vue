@@ -57,7 +57,7 @@
           </div>
         </v-list-item>
       </div>
-      <edit-recipe v-model:dialog="dialog" :recipe="selectedRecipe" @submit="handleFormSubmit" />
+      <edit-recipe v-model:dialog="dialog" :recipe="selectedRecipe" :readonly="true" @submit="handleFormSubmit" />
     </v-list>
   </v-card>
 </template>

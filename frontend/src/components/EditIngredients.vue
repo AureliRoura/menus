@@ -1,10 +1,10 @@
 <template>
   <v-card>
     <v-card-title>Ingredients
-      <v-tooltip text="Afegeix Ingredients">
+      <v-tooltip text="Afegeix Ingredients" v-if="!props.readonly" >
         <template v-slot:activator="{ props }">
-          <v-btn icon size="x-small" density="comfortable" @click="selectionActive = !selectionActive" color="primary"
-            class="ml-1" v-bind="props">
+          <v-btn   icon size="x-small" density="comfortable" @click="selectionActive = !selectionActive" color="primary"
+            class="ml-1" v-bind="props" >
             <v-icon v-if="!selectionActive">mdi-plus</v-icon>
             <v-icon v-else>mdi-minus</v-icon>
           </v-btn>
@@ -45,7 +45,7 @@
           <div class="d-flex justify-space-between">
             <span>{{ ingredient.name }} - {{ ingredient.quantity }} {{ ingredient.unit }}
             </span>
-            <v-list-item-action>
+            <v-list-item-action v-if="!props.readonly">
               <v-icon color="red" @click="removeIngredient(index)">mdi-delete</v-icon>
             </v-list-item-action>
           </div>
@@ -69,7 +69,12 @@ import { addMessage } from '@/modules/arrMessage';
 import apiIngredients from '@/modules/apiIngredients';
 
 const props = defineProps({
-  ingredients: Array
+  ingredients: Array,
+  readonly:
+  {
+    type: Boolean,
+    default: false
+  }
 });
 
 let ingredients = toRef(props, 'ingredients');
@@ -90,6 +95,12 @@ const emit = defineEmits(['update:ingredients']);
 
 watch(() => ingredients.value, (newIngredients) => {
   emit('update:ingredients', newIngredients);
+});
+
+watch(() => props.readonly, (newVal) => {
+  if (newVal) {
+    selectionActive.value = false;
+  }
 });
 
 let valid = computed(() => {

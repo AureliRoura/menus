@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title>Categories</v-card-title>
     <v-card-text>
-      <v-row>
+      <v-row v-if="!props.readonly">
         <v-col cols="12" sm="5">
           <v-autocomplete v-model="newCategory.category" :items="mainCategories" label="Categories" auto-select-first
             required @input="inputCategoryCtl" style="min-width: 100px;">
@@ -26,7 +26,7 @@
                 <a v-if="category.category === 'url'" :href="value" target="_blank"> {{ value }}</a>
                 <span v-else> {{ value }}</span>
               </div>
-              <v-list-item-action>
+              <v-list-item-action v-if="!props.readonly">
                 <v-icon color="red" @click="removeCategory(category.category, value)">mdi-delete</v-icon>
               </v-list-item-action>
             </div>
@@ -45,7 +45,11 @@ import { addMessage } from '@/modules/arrMessage';
 const categoriesStore = useCategoriesStore();
 
 const props = defineProps({
-  categories: Array
+  categories: Array,
+  readonly: {
+    type: Boolean,
+    default: false
+  }
 });
 
 let categories = toRef(props, 'categories');

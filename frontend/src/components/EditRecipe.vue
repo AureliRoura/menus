@@ -1,8 +1,16 @@
 <template>
   <v-dialog v-model="state.dialog">
     <v-card>
-
-      <v-card-title>Recepta</v-card-title>
+      <div class="d-flex justify-space-between align-center">
+        <v-card-title>Recepta</v-card-title>
+        <v-tooltip :text="readonly ? 'Edita' :'Bloqueja'">
+          <template v-slot:activator="{ props }">
+            <v-btn icon size="x-small" round class="mr-2" @click="readonly = !readonly" v-bind="props">
+              <v-icon>{{ readonly ? 'mdi-pencil-off' : 'mdi-pencil' }}</v-icon>
+            </v-btn>
+          </template>
+        </v-tooltip>
+      </div>
       <v-tabs v-model="tab" bg-color="primary" show-arrows>
         <v-tab value="general">General </v-tab>
         <v-tab value="steps">Passos ({{ numSteps }})</v-tab>
@@ -11,26 +19,28 @@
       </v-tabs>
       <div class="content-container">
         <v-card-text>
-          <v-form v-model="valid" @submit.prevent="submit" :disabled="props.readonly">
+          <v-form v-model="valid" @submit.prevent="submit" :disabled="readonly">
             <v-tabs-window v-model="tab">
               <v-tabs-window-item value="general">
                 <v-row>
-                  <v-col cols="12" sm="12" md="9">
+                  <v-col cols="12" sm="12" md="9" class="py-0">
                     <v-text-field v-model="state.recipe.name" label="Nom" required></v-text-field>
                   </v-col>
-                  <v-col cols="8" sm="8" md="2">
+                  <v-col cols="8" sm="8" md="2" class="py-0">
                     <v-text-field v-model="state.recipe.time" label="Temps de Cocció" required></v-text-field>
                   </v-col>
-                  <v-col cols="4" sm="4" md="1" class="d-flex align-center justify-center">
+                  <v-col cols="4" sm="4" md="1" class="d-flex align-center justify-center py-0">
                     <v-sheet class="pa-2 border mb-4" elevation="4" rounded>
                       <select-rating :rating="state.recipe?.rating?.[userStore.account] ?? 0"
                         :ratingList="state.recipe?.rating ?? {}"
-                        @update:rating="state.recipe.rating[userStore.account] = $event"></select-rating>
+                        @update:rating="state.recipe.rating[userStore.account] = $event"
+                        :readonly="readonly">
+                         </select-rating>
                     </v-sheet>
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col cols="12" sm="12" md="10">
+                  <v-col cols="12" sm="12" md="10" >
                     <v-textarea v-model="state.recipe.desc" label="Descripció" required rows="3">
                     </v-textarea>
                   </v-col>
@@ -39,7 +49,7 @@
                       <v-text-field v-model="state.recipe.servings" label="Comensals" required type="number"
                         min="1"></v-text-field>
                     </v-row>
-                    <v-row class="mr-2">
+                    <v-row class="mr-2" >
                       <v-select v-model="state.recipe.difficulty" label="Dificultat" :items="difficulty"
                         item-value="value" item-title="label" required></v-select>
                     </v-row>
@@ -57,28 +67,29 @@
                     </v-row>
                   </v-col>
                 </v-row>
-                <edit-ingredients v-model:ingredients="state.recipe.ingredients"></edit-ingredients>
+                <edit-ingredients v-model:ingredients="state.recipe.ingredients" :readonly="readonly">
+                </edit-ingredients>
               </v-tabs-window-item>
               <v-tabs-window-item value="category">
-                <edit-categories v-model:categories="state.recipe.categories"></edit-categories>
+                <edit-categories v-model:categories="state.recipe.categories" :readonly="readonly"></edit-categories>
               </v-tabs-window-item>
               <v-tabs-window-item value="steps">
-                <edit-steps v-model:steps="state.recipe.steps"></edit-steps>
+                <edit-steps v-model:steps="state.recipe.steps" :readonly="readonly"></edit-steps>
               </v-tabs-window-item>
             </v-tabs-window>
           </v-form>
         </v-card-text>
       </div>
       <v-card-actions class="justify-end">
-        <v-chip class="mr-2" color="red darken-1" text @click="state.dialog = false">Close</v-chip>
-        <v-chip class="mr-2" color="green darken-1" text @click="submit">Save</v-chip>
+        <v-chip class="mr-2" color="red darken-1" text @click="state.dialog = false">Tanca</v-chip>
+        <v-chip v-if="!readonly" class="mr-2" color="green darken-1" text @click="submit">Guarda</v-chip>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed, readonly } from 'vue';
+import { ref, reactive, watch, computed } from 'vue';
 import EditIngredients from './EditIngredients.vue';
 import EditCategories from './EditCategories.vue';
 import EditSteps from './EditSteps.vue';
@@ -104,6 +115,8 @@ const props = defineProps({
     default: false,
   },
 });
+
+const readonly = ref(props.readonly);
 
 let state = reactive({
   dialog: props.dialog,

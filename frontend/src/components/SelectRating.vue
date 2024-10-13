@@ -17,7 +17,7 @@
         </span>
       </template>
 
-      <v-list>
+      <v-list v-if="!props.readonly">
         <v-list-item v-for="(item, index) in items" :key="index" @click="selectItem(item)" density="compact"
           rounded="lg" :class="item.value === itemSelected ? 'bg-blue-darken-4' : ''">
           <v-list-item-title>{{ item.title }} {{ item.desc }}</v-list-item-title>
@@ -41,6 +41,10 @@ const props = defineProps({
   ratingList: {
     type: Object,
     default: () => ({})
+  },
+  readonly: {
+    type: Boolean,
+    default: false
   }
 })
 const items = ref(rating)

@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>Passos
-      <v-tooltip text="Edita Passos">
+      <v-tooltip text="Edita Passos" v-if="!props.readonly" >
         <template v-slot:activator="{ props }">
           <v-btn icon size="x-small" density="comfortable" @click="selectionActive = !selectionActive" color="primary"
             class="ml-1" v-bind="props">
@@ -58,9 +58,18 @@ import { ref, watch, computed, toRef } from 'vue';
 import { addMessage } from '@/modules/arrMessage';
 
 const props = defineProps({
-  steps: Array
+  steps: Array,
+  readonly: {
+    type: Boolean,
+    default: false
+  }
 });
 
+watch(() => props.readonly, (newVal) => {
+  if (newVal) {
+    selectionActive.value = false;
+  }
+});
 
 let steps = toRef(props, 'steps');
 
