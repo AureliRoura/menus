@@ -83,7 +83,7 @@ const recipesList = ref([]);
 recipesList.value = recipesStore.recipes;
 const selectedIngredients = ref([]);
 const selectedCategory = ref([]);
-const readonly = ref(false);
+const readonly = ref(true);
 
 let filter = ref(''); // Valor del filtre
 

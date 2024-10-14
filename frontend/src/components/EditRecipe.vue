@@ -148,6 +148,10 @@ watch(() => props.recipe, (value) => {
   }
 });
 
+watch(() => props.readonly, (value) => {
+  readonly.value = value;
+});
+
 watch(() => state.dialog, (value) => {
   emit('update:dialog', value);
   tab.value = 'general';
