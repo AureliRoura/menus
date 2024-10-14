@@ -4,7 +4,7 @@
     <v-menu>
       <template v-slot:activator="{ props }">
         <span v-bind="props" class="cursor-pointer">
-          <h2> {{ rating[itemSelected]?.title ?? 'undefined' }}
+          <h2 :class="{'bg-light-blue-lighten-3 rounded' : hasRatings}"> {{ rating[itemSelected]?.title ?? 'undefined' }}
             <v-tooltip v-if="hasRatings" activator="parent" location="bottom" open-on-hover>
               <!--  show list key value pairs  -->
               <v-list>
