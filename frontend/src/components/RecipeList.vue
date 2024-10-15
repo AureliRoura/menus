@@ -1,64 +1,65 @@
 <template>
   <v-card>
-    <v-row cols="12" md="6">
-      <v-text-field v-model="filter" label="Filtrar per Nom" outlined></v-text-field>
-    </v-row>
-    <v-row>
-      <v-col cols="12" md="6">
-        <v-autocomplete v-model="selectedIngredients" :items="ingredientsList" item-title="name"
-          label="Filtrar per Ingredients" multiple clearable chips closable-chips return-object
-          @update:model-value="closeDropdownIngredient" ref="autoCompleteRefIngredient">
-          <template v-slot:chip="{ props, item }">
-            <v-chip v-bind="props" :text="item.raw.name"></v-chip>
-          </template>
-          <template v-slot:item="{ props, item }">
-            <v-list-item v-bind="props" :title="item.raw.name" density="compact"></v-list-item>
-          </template>
-        </v-autocomplete>
-      </v-col>
-      <v-col cols="12" md="6">
-        <v-autocomplete v-model="selectedCategory" :items="categoriesList" item-title="name" item-value="_id"
-          label="Filtrar per Categories" multiple clearable chips closable-chips return-object
-          @update:model-value="closeDropdownCategory" ref="autoCompleteRefCategory">
-          <template v-slot:chip="{ props, item }">
-            <v-chip v-bind="props" :text="item.raw.value"></v-chip>
-          </template>
-          <template v-slot:item="{ props, item }">
-            <v-list-item v-bind="props" :title="item.raw.name" density="compact"
-              :class="!item.raw.isDisabled ? 'ml-4' : ''" :disabled="item.raw.isDisabled">
-            </v-list-item>
-          </template>
-        </v-autocomplete>
-      </v-col>
-    </v-row>
-    <v-list>
-      <v-list-item class="text-h6 bg-primary" density="compact" rounded>
-        <div class="d-flex justify-space-between">
-          Receptes ({{ recipesFiltered.length }})
-          <v-list-item-action>
-            <v-icon @click="addRecipe()">mdi-plus</v-icon>
-          </v-list-item-action>
-        </div>
-      </v-list-item>
-      <div style="max-height: calc(100vh - 370px); overflow-y: auto;">
-        <!-- Utilitzem recipesFiltered en lloc de recipesList -->
-        <v-list-item v-for="(recipe, index) in recipesFiltered" :key="recipe.id" @mouseover="hover = index"
-          @mouseleave="hover = null" :class="hover === index ? 'bg-blue-grey-darken-1' : ''" rounded density="compact">
+      <v-row cols="12" md="6">
+        <v-text-field v-model="filter" label="Filtrar per Nom" outlined></v-text-field>
+      </v-row>
+      <v-row>
+        <v-col cols="12" md="6">
+          <v-autocomplete v-model="selectedIngredients" :items="ingredientsList" item-title="name"
+            label="Filtrar per Ingredients" multiple clearable chips closable-chips return-object
+            @update:model-value="closeDropdownIngredient" ref="autoCompleteRefIngredient">
+            <template v-slot:chip="{ props, item }">
+              <v-chip v-bind="props" :text="item.raw.name"></v-chip>
+            </template>
+            <template v-slot:item="{ props, item }">
+              <v-list-item v-bind="props" :title="item.raw.name" density="compact"></v-list-item>
+            </template>
+          </v-autocomplete>
+        </v-col>
+        <v-col cols="12" md="6">
+          <v-autocomplete v-model="selectedCategory" :items="categoriesList" item-title="name" item-value="_id"
+            label="Filtrar per Categories" multiple clearable chips closable-chips return-object
+            @update:model-value="closeDropdownCategory" ref="autoCompleteRefCategory">
+            <template v-slot:chip="{ props, item }">
+              <v-chip v-bind="props" :text="item.raw.value"></v-chip>
+            </template>
+            <template v-slot:item="{ props, item }">
+              <v-list-item v-bind="props" :title="item.raw.name" density="compact"
+                :class="!item.raw.isDisabled ? 'ml-4' : ''" :disabled="item.raw.isDisabled">
+              </v-list-item>
+            </template>
+          </v-autocomplete>
+        </v-col>
+      </v-row>
+      <v-list>
+        <v-list-item class="text-h6 bg-primary" density="compact" rounded>
           <div class="d-flex justify-space-between">
-            <div class="d-flex align-left align-center">
-              <select-rating :rating="recipe?.rating?.[userStore.account] ?? 0" :ratingList="recipe?.rating ?? {}"
-                @update:rating="updateRating($event, recipe._id)"></select-rating>
-              <v-list-item-title class="cursor-pointer ml-3 text-wrap" v-text="recipe.name"
-                @click="selectRecipe(recipe)"></v-list-item-title>
-            </div>
+            Receptes ({{ recipesFiltered.length }})
             <v-list-item-action>
-              <v-icon color="red" @click="deleteRecipe(recipe, index)">mdi-delete</v-icon>
+              <v-icon @click="addRecipe()">mdi-plus</v-icon>
             </v-list-item-action>
           </div>
         </v-list-item>
-      </div>
-      <edit-recipe v-model:dialog="dialog" :recipe="selectedRecipe" :readonly=readonly @submit="handleFormSubmit" />
-    </v-list>
+        <div style="max-height: calc(100vh - 370px); overflow-y: auto;">
+          <!-- Utilitzem recipesFiltered en lloc de recipesList -->
+          <v-list-item v-for="(recipe, index) in recipesFiltered" :key="recipe.id" @mouseover="hover = index"
+            @mouseleave="hover = null" :class="hover === index ? 'bg-blue-grey-darken-1' : ''" rounded
+            density="compact">
+            <div class="d-flex justify-space-between">
+              <div class="d-flex align-left align-center ">
+                <select-rating :rating="recipe?.rating?.[userStore.account] ?? 0" :ratingList="recipe?.rating ?? {}"
+                  @update:rating="updateRating($event, recipe._id)"></select-rating>
+                <v-list-item-title class="cursor-pointer ml-3 text-wrap" v-text="recipe.name"
+                  @click="selectRecipe(recipe)"></v-list-item-title>
+              </div>
+              <v-list-item-action>
+                <v-icon color="red" @click="deleteRecipe(recipe, index)">mdi-delete</v-icon>
+              </v-list-item-action>
+            </div>
+          </v-list-item>
+        </div>
+        <edit-recipe v-model:dialog="dialog" :recipe="selectedRecipe" @submit="handleFormSubmit" />
+      </v-list>
   </v-card>
 </template>
 
@@ -83,16 +84,17 @@ const recipesList = ref([]);
 recipesList.value = recipesStore.recipes;
 const selectedIngredients = ref([]);
 const selectedCategory = ref([]);
-const readonly = ref(true);
 
 let filter = ref(''); // Valor del filtre
 
 // Computed property per filtrar les receptes
 const recipesFiltered = computed(() => {
   // First, filter based on the search text if any
-  let filteredBySearch = recipesList.value;
+  let filteredBySearch = [];
   if (filter.value) {
     filteredBySearch = recipesList.value.filter(recipe => recipe.name.toLowerCase().includes(filter.value.toLowerCase()));
+  } else {
+    filteredBySearch = recipesList.value;
   }
   /* 
     // If no ingredients are selected, return the recipes filtered by search
@@ -202,7 +204,6 @@ const handleFormSubmit = (formData) => {
 const selectRecipe = (recipe) => {
   operation = 'edit';
   selectedRecipe.value = recipe;
-  readonly.value = true
   dialog.value = true;
 };
 
@@ -238,7 +239,6 @@ const addRecipe = () => {
   });
 
   selectedRecipe.value = recipe;
-  readonly.value = false;
   dialog.value = true;
   //console.log('addRecipe');
 };
@@ -255,11 +255,11 @@ const closeDropdownIngredient = () => {
 
 const closeDropdownCategory = () => {
 
-  nextTick(() => {
-    if (autoCompleteRefCategory.value) {
-      autoCompleteRefCategory.value.blur();
-    }
-  });
+nextTick(() => {
+  if (autoCompleteRefCategory.value) {
+    autoCompleteRefCategory.value.blur();
+  }
+});
 
 };
 const updateRating = (newRating, recipeId) => {
@@ -283,9 +283,7 @@ const updateRating = (newRating, recipeId) => {
 
 <style scoped>
 .text-wrap {
-  white-space: normal;
-  /* Allows text to wrap */
-  word-wrap: break-word;
-  /* Breaks long words */
+  white-space: normal; /* Allows text to wrap */
+  word-wrap: break-word; /* Breaks long words */
 }
 </style>
