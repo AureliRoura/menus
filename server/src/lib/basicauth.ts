@@ -58,5 +58,5 @@ export const basicAuthMiddleware: express.RequestHandler = (req: Request, res: R
 };
 
 export const createToken = (nom: string, password: string): string => {
-  return jwt.sign({ nom, password }, secretKey, { expiresIn: '1h' });
+  return jwt.sign({ nom, password }, secretKey, { expiresIn: '6h' });
 };
