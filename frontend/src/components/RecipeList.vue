@@ -58,14 +58,14 @@
             </div>
           </v-list-item>
         </div>
-        <edit-recipe v-model:dialog="dialog" :recipe="selectedRecipe" @submit="handleFormSubmit" />
+        <edit-recipe v-model:dialog="dialog" :recipe="selectedRecipe" :readonly="readonly" @submit="handleFormSubmit" />
       </v-list>
   </v-card>
 </template>
 
 
 <script setup>
-import { ref, inject, reactive, computed, nextTick } from 'vue';
+import { ref, inject, reactive, computed, nextTick} from 'vue';
 import { useRecipesStore } from '@/stores/recipesStore';
 import { useUserStore } from '@/stores/userStore';
 import { addMessage } from '@/modules/arrMessage';
@@ -84,6 +84,7 @@ const recipesList = ref([]);
 recipesList.value = recipesStore.recipes;
 const selectedIngredients = ref([]);
 const selectedCategory = ref([]);
+const readonly = ref(true);
 
 let filter = ref(''); // Valor del filtre
 
@@ -203,6 +204,7 @@ const handleFormSubmit = (formData) => {
 
 const selectRecipe = (recipe) => {
   operation = 'edit';
+  readonly.value = true;
   selectedRecipe.value = recipe;
   dialog.value = true;
 };
@@ -238,6 +240,7 @@ const addRecipe = () => {
     rating: {}
   });
 
+  readonly.value = false;
   selectedRecipe.value = recipe;
   dialog.value = true;
   //console.log('addRecipe');
