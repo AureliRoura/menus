@@ -35,7 +35,7 @@
               </v-row>
             </template>
             <template v-else>
-              <v-col @click="stepDone[index] = !stepDone[index]" :class="{'bg-secondary': stepDone[index], 'cursor-pointer': true}">
+              <v-col @click="stepDone[index] = !stepDone[index]" :class="{'text-decoration-line-through text-red-lighten-1': stepDone[index], 'cursor-pointer': true}">
                 {{ index + 1 }}. {{ step }}
               </v-col>
               <v-list-item-action v-if="selectionActive">
