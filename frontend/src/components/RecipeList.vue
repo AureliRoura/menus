@@ -22,7 +22,7 @@
             @update:model-value="closeDropdownCategory" ref="autoCompleteRefCategory">
             <template v-slot:chip="{ props, item }">
               <v-chip v-bind="props" :text="item.raw.value"></v-chip>
-            </template>
+            </template> 
             <template v-slot:item="{ props, item }">
               <v-list-item v-bind="props" :title="item.raw.name" density="compact"
                 :class="!item.raw.isDisabled ? 'ml-4' : ''" :disabled="item.raw.isDisabled">
