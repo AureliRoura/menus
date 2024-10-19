@@ -74,7 +74,7 @@
                 <edit-categories v-model:categories="state.recipe.categories" :readonly="readonly"></edit-categories>
               </v-tabs-window-item>
               <v-tabs-window-item value="steps">
-                <edit-steps v-model:steps="state.recipe.steps" :readonly="readonly"></edit-steps>
+                <edit-steps v-model:steps="state.recipe.steps" :ingredients="state.recipe.ingredients" :readonly="readonly"></edit-steps>
               </v-tabs-window-item>
             </v-tabs-window>
           </v-form>
@@ -130,6 +130,9 @@ const ratingOptions = ref(rating)
 
 watch(() => props.dialog, (value) => {
   state.dialog = value;
+  if (value) {
+    readonly.value = props.readonly;
+  }
 });
 
 watch(() => props.recipe, (value) => {
