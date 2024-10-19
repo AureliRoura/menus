@@ -36,7 +36,10 @@
             </template>
             <template v-else>
               <v-col @click="stepDone[index] = !stepDone[index]" :class="{'text-decoration-line-through text-red-lighten-1': stepDone[index], 'cursor-pointer': true}">
+                <span>
                 {{ index + 1 }}. {{ step }}
+                <v-tooltip v-if="ingredientsList(step)" location="bottom" activator="parent" >{{ingredientsList(step)}}</v-tooltip>
+                </span>
               </v-col>
               <v-list-item-action v-if="selectionActive">
                 <v-icon :disabled="index == 0" color="green" @click="upStep(index)">mdi-arrow-up</v-icon>
@@ -59,6 +62,10 @@ import { addMessage } from '@/modules/arrMessage';
 
 const props = defineProps({
   steps: Array,
+  ingredients: {
+    type: Array,
+    default: () => []
+  },
   readonly: {
     type: Boolean,
     default: false
@@ -140,6 +147,16 @@ const downStep = (index) => {
     steps.value[index + 1] = temp;
   }
 };
+
+const ingredientsList = (step) => {
+  // Implement your logic to find texts from the array in the step string
+  const lowerCaseStep = step.toLowerCase();
+  return props.ingredients
+    .filter(ingredient => lowerCaseStep.includes(ingredient.name.toLowerCase()))
+    .map(ingredient => `${ingredient.name} (${ingredient.quantity} ${ingredient.unit})`)
+    .join(', ');
+};
+
 </script>
 
 <style scoped>
