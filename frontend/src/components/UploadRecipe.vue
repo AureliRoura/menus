@@ -96,7 +96,7 @@ const handleFileUpload = (file) => {
 
 const handleTextInput = (value) => {
   try {
-    console.log('value', value);
+    //console.log('value', value);
     json = JSON.parse(value);
     // Handle text input logic here
   }
@@ -121,7 +121,7 @@ const submitForm = async () => {
     }
     selectedRecipe.value = json;
     dialog.value = true;
-    console.log('json', json)
+    // console.log('json', json)
     /*
     arrxios.post('/api/recipes/upload',  { data: JSON.stringify(json) })
       .then((response) => {
@@ -162,7 +162,7 @@ const handleFormSubmit = async (formData) => {
       return;
     }
   }
-  console.log('continue');
+  //console.log('continue');
   for (const Ingredient of formData.ingredients) {
     try {
       const response = await arrxios.get('/api/ingredients/byname/' + Ingredient.name)
@@ -177,7 +177,7 @@ const handleFormSubmit = async (formData) => {
         working.value = false;
         return;
       } else {
-        console.log('Creant igredient:', Ingredient);
+        // console.log('Creant igredient:', Ingredient);
         await arrxios.post('/api/ingredients', { name: Ingredient.name })
           .then((response) => {
             if (response.status === 201) {
@@ -194,17 +194,17 @@ const handleFormSubmit = async (formData) => {
       }
     }
   }
-  console.log('handleFormSubmit', formData);
+  //console.log('handleFormSubmit', formData);
   await arrxios.post('/api/recipes', formData)
     .then((response) => {
-      console.log('Response:', response);
+      //console.log('Response:', response);
       addMessage('Recepta pujada amb exit!!');
     })
     .catch((error) => {
       console.error('Error submitting form:', error);
       addMessage('Error Creant Recepta: ', 'error');
     });
-  console.log('handleFormSubmit', formData);
+  //console.log('handleFormSubmit', formData);
   loadRecipes();
   loadIngredients();
   working.value = false;
