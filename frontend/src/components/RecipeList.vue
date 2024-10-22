@@ -39,7 +39,7 @@
 
 
 <script setup>
-import { ref, inject, reactive, computed, nextTick} from 'vue';
+import { ref, inject, reactive} from 'vue';
 import { useRecipesStore } from '@/stores/recipesStore';
 import { useUserStore } from '@/stores/userStore';
 import { addMessage } from '@/modules/arrMessage';
@@ -53,15 +53,9 @@ const recipesStore = useRecipesStore();
 const userStore = useUserStore();
 
 const confirmMessage = inject('confirmMessage');
-const autoCompleteRefIngredient = ref(null);
-const autoCompleteRefCategory = ref(null);
 const recipesList = ref([]);
 recipesList.value = recipesStore.recipes;
 const readonly = ref(true);
-
-let filter = ref(''); // Valor del filtre
-
-
 
 let selectedRecipe = ref(null);
 let hover = ref(null);
@@ -124,25 +118,6 @@ const addRecipe = () => {
   //console.log('addRecipe');
 };
 
-const closeDropdownIngredient = () => {
-
-  nextTick(() => {
-    if (autoCompleteRefIngredient.value) {
-      autoCompleteRefIngredient.value.blur();
-    }
-  });
-
-};
-
-const closeDropdownCategory = () => {
-
-nextTick(() => {
-  if (autoCompleteRefCategory.value) {
-    autoCompleteRefCategory.value.blur();
-  }
-});
-
-};
 const updateRating = (newRating, recipeId) => {
   const aux = `rating.${userStore.account}`;
   arrxios.put(`/api/recipes/${recipeId}`, { [aux]: newRating })
