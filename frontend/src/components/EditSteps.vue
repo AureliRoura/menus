@@ -152,8 +152,8 @@ const ingredientsList = (step) => {
   // Implement your logic to find texts from the array in the step string
   const lowerCaseStep = step.toLowerCase();
   return props.ingredients
-    .filter(ingredient => lowerCaseStep.includes(ingredient.name.split(' ')[0].toLowerCase()))
-    .map(ingredient => `${ingredient.name} (${ingredient.quantity || ''} ${ingredient.unit || ''})`)
+    .filter(ingredient => lowerCaseStep.includes(ingredient.name.toLowerCase()))
+    .map(ingredient => `${ingredient.name} (${ingredient.quantity} ${ingredient.unit})`)
     .join(', ');
 };
 
