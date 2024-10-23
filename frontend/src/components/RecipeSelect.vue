@@ -1,6 +1,6 @@
 <template>
   <v-row cols="12" md="6" class="mt-1" >
-    <v-text-field v-model="filter" label="Filtrar per Nom" outlined></v-text-field>
+    <v-text-field v-model="filter" label="Filtrar per Nom" outlined clearable></v-text-field>
   </v-row>
   <v-row>
     <v-col cols="12" md="6">
