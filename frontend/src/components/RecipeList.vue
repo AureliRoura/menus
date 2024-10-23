@@ -1,45 +1,45 @@
 <template>
   <v-card>
-      <recipe-select>
-        <template #data="{recipesFiltered}">
-          <v-list>
-        <v-list-item class="text-h6 bg-primary" density="compact" rounded>
-          <div class="d-flex justify-space-between">
-            Receptes ({{ recipesFiltered.length }})
-            <v-list-item-action>
-              <v-icon @click="addRecipe()">mdi-plus</v-icon>
-            </v-list-item-action>
-          </div>
-        </v-list-item>
-        <div style="max-height: calc(100vh - 370px); overflow-y: auto;">
-          <!-- Utilitzem recipesFiltered en lloc de recipesList -->
-          <v-list-item v-for="(recipe, index) in recipesFiltered" :key="recipe.id" @mouseover="hover = index"
-            @mouseleave="hover = null" :class="hover === index ? 'bg-blue-grey-darken-1' : ''" rounded
-            density="compact">
+    <recipe-select>
+      <template #data="{ recipesFiltered }">
+        <v-list>
+          <v-list-item class="text-h6 bg-primary" density="compact" rounded>
             <div class="d-flex justify-space-between">
-              <div class="d-flex align-left align-center ">
-                <select-rating :rating="recipe?.rating?.[userStore.account] ?? 0" :ratingList="recipe?.rating ?? {}"
-                  @update:rating="updateRating($event, recipe._id)"></select-rating>
-                <v-list-item-title class="cursor-pointer ml-3 text-wrap" v-text="recipe.name"
-                  @click="selectRecipe(recipe)"></v-list-item-title>
-              </div>
+              Receptes ({{ recipesFiltered.length }})
               <v-list-item-action>
-                <v-icon color="red" @click="deleteRecipe(recipe, index)">mdi-delete</v-icon>
+                <v-icon @click="addRecipe()">mdi-plus</v-icon>
               </v-list-item-action>
             </div>
           </v-list-item>
-        </div>
+          <div style="max-height: calc(100vh - 370px); overflow-y: auto;">
+            <!-- Utilitzem recipesFiltered en lloc de recipesList -->
+            <v-list-item v-for="(recipe, index) in recipesFiltered" :key="recipe.id" @mouseover="hover = index"
+              @mouseleave="hover = null" :class="hover === index ? 'bg-blue-grey-darken-1' : ''" rounded
+              density="compact">
+              <div class="d-flex justify-space-between">
+                <div class="d-flex align-left align-center ">
+                  <select-rating :rating="recipe?.rating?.[userStore.account] ?? 0" :ratingList="recipe?.rating ?? {}"
+                    @update:rating="updateRating($event, recipe._id)"></select-rating>
+                  <v-list-item-title class="cursor-pointer ml-3 text-wrap" v-text="recipe.name"
+                    @click="selectRecipe(recipe)"></v-list-item-title>
+                </div>
+                <v-list-item-action>
+                  <v-icon color="red" @click="deleteRecipe(recipe, index)">mdi-delete</v-icon>
+                </v-list-item-action>
+              </div>
+            </v-list-item>
+          </div>
+        </v-list>
         <edit-recipe v-model:dialog="dialog" :recipe="selectedRecipe" :readonly="readonly" @submit="handleFormSubmit" />
-      </v-list>
-        </template>
-      </recipe-select>
+      </template>
+    </recipe-select>
 
   </v-card>
 </template>
 
 
 <script setup>
-import { ref, inject, reactive} from 'vue';
+import { ref, inject, reactive } from 'vue';
 import { useRecipesStore } from '@/stores/recipesStore';
 import { useUserStore } from '@/stores/userStore';
 import { addMessage } from '@/modules/arrMessage';
@@ -139,7 +139,9 @@ const updateRating = (newRating, recipeId) => {
 
 <style scoped>
 .text-wrap {
-  white-space: normal; /* Allows text to wrap */
-  word-wrap: break-word; /* Breaks long words */
+  white-space: normal;
+  /* Allows text to wrap */
+  word-wrap: break-word;
+  /* Breaks long words */
 }
 </style>
