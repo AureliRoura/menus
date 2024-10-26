@@ -50,6 +50,7 @@ let items = ref([
   { title: 'Menús', link: '/menuweeklist', selected: false, loggedIn: true },
   { title: 'Ingredients', link: '/editingredients', selected: false, loggedIn: true },
   { title: 'Receptes', link: '/editrecipes', selected: false, loggedIn: true },
+  { title: 'Llista de la Compra', link: '/recipeIngredients', selected: false, loggedIn: true },
   { title: 'Carrega des de JSON', link: '/uploadmenu', selected: false, loggedIn: true },
   { title: 'Adminstració de Components', link: '/admindata', selected: false, loggedIn: true },
   //  { title: 'Edita Categories', link: '/editcategoriestorecipe', selected: false, loggedIn: true},

@@ -1,24 +1,43 @@
-export default function aggregateIngredients(menuData, numberOfPersons) {
+export default function aggregateIngredients(menuData, recipeList, numberOfPersons) {
   const result = {};
-  
-  Object.values(menuData).forEach(day => {
-    Object.values(day).forEach(meals => {
-      meals.forEach(recipe => {
-        if (!recipe.servings || recipe.servings < 1) {
-          recipe.servings = 1;
-        }
-        recipe.ingredients.forEach(ingredient => {
-          // Create a composite key using ingredient name and unit
-          const key = `${ingredient.name}_${ingredient.unit}`;
-          if (!result[key]) {
-            result[key] = { name: ingredient.name, quantity: 0, unit: ingredient.unit };
+  if (menuData) {
+
+    Object.values(menuData).forEach(day => {
+      Object.values(day).forEach(meals => {
+        meals.forEach(recipe => {
+          if (!recipe.servings || recipe.servings < 1) {
+            recipe.servings = 1;
           }
-          // Multiply ingredient quantity by the number of persons
-          result[key].quantity += ingredient.quantity / recipe.servings * numberOfPersons;
+          recipe.ingredients.forEach(ingredient => {
+            // Create a composite key using ingredient name and unit
+            const key = `${ingredient.name}_${ingredient.unit}`;
+            if (!result[key]) {
+              result[key] = { name: ingredient.name, quantity: 0, unit: ingredient.unit };
+            }
+            // Multiply ingredient quantity by the number of persons
+            result[key].quantity += ingredient.quantity / recipe.servings * numberOfPersons;
+          });
         });
       });
     });
-  });
+  }
+  if (recipeList) {
+    // Add the ingredients from the recipe list
+    recipeList.forEach(recipe => {
+      if (!recipe.servings || recipe.servings < 1) {
+        recipe.servings = 1;
+      }
+      recipe.ingredients.forEach(ingredient => {
+        // Create a composite key using ingredient name and unit
+        const key = `${ingredient.name}_${ingredient.unit}`;
+        if (!result[key]) {
+          result[key] = { name: ingredient.name, quantity: 0, unit: ingredient.unit };
+        }
+        // Multiply ingredient quantity by the number of persons
+        result[key].quantity += ingredient.quantity / recipe.servings * numberOfPersons;
+      });
+    });
+  }
 
   // Convert the result object into an array of ingredient objects
   const ingredientsArray = Object.values(result);

@@ -52,6 +52,11 @@ const router = createRouter({
       component: () => import('../views/EditRecipesView.vue')
     },
     {
+      path: '/recipeIngredients',
+      name: 'Llista de Ingredients a Receptes Selecionades',
+      component: () => import('../views/RecipeIngredientsView.vue')
+    },
+    {
       path: '/editday',
       name: 'Edit Day',
       component: () => import('../views/EditDayView.vue')

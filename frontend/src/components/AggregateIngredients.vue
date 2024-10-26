@@ -11,7 +11,7 @@
       <v-card-text>
         <v-text-field v-model="numberOfPersons" label="Number of Persons" type="number"
           :rules="[rules.required]"></v-text-field>
-        <v-list  style="max-height: 300px; overflow-y: auto;">
+        <v-list style="max-height: 300px; overflow-y: auto;">
 
 
           <v-list-item v-for="(ingredient, index) in aggregatedIngredients" :key="index">
@@ -31,7 +31,16 @@ import aggregateIngredients from '@/modules/aggregateIngredients';
 // Props
 const props = defineProps({
   dialog: Boolean,
-  menu: Object
+  menu: 
+  {
+    type: Object,
+    default: () => null
+  },
+  recipeList:
+  {
+    type: Array,
+    default: () => []
+  }
 });
 
 
@@ -57,6 +66,6 @@ const rules = {
 
 // Computed property to get aggregated ingredients
 const aggregatedIngredients = computed(() => {
-  return aggregateIngredients(props.menu, numberOfPersons.value);
+  return aggregateIngredients(props.menu, props.recipeList, numberOfPersons.value);
 });
 </script>
