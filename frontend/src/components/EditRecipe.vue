@@ -3,13 +3,22 @@
     <v-card>
       <div class="d-flex justify-space-between align-center">
         <v-card-title>Recepta</v-card-title>
+        <div>
+        <v-tooltip text="Copy Link">
+          <template v-slot:activator="{ props }">
+            <v-btn icon size="x-small" round class="mr-2" @click="copyLink" v-bind="props">
+              <v-icon>mdi-content-copy</v-icon>
+            </v-btn>
+          </template>
+        </v-tooltip>
         <v-tooltip v-if="props.readonly" :text="readonly ? 'Edita' :'Bloqueja'">
           <template v-slot:activator="{ props }">
-            <v-btn icon size="x-small" round class="mr-2" @click="readonly = !readonly" v-bind="props">
+            <v-btn v-if="editable" icon size="x-small" round class="mr-2" @click="readonly = !readonly" v-bind="props">
               <v-icon>{{ readonly ? 'mdi-pencil-off' : 'mdi-pencil' }}</v-icon>
             </v-btn>
           </template>
         </v-tooltip>
+      </div>
       </div>
       <v-tabs v-model="tab" bg-color="primary" show-arrows>
         <v-tab value="general">General </v-tab>
@@ -94,13 +103,14 @@ import EditIngredients from './EditIngredients.vue';
 import EditCategories from './EditCategories.vue';
 import EditSteps from './EditSteps.vue';
 import SelectRating from './SelectRating.vue';
-import rating from '@/modules/rating.js';
 import { useUserStore } from '@/stores/userStore';
 import difficulty from '@/modules/difficulty.js';
 import { useBreakpoint } from '@/modules/usebreakpoint';
+import { addMessage } from '@/modules/arrMessage';
 
 const userStore = useUserStore();
 const { isMdAndUp } = useBreakpoint();
+
 
 
 
@@ -114,9 +124,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  editable: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const readonly = ref(props.readonly);
+const editable = ref(props.editable);
 
 let state = reactive({
   dialog: props.dialog,
@@ -124,9 +139,6 @@ let state = reactive({
 });
 const valid = ref(false);
 const tab = ref('general');
-
-
-const ratingOptions = ref(rating)
 
 watch(() => props.dialog, (value) => {
   state.dialog = value;
@@ -170,6 +182,12 @@ const submit = () => {
     emit('submit', state.recipe);
     emit('update:dialog', false);
   }
+};
+
+const copyLink = () => {
+  const url = `${window.location.origin}/menus/showrecipe/${state.recipe._id}`;
+  navigator.clipboard.writeText(url);
+  addMessage('Link copiat al portapapers');
 };
 
 defineExpose({

@@ -57,6 +57,11 @@ const router = createRouter({
       component: () => import('../views/RecipeIngredientsView.vue')
     },
     {
+      path: '/showrecipe/:recipeId',
+      name: 'Mostra Recepta',
+      component: () => import('../views/RecipeByLinkView.vue')
+    },
+    {
       path: '/editday',
       name: 'Edit Day',
       component: () => import('../views/EditDayView.vue')
@@ -141,7 +146,8 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.name === 'Login' || to.name == 'Logout' || to.name === 'Nou Usuari' || to.name === 'MFA') {
+  if (to.name === 'Login' || to.name == 'Logout' || to.name === 'Nou Usuari' || to.name === 'MFA' ||
+    to.name === 'Mostra Recepta' || to.name === 'Verifica Token') {
     next()
     return
   }
