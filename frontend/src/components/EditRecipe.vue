@@ -4,21 +4,22 @@
       <div class="d-flex justify-space-between align-center">
         <v-card-title>Recepta</v-card-title>
         <div>
-        <v-tooltip text="Copy Link">
-          <template v-slot:activator="{ props }">
-            <v-btn icon size="x-small" round class="mr-2" @click="copyLink" v-bind="props">
-              <v-icon>mdi-content-copy</v-icon>
-            </v-btn>
-          </template>
-        </v-tooltip>
-        <v-tooltip v-if="props.readonly" :text="readonly ? 'Edita' :'Bloqueja'">
-          <template v-slot:activator="{ props }">
-            <v-btn v-if="editable" icon size="x-small" round class="mr-2" @click="readonly = !readonly" v-bind="props">
-              <v-icon>{{ readonly ? 'mdi-pencil-off' : 'mdi-pencil' }}</v-icon>
-            </v-btn>
-          </template>
-        </v-tooltip>
-      </div>
+          <v-tooltip text="Copy Link">
+            <template v-slot:activator="{ props }">
+              <v-btn icon size="x-small" round class="mr-2" @click="copyLink" v-bind="props">
+                <v-icon>mdi-content-copy</v-icon>
+              </v-btn>
+            </template>
+          </v-tooltip>
+          <v-tooltip v-if="props.readonly" :text="readonly ? 'Edita' : 'Bloqueja'">
+            <template v-slot:activator="{ props }">
+              <v-btn v-if="editable" icon size="x-small" round class="mr-2" @click="readonly = !readonly"
+                v-bind="props">
+                <v-icon>{{ readonly ? 'mdi-pencil-off' : 'mdi-pencil' }}</v-icon>
+              </v-btn>
+            </template>
+          </v-tooltip>
+        </div>
       </div>
       <v-tabs v-model="tab" bg-color="primary" show-arrows>
         <v-tab value="general">General </v-tab>
@@ -42,14 +43,13 @@
                     <v-sheet class="pa-2 border mb-4" elevation="4" rounded>
                       <select-rating :rating="state.recipe?.rating?.[userStore.account] ?? 0"
                         :ratingList="state.recipe?.rating ?? {}"
-                        @update:rating="state.recipe.rating[userStore.account] = $event"
-                        :readonly="readonly">
-                         </select-rating>
+                        @update:rating="state.recipe.rating[userStore.account] = $event" :readonly="readonly">
+                      </select-rating>
                     </v-sheet>
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col cols="12" sm="12" md="10" >
+                  <v-col cols="12" sm="12" md="10">
                     <v-textarea v-model="state.recipe.desc" label="Descripció" required rows="3">
                     </v-textarea>
                   </v-col>
@@ -58,7 +58,7 @@
                       <v-text-field v-model="state.recipe.servings" label="Comensals" required type="number"
                         min="1"></v-text-field>
                     </v-row>
-                    <v-row class="mr-2" >
+                    <v-row class="mr-2">
                       <v-select v-model="state.recipe.difficulty" label="Dificultat" :items="difficulty"
                         item-value="value" item-title="label" required></v-select>
                     </v-row>
@@ -83,7 +83,8 @@
                 <edit-categories v-model:categories="state.recipe.categories" :readonly="readonly"></edit-categories>
               </v-tabs-window-item>
               <v-tabs-window-item value="steps">
-                <edit-steps v-model:steps="state.recipe.steps" :ingredients="state.recipe.ingredients" :readonly="readonly"></edit-steps>
+                <edit-steps v-model:steps="state.recipe.steps" :ingredients="state.recipe.ingredients"
+                  :readonly="readonly"></edit-steps>
               </v-tabs-window-item>
             </v-tabs-window>
           </v-form>
@@ -195,9 +196,13 @@ const copyLink = () => {
       fallbackCopyTextToClipboard(url);
     });
   } else {
-    fallbackCopyTextToClipboard(url);
-    addMessage('Link copiat al portapapers');
-  }
+    try {
+      fallbackCopyTextToClipboard(url);
+      addMessage('Link copiat al portapapers');
+    } catch (err) {
+      addMessage('Error copiant el link', 'error');
+    }
+  };
 };
 
 const fallbackCopyTextToClipboard = (text) => {
@@ -209,7 +214,6 @@ const fallbackCopyTextToClipboard = (text) => {
   textArea.select();
   try {
     document.execCommand('copy');
-    addMessage('Link copiat al portapapers');
   } catch (err) {
     console.error('Fallback: Oops, unable to copy', err);
   }
