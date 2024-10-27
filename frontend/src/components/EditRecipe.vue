@@ -108,6 +108,7 @@ import difficulty from '@/modules/difficulty.js';
 import { useBreakpoint } from '@/modules/usebreakpoint';
 import { addMessage } from '@/modules/arrMessage';
 
+
 const userStore = useUserStore();
 const { isMdAndUp } = useBreakpoint();
 
@@ -197,6 +198,22 @@ const copyLink = () => {
     fallbackCopyTextToClipboard(url);
     addMessage('Link copiat al portapapers');
   }
+};
+
+const fallbackCopyTextToClipboard = (text) => {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  textArea.style.position = "fixed";  // Avoid scrolling to bottom
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand('copy');
+    addMessage('Link copiat al portapapers');
+  } catch (err) {
+    console.error('Fallback: Oops, unable to copy', err);
+  }
+  document.body.removeChild(textArea);
 };
 
 defineExpose({
