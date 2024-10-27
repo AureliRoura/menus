@@ -186,8 +186,17 @@ const submit = () => {
 
 const copyLink = () => {
   const url = `${window.location.origin}/menus/showrecipe/${state.recipe._id}`;
-  navigator.clipboard.writeText(url);
-  addMessage('Link copiat al portapapers');
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => {
+      addMessage('Link copiat al portapapers');
+    }).catch(err => {
+      console.error('Failed to copy: ', err);
+      fallbackCopyTextToClipboard(url);
+    });
+  } else {
+    fallbackCopyTextToClipboard(url);
+    addMessage('Link copiat al portapapers');
+  }
 };
 
 defineExpose({
