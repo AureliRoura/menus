@@ -109,7 +109,6 @@ import difficulty from '@/modules/difficulty.js';
 import { useBreakpoint } from '@/modules/usebreakpoint';
 import { addMessage } from '@/modules/arrMessage';
 
-
 const userStore = useUserStore();
 const { isMdAndUp } = useBreakpoint();
 
@@ -188,36 +187,8 @@ const submit = () => {
 
 const copyLink = () => {
   const url = `${window.location.origin}/menus/showrecipe/${state.recipe._id}`;
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(url).then(() => {
-      addMessage('Link copiat al portapapers');
-    }).catch(err => {
-      console.error('Failed to copy: ', err);
-      fallbackCopyTextToClipboard(url);
-    });
-  } else {
-    try {
-      fallbackCopyTextToClipboard(url);
-      addMessage('Link copiat al portapapers');
-    } catch (err) {
-      addMessage('Error copiant el link', 'error');
-    }
-  };
-};
-
-const fallbackCopyTextToClipboard = (text) => {
-  const textArea = document.createElement("textarea");
-  textArea.value = text;
-  textArea.style.position = "fixed";  // Avoid scrolling to bottom
-  document.body.appendChild(textArea);
-  textArea.focus();
-  textArea.select();
-  try {
-    document.execCommand('copy');
-  } catch (err) {
-    console.error('Fallback: Oops, unable to copy', err);
-  }
-  document.body.removeChild(textArea);
+  navigator.clipboard.writeText(url);
+  addMessage(`Link copiat: ${url}`);  
 };
 
 defineExpose({
