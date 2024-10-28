@@ -1,3 +1,6 @@
+import http from 'http';
+import https from 'https';
+import fs from 'fs';
 import express, { Request, Response } from 'express';
 import cors from  'cors';
 import { MongoDatabase } from './lib/mongo-database';
@@ -17,6 +20,25 @@ if (uri === undefined) {
 const app = express();
 app.use(express.json());
 const port = process.env.SERVER_PORT||3000;
+const httpsPort = process.env.SERVER_PORT_HTTPS||3443;
+const certKey = process.env.SERVER_KEY;
+const cert = process.env.SERVER_CERT;
+
+
+if (certKey === undefined || cert === undefined) {
+  logger.error('No s\'ha trobat la variable d\'entorn SERVER_KEY o SERVER_CERT');
+  process.exit(1);
+}
+
+const httpsOptions = {
+  key: fs.readFileSync(certKey),
+  cert: fs.readFileSync(cert)
+};
+
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(httpsOptions, app);
+
+
 //const uri = "mongodb+srv://aureliroura:hxndwxZsORfWp49c@cluster0.obzgga5.mongodb.net?retryWrites=true&w=majority&appName=Cluster0";
 const db = new MongoDatabase(uri);
 (async () => {
@@ -43,8 +65,8 @@ app.use(cors({
 
 // Ruta de test
 app.get('/test', (req: Request, res: Response) => {
-  logger.log('request:', req.body);
-  res.send('Hola, aquest és un servidor web amb TypeScript!');
+  logger.info(`request: ${req.protocol}://${req.get('host')}${req.originalUrl}`);
+  res.send('It\'s alive!');
 });
 
 // Configurar la nova ruta de logon
@@ -72,6 +94,11 @@ app.use('/api', allergenicsRouter);
 import { categoriesRouter } from './routes/categories';
 app.use('/api', categoriesRouter);
 
-app.listen(port, () => {
+httpServer.listen(port, () => {
   logger.info(`Server is running at http://localhost:${port}`);
 });
+
+httpsServer.listen(httpsPort, () => {
+  logger.info(`Server is running at https://localhost:${httpsPort}`);
+});
+
