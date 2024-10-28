@@ -36,3 +36,5 @@ coverage
 # data directory
 data
 
+# cert directory
+cert
