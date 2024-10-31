@@ -11,7 +11,8 @@
               </v-list-item-action>
             </div>
           </v-list-item>
-          <div style="max-height: calc(100vh - 370px); overflow-y: auto;">
+          <!-- <div style="max-height: calc(100vh - 370px); overflow-y: auto;"> -->
+          <div style="max-height: 50vh; overflow-y: auto;">
             <!-- Utilitzem recipesFiltered en lloc de recipesList -->
             <v-list-item v-for="(recipe, index) in recipesFiltered" :key="recipe.id" @mouseover="hover = index"
               @mouseleave="hover = null" :class="hover === index ? 'bg-blue-grey-darken-1' : ''" rounded

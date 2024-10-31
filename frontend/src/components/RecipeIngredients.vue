@@ -24,7 +24,7 @@
           </div>
         </v-list>
         <v-list>
-          <div style="max-height: calc(100vh - 490px); overflow-y: auto;">
+          <div style="max-height: calc(35vh); overflow-y: auto;">
             <!-- Utilitzem recipesFiltered -->
             <v-list-item v-for="(recipe, index) in recipesFiltered" :key="recipe.id" @mouseover="hover2 = index"
               @mouseleave="hover2 = null" :class="hover2 === index ? 'bg-blue-grey-darken-1' : ''" rounded
