@@ -96,6 +96,17 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="dialogUrl" max-width="400">
+    <v-card>
+      <v-card-title>Copia Link</v-card-title>
+      <v-card-text>
+        <v-textarea  v-model="url" readonly></v-textarea>
+      </v-card-text>
+      <v-card-actions>
+        <v-chip class="mr-2" color="green darken-1" text @click="dialogUrl = false">Tanca</v-chip>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -138,8 +149,10 @@ let state = reactive({
   dialog: props.dialog,
   recipe: props.recipe || { name: '', desc: '', time: '', ingredients: [], categories: [], steps: [], rating: [], difficulty: '', servings: 1 },
 });
+const dialogUrl = ref(false);
 const valid = ref(false);
 const tab = ref('general');
+let url = '';
 
 watch(() => props.dialog, (value) => {
   state.dialog = value;
@@ -186,9 +199,13 @@ const submit = () => {
 };
 
 const copyLink = () => {
-  const url = `${window.location.origin}/menus/showrecipe/${state.recipe._id}`;
-  navigator.clipboard.writeText(url);
-  addMessage(`Link copiat: ${url}`);  
+  url = `${window.location.origin}/menus/showrecipe/${state.recipe._id}`;
+  try {
+    navigator.clipboard.writeText(url);
+    addMessage(`Link copiat: ${url}`);
+  } catch (error) {
+    dialogUrl.value = true;
+  }
 };
 
 defineExpose({
