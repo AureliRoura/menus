@@ -12,6 +12,7 @@
             </div>
           </v-list-item>
           <!-- <div style="max-height: calc(100vh - 370px); overflow-y: auto;"> -->
+          <!-- <div :style="{ maxHeight: maxHeight, overflowY: 'auto'}"> -->
           <div style="max-height: 50vh; overflow-y: auto;">
             <!-- Utilitzem recipesFiltered en lloc de recipesList -->
             <v-list-item v-for="(recipe, index) in recipesFiltered" :key="recipe.id" @mouseover="hover = index"
@@ -57,6 +58,7 @@ const confirmMessage = inject('confirmMessage');
 const recipesList = ref([]);
 recipesList.value = recipesStore.recipes;
 const readonly = ref(true);
+// const maxHeight = ref('50vh'); // 'calc(100vh - 370px)';
 
 let selectedRecipe = ref(null);
 let hover = ref(null);
