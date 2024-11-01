@@ -18,7 +18,7 @@
             </template>
             <v-list>
               <div v-for="(item, i) in items" :key="i" @click="selectItem(i)">
-                <router-link :to="item.link" v-if="!('loggedIn' in item) || item.loggedIn === userStore.loggedIn">
+                <router-link :to="item.link" v-if="(!('loggedIn' in item) || item.loggedIn === userStore.loggedIn) && (!item.admin || userStore.account === 'admin')" >
                   <v-list-item :active="item.selected">
                     <v-list-item-title>{{ item.title }}</v-list-item-title>
                   </v-list-item>
@@ -52,7 +52,7 @@ let items = ref([
   { title: 'Receptes', link: '/editrecipes', selected: false, loggedIn: true },
   { title: 'Llista de la Compra', link: '/recipeIngredients', selected: false, loggedIn: true },
   { title: 'Carrega des de JSON', link: '/uploadmenu', selected: false, loggedIn: true },
-  { title: 'Adminstració de Components', link: '/admindata', selected: false, loggedIn: true },
+  { title: 'Adminstració de Components', link: '/admindata', selected: false, loggedIn: true, admin: true },
   //  { title: 'Edita Categories', link: '/editcategoriestorecipe', selected: false, loggedIn: true},
   //  { title: 'Edit Day', link: '/editday', selected: false},
   //  { title: 'Edit Week', link: '/editweek', selected: false}, 
