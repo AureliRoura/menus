@@ -26,7 +26,7 @@ import { ref, computed, watch , inject} from 'vue';
 import { useIngredientsStore } from '@/stores/ingredientsStore';
 import arrxios from '@/modules/arrxios';
 import { addMessage } from '@/modules/arrMessage';
-import { loadRecipes } from '@/modules/loadData';
+import { loadRecipes, loadIngredients } from '@/modules/loadData';
 
 
 const confirmMessage = inject('confirmMessage');
@@ -68,6 +68,7 @@ const renameIngredient = () => {
 //            console.log(response);
             if (response.status === 200) {
               loadRecipes().catch (error => addMessage('Error al carregat Receptes:' + error, 'error'));
+              loadIngredients().catch(error => addMessage('Error al carregar Ingredients:' + error, 'error'));
               addMessage('Ingredient renombrada correctament', 'success');
               selectedFromIngredient.value = null;
               selectedToIngredient.value = null;

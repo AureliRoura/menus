@@ -466,19 +466,32 @@ export class MongoDatabase {
       }
       const newIngredient = await this.ingredientsCollection.findOne({ name: newName });
       if (!newIngredient) {
+        // new ingredient name does not exist name should be updated
         newId = oldIngredient._id;
+        const updateResult = await this.ingredientsCollection.updateOne(
+          { _id: oldIngredient._id },
+          { $set: { name: newName } }
+        );
+        logger.info(`Ingredient Updated ${updateResult.modifiedCount} documents.`);
       } else {
+        // new ingredient name exists
         newId = newIngredient._id;
+        // delete old ingredient
+        const deleteResult = await this.ingredientsCollection.deleteOne(
+          { _id: oldIngredient._id }
+        );
+        logger.info(`Ingredient Deleted ${deleteResult.deletedCount} documents.`);
       }
-
       // update all recipes with the old ingredient name
       const updateResult = await this.recipesCollection.updateMany(
         { 'ingredients.name': oldName }, // Find recipes with the old ingredient name
         { $set: { 'ingredients.$[elem].name': newName, 'ingredients.$[elem]._id': new ObjectId(newId) } }, // Set the new name and _id
         { arrayFilters: [{ 'elem.name': oldName }] } // Specify which array elements to update
       );
+
+
       await this.session.commitTransaction();
-      logger.info(`Updated ${updateResult.modifiedCount} documents.`);
+      logger.info(`Recipes Updated ${updateResult.modifiedCount} documents.`);
       return true
     } catch (error) {
       await this.session.abortTransaction();
@@ -744,7 +757,7 @@ export class MongoDatabase {
     if (!this.GridFSBucket) {
       throw new Error('Database not connected');
     }
-  
+
     try {
       const downloadStream = this.GridFSBucket.openDownloadStream(new ObjectId(id));
       return downloadStream;
