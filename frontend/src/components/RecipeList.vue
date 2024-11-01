@@ -20,7 +20,7 @@
               density="compact">
               <div class="d-flex justify-space-between">
                 <div class="d-flex align-left align-center ">
-                  <select-rating :rating="recipe?.rating?.[userStore.account] ?? 0" :ratingList="recipe?.rating ?? {}"
+                  <select-rating :rating="recipe?.rating?.[userStore.account] ?? {'value': 0, 'date': new Date().toISOString() }" :ratingList="recipe?.rating ?? {}"
                     @update:rating="updateRating($event, recipe._id)"></select-rating>
                   <v-list-item-title class="cursor-pointer ml-3 text-wrap" v-text="recipe.name"
                     @click="selectRecipe(recipe)"></v-list-item-title>

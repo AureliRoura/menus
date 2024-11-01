@@ -170,7 +170,7 @@ watch(() => props.recipe, (value) => {
     state.recipe.rating = {};
   }
   if (state.recipe.rating[userStore.account] === undefined) {
-    state.recipe.rating[userStore.account] = 0;
+    state.recipe.rating[userStore.account] = { value: 0, date: new Date().toISOString() };
   }
   if (state.recipe.steps === undefined) {
     state.recipe.steps = [];
