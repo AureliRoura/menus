@@ -2,7 +2,7 @@
 
 import { User } from './user';
 
-import { MongoClient, Db, Collection, ObjectId, GridFSBucket } from 'mongodb';
+import { MongoClient, Db, Collection, ObjectId, GridFSBucket,Document } from 'mongodb';
 import { IUser } from './user';
 import { IIngredient } from './ingredients';
 import { IUnit } from './units';
@@ -320,6 +320,41 @@ export class MongoDatabase {
       throw new Error('Database not connected');
     }
     return this.recipesCollection.find().sort({ name: 1 }).toArray();
+  }
+
+  async getRecipesWithIngredient(ingredientId: string):   Promise<Document[]> {
+    if (!this.ingredientsCollection) {
+      throw new Error('Database not connected');
+    }
+    const result = this.ingredientsCollection.aggregate([
+      {
+        $match: {
+          _id: new ObjectId(ingredientId) // Replace with the actual ObjectId of the ingredient you want to filter for
+        }
+      },
+      {
+        $lookup: {
+          from: "recipes",
+          let: { ingredientId: { $toString: "$_id" } },
+          pipeline: [
+            { $unwind: "$ingredients" },
+            { $match: { $expr: { $eq: ["$ingredients._id", "$$ingredientId"] } } }
+          ],
+          as: "recipes"
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          recipes: {
+            _id: 1,
+            name: 1
+          }
+        }
+      }
+    ]).toArray();
+    return result;
   }
 
   async createRecipe(recipe: IRecipe): Promise<IRecipe> {

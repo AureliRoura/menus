@@ -24,6 +24,16 @@ const selectedRecipe = ref(null);
 const readonly = ref(true);
 const thinking = ref(true);
 
+const goBack = () => {
+  const referrer = document.referrer;
+  const currentOrigin = window.location.origin;
+  if (referrer.startsWith(currentOrigin)) {
+    router.go(-1); // Navigate back to the previous page
+  } else {
+    router.push({ name: 'Edita Receptes' }); // Navigate to a default route
+  }
+};
+
 onMounted(() => {
   setTimeout(() => {
     recipeId.value = route.params.recipeId;
@@ -40,12 +50,12 @@ onMounted(() => {
 
 watch(() => dialog.value, (value) => {
   if (!value) {
-    router.push({ name: 'Edita Receptes' });
+    goBack(); // Navigate back to the previous page or to the default route
   }
 });
 
 const handleFormSubmit = () => {
-  router.push({ name: 'Edita Receptes' });
+  goBack(); // Navigate back to the previous page or to the default route
 };
 
 </script>

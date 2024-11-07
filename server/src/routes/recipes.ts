@@ -3,6 +3,7 @@ import express, { Request, Response, Router } from 'express';
 import { MongoDatabase as BaseDatabase } from '../lib/mongo-database';
 import { basicAuthMiddleware } from '../lib/basicauth';
 import { Recipe } from '../lib/recipes';
+import logger from '../lib/logger';
 
 
 
@@ -138,6 +139,27 @@ recipesRouter.get('/recipes/rename', basicAuthMiddleware, async (req: Request, r
     } catch (error) {
         console.error('Error en renombrar recipe:', error);
         res.status(500).json({ error: 'Error en renombrar recipe.' });
+    }
+});
+
+recipesRouter.get('/recipes/ingredient/:_id', basicAuthMiddleware, async (req: Request, res: Response) => {
+    try {
+        const db = (req.app.locals.db as BaseDatabase);
+        const _id = req.params._id;
+
+        // Comprova que el parametre existeixi
+
+        if (_id === null) {
+            return res.status(400).json({ error: 'Falta id de l\'ingredient.' });
+        } else {
+            let recipes = await db.getRecipesWithIngredient(_id);
+            res.status(200).json(recipes.map((recipe) => recipe));
+
+        }
+    } catch (error) {
+        logger.error('Error al recuperar receptes:', error);
+        console.log('Error al recuperar receptes:', error);
+        res.status(500).json({ error: 'Error al recuperar receptes.' });
     }
 });
 

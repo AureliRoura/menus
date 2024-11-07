@@ -6,20 +6,36 @@
         <v-list-item class="text-h6 bg-primary rounded">
           <div class="d-flex justify-space-between">
             Ingredients
-            <v-list-item-action>
+            <v-list-item-action >
               <v-icon @click="addIngredient()">mdi-plus</v-icon>
             </v-list-item-action>
           </div>
         </v-list-item>
         <div style="max-height: calc(100vh - 300px); overflow-y: auto;" class="fill-height">
-          <v-list-item v-for="(ingredient, index) in ingredientsFiltered" :key="ingredient._id" @mouseover="hover = index"
-            @mouseleave="hover = null" :class="hover === index ? 'bg-blue-grey-darken-1' : ''" rounded>
+          <v-list-item v-for="(ingredient, index) in ingredientsFiltered" :key="ingredient._id"
+            @mouseover="hover = index" @mouseleave="hover = null"
+            :class="hover === index ? 'bg-blue-grey-darken-1' : ''" rounded>
             <div class="d-flex justify-space-between">
               <v-list-item-title class="cursor-pointer" v-text="ingredient.name"
                 @click="selectIngredient(ingredient, index)"></v-list-item-title>
-              <v-list-item-action>
-                <v-icon color="red" @click="deleteIngredient(ingredient, index)">mdi-delete</v-icon>
-              </v-list-item-action>
+
+              <div class="d-flex align-center">
+                <v-menu open-on-click open-on-hover>
+                  <template v-slot:activator="{ props }">
+                    <span v-bind="props" class="mr-2 cursor-pointer">
+                      {{ recipes[ingredient._id]?.length || 0 }}
+                    </span>
+                  </template>
+                  <v-list>
+                    <v-list-item v-for="(recipe, index) in recipes[ingredient._id]" :key="index" :value="recipe._id">
+                      <v-list-item-title @click="goRecipe(recipe._id)">{{ recipe.name }}</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+                <v-list-item-action>
+                  <v-icon color="red" @click="deleteIngredient(ingredient, index)" :disabled="(recipes[ingredient._id]?.length || 0) !== 0">mdi-delete</v-icon>
+                </v-list-item-action>
+              </div>
             </div>
           </v-list-item>
         </div>
@@ -31,17 +47,19 @@
 
 
 <script setup>
-import { ref, inject, reactive, computed } from 'vue';
+import { ref, inject, reactive, computed, watch } from 'vue';
 import { useIngredientsStore } from '@/stores/ingredientsStore';
 import { addMessage } from '@/modules/arrMessage';
 import ingredients from '@/modules/ingredients';
 import { useRouter } from 'vue-router';
 import EditIngredient from './EditIngredient.vue';
+import arrxios from '@/modules/arrxios';
 
 const router = useRouter();
 const ingredientsStore = useIngredientsStore();
 const confirmMessage = inject('confirmMessage');
 const ingredientList = ref([]);
+const recipes = ref({});
 
 const filter = ref('');
 
@@ -76,15 +94,6 @@ const selectIngredient = (ingredient, index) => {
   operation = 'edit';
   selectedIngredient.value = ingredient;
   dialog.value = true;
-  /*
-  getIngredient(selectedIngredient.value._id)
-    .then(() => {
-      console.log('getIngredient', selectedIngredient.value);
-    })
-    .catch(() => {
-      addMessage('Error carregant el ingredient', 'error');
-    });
-*/
 };
 
 const deleteIngredient = (ingredient, index) => {
@@ -118,11 +127,30 @@ const addIngredient = () => {
   dialog.value = true;
 };
 
-defineExpose({
-  ingredientsStore,
-  dialog,
-  selectedIngredient,
-  selectIngredient,
-});
+const fetchRecipesList = async (ingredientId) => {
+  try {
+    const response = await arrxios.get('/api/recipes/ingredient/' + ingredientId);
+    if (response.status === 200) {
+      recipes.value[ingredientId] = response.data.length > 0 ? response.data[0].recipes : [];
+    } else {
+      recipes.value[ingredientId] = [];
+    }
+  } catch (error) {
+    console.error('Error fetching recipes:', error);
+    recipes.value[ingredientId] = [];
+  }
+};
+
+const goRecipe = (recipeId) => {
+  router.push({ name: 'Mostra Recepta', params: { recipeId } });
+};
+
+
+// Watch for changes to the ingredients and fetch recipes
+watch(ingredientList.value, (newIngredients) => {
+  newIngredients.forEach(ingredient => {
+    fetchRecipesList(ingredient._id);
+  });
+}, { immediate: true });
 
 </script>
