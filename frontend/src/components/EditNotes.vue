@@ -3,9 +3,9 @@
     <v-card-title>
       Notes
     </v-card-title>
-    <v-card-text>
-      <v-textarea v-model="newNoteContent" label="New Note" outlined></v-textarea>
-      <v-btn @click="addNote" rounded>Add Note</v-btn>
+    <v-card-text >
+      <v-textarea v-model="newNoteContent" label="New Note" outlined :disabled=false></v-textarea>
+      <v-btn @click="addNote" :disabled="newNoteContent.length == 0">Add Note</v-btn>
     </v-card-text>
     <v-card-text>
       <v-list density="compact">
