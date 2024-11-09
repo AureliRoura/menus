@@ -1,14 +1,13 @@
 
 
-import { User } from './user';
-
-import { MongoClient, Db, Collection, ObjectId, GridFSBucket,Document } from 'mongodb';
+import { MongoClient, Db, Collection, ObjectId, GridFSBucket, Document } from 'mongodb';
 import { IUser } from './user';
 import { IIngredient } from './ingredients';
 import { IUnit } from './units';
 import { IRecipe, ICategories } from './recipes';
 import { IMenu } from './menus';
 import { IAllergenic } from './allergenics';
+import { INote } from './notes';
 import { Readable } from 'stream';
 import logger from './logger';
 
@@ -26,6 +25,7 @@ export class MongoDatabase {
   private recipesCollection?: Collection<IRecipe>;
   private menusCollection?: Collection<IMenu>;
   private allergenicsCollection?: Collection<IAllergenic>;
+  private notesCollection?: Collection<INote>;
   private GridFSBucket?: GridFSBucket;
 
   constructor(mongoURI: string) {
@@ -62,6 +62,7 @@ export class MongoDatabase {
       this.recipesCollection = this.db.collection('recipes');
       this.menusCollection = this.db.collection('menus');
       this.allergenicsCollection = this.db.collection('allergenics');
+      this.notesCollection = this.db.collection('notes');
       this.GridFSBucket = new GridFSBucket(this.db, { bucketName: 'images' });
       logger.info('Connected to database');
     } catch (error) {
@@ -322,7 +323,7 @@ export class MongoDatabase {
     return this.recipesCollection.find().sort({ name: 1 }).toArray();
   }
 
-  async getRecipesWithIngredient(ingredientId: string):   Promise<Document[]> {
+  async getRecipesWithIngredient(ingredientId: string): Promise<Document[]> {
     if (!this.ingredientsCollection) {
       throw new Error('Database not connected');
     }
@@ -592,6 +593,72 @@ export class MongoDatabase {
       throw new Error('Database not connected');
     }
     return this.allergenicsCollection.find().toArray();
+  }
+
+  async createNote(note: INote): Promise<INote> {
+    if (!this.notesCollection) {
+      throw new Error('Database not connected');
+    }
+    note._id = new ObjectId();
+    note.createdAt = new Date();
+    note.updatedAt = new Date();
+    await this.notesCollection.insertOne(note);
+    return note;
+  }
+
+  async getNotesByUser(userId: string): Promise<INote[]> {
+    if (!this.notesCollection) {
+      throw new Error('Database not connected');
+    }
+    return this.notesCollection.find({ userId }).toArray();
+  }
+
+  async getNote(noteId: string): Promise<INote | null> {
+    if (!this.notesCollection) {
+      throw new Error('Database not connected');
+    }
+    return this.notesCollection.findOne({ _id: new ObjectId(noteId) });
+  }
+
+  async getNoteByRecipeId(recipeId: string): Promise<INote[]> {
+    if (!this.notesCollection) {
+      throw new Error('Database not connected');
+    }
+    return this.notesCollection
+      .find({ recipeId: new ObjectId(recipeId) })
+      .sort({ recipeId: 1, createdAt: -1 })
+      .toArray();
+  }
+
+  async countNotesByRecipeId(recipeId: string): Promise<number> {
+    if (!this.notesCollection) {
+      throw new Error('Database not connected');
+    }
+    return this.notesCollection.countDocuments({ recipeId: new ObjectId(recipeId) });
+  }
+
+  async updateNote(noteId: string, updatedNote: Partial<INote>): Promise<void> {
+    if (!this.notesCollection) {
+      throw new Error('Database not connected');
+    }
+    updatedNote.updatedAt = new Date();
+    if (updatedNote._id) {
+      delete updatedNote._id;
+    }
+    if (typeof updatedNote.recipeId === 'string') {
+      updatedNote.recipeId = new ObjectId(updatedNote.recipeId);
+    }
+    await this.notesCollection.updateOne(
+      { _id: new ObjectId(noteId) },
+      { $set: updatedNote }
+    );
+  }
+
+  async deleteNote(noteId: string): Promise<void> {
+    if (!this.notesCollection) {
+      throw new Error('Database not connected');
+    }
+    await this.notesCollection.deleteOne({ _id: new ObjectId(noteId) });
   }
 
   async getMenus(): Promise<IMenu[]> {

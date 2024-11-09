@@ -3,9 +3,8 @@ import express, { Request, Response, Router } from 'express';
 import { MongoDatabase as BaseDatabase } from '../lib/mongo-database';
 import { basicAuthMiddleware } from '../lib/basicauth';
 import { Recipe } from '../lib/recipes';
+import { ObjectId } from 'mongodb';
 import logger from '../lib/logger';
-
-
 
 export const recipesRouter = Router();
 
@@ -163,6 +162,73 @@ recipesRouter.get('/recipes/ingredient/:_id', basicAuthMiddleware, async (req: R
     }
 });
 
+// Get notes for a recipe
+recipesRouter.get('/recipes/:recipeId/notes', basicAuthMiddleware, async (req: Request, res: Response) => {
+    try {
+        const db = (req.app.locals.db as BaseDatabase);
+        const recipeId = req.params.recipeId;
+        const notes = await db.getNoteByRecipeId(recipeId);
+        res.json(notes);
+    } catch (error) {
+        console.error('Error fetching notes:', error);
+        res.status(500).json({ error: 'Error fetching notes.' });
+    }
+});
 
+// Add a note to a recipe
+recipesRouter.post('/recipes/:recipeId/notes', basicAuthMiddleware, express.json(), async (req: Request, res: Response) => {
+    try {
+        const db = (req.app.locals.db as BaseDatabase);
+        const note = req.body;
+        note.recipeId = new ObjectId(req.params.recipeId);
+        const newNote = await db.createNote(note);
+        res.status(201).json(newNote);
+    } catch (error) {
+        console.error('Error adding note:', error);
+        res.status(500).json({ error: 'Error adding note.' });
+    }
+});
+
+// Update a note in a recipe
+recipesRouter.put('/recipes/:recipeId/notes/:noteId', basicAuthMiddleware, express.json(), async (req: Request, res: Response) => {
+    try {
+        const db = (req.app.locals.db as BaseDatabase);
+        const noteId = req.params.noteId;
+        const updatedNote = req.body;
+        await db.updateNote(noteId, updatedNote);
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error updating note:', error);
+        res.status(500).json({ error: 'Error updating note.' });
+    }
+});
+
+// Delete a note from a recipe
+recipesRouter.delete('/recipes/:recipeId/notes/:noteId', basicAuthMiddleware, async (req: Request, res: Response) => {
+    try {
+        const db = (req.app.locals.db as BaseDatabase);
+        const noteId = req.params.noteId;
+        await db.deleteNote(noteId);
+        res.status(204).json({ success: true });
+    } catch (error) {
+        console.error('Error deleting note:', error);
+        res.status(500).json({ error: 'Error deleting note.' });
+    }
+});
+
+recipesRouter.get('/recipes/countnotes/:recipeId', basicAuthMiddleware, async (req: Request, res: Response) => {
+    const recipeId = req.params.recipeId;
+    if (!recipeId || recipeId === '' || recipeId === 'undefined') {
+        return res.status(400).json({ error: 'Missing recipeId.' });
+    }
+    try {
+        const db = (req.app.locals.db as BaseDatabase);
+        const count = await db.countNotesByRecipeId(recipeId);
+        res.json(count);
+    } catch (error) {
+        console.error('Error fetching notes:', error);
+        res.status(500).json({ error: 'Error fetching notes.' });
+    }
+});
 
 export default recipesRouter;

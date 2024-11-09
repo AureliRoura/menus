@@ -25,6 +25,7 @@
         <v-tab value="general">General </v-tab>
         <v-tab value="steps">Passos ({{ numSteps }})</v-tab>
         <v-tab value="category">Cats ({{ numCategories }})</v-tab>
+        <v-tab value="notes">Notes ({{ numNotes }})</v-tab>
         <!--         <v-tab value="images">Imatges</v-tab>  -->
       </v-tabs>
       <div class="content-container">
@@ -86,6 +87,10 @@
                 <edit-steps v-model:steps="state.recipe.steps" :ingredients="state.recipe.ingredients"
                   :readonly="readonly"></edit-steps>
               </v-tabs-window-item>
+              <v-tabs-window-item value="notes">
+                <edit-notes v-model:recipe-id="state.recipe._id"></edit-notes>
+              </v-tabs-window-item>
+
             </v-tabs-window>
           </v-form>
         </v-card-text>
@@ -100,7 +105,7 @@
     <v-card>
       <v-card-title>Copia Link</v-card-title>
       <v-card-text>
-        <v-textarea  v-model="url" readonly></v-textarea>
+        <v-textarea v-model="url" readonly></v-textarea>
       </v-card-text>
       <v-card-actions>
         <v-chip class="mr-2" color="green darken-1" text @click="dialogUrl = false">Tanca</v-chip>
@@ -110,15 +115,17 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed } from 'vue';
+import { ref, reactive, watch, computed, onMounted } from 'vue';
 import EditIngredients from './EditIngredients.vue';
 import EditCategories from './EditCategories.vue';
 import EditSteps from './EditSteps.vue';
+import EditNotes from './EditNotes.vue';
 import SelectRating from './SelectRating.vue';
 import { useUserStore } from '@/stores/userStore';
 import difficulty from '@/modules/difficulty.js';
 import { useBreakpoint } from '@/modules/usebreakpoint';
 import { addMessage } from '@/modules/arrMessage';
+import arrxios from '@/modules/arrxios';
 
 const userStore = useUserStore();
 const { isMdAndUp } = useBreakpoint();
@@ -186,8 +193,23 @@ watch(() => state.dialog, (value) => {
   tab.value = 'general';
 });
 
+watch(() => state.recipe, (value) => {
+  fetchNoteCount(value);
+}, { deep: true });
+
 const numCategories = computed(() => state.recipe.categories.length);
 const numSteps = computed(() => state.recipe.steps.length);
+const numNotes = ref(0);
+
+const fetchNoteCount = async (value) => {
+  try {
+    const response = await arrxios.get(`/api/recipes/countnotes/${value._id}`);
+    numNotes.value = response.data;
+  } catch (error) {
+    console.error('Error fetching note count:', error);
+    numNotes.value = 0;
+  }
+};
 
 const emit = defineEmits(['update:dialog', 'submit']);
 
