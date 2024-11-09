@@ -648,6 +648,9 @@ export class MongoDatabase {
     if (typeof updatedNote.recipeId === 'string') {
       updatedNote.recipeId = new ObjectId(updatedNote.recipeId);
     }
+    if (typeof updatedNote.createdAt === 'string') {
+      updatedNote.createdAt = new Date(updatedNote.createdAt);
+    }
     await this.notesCollection.updateOne(
       { _id: new ObjectId(noteId) },
       { $set: updatedNote }
