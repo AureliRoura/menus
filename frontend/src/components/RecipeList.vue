@@ -39,7 +39,6 @@
   </v-card>
 </template>
 
-
 <script setup>
 import { ref, inject, reactive, computed } from 'vue';
 import { useRecipesStore } from '@/stores/recipesStore';

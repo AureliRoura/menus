@@ -104,7 +104,6 @@ const deleteNote = async (noteId, index) => {
   try {
     await arrxios.delete(`/api/recipes/${recipeId}/notes/${noteId}`);
     notes.value = notes.value.filter(note => note._id !== noteId);
-    console.log('deleteNote', index);
     editNote.value.splice(index, 1);
     props.onNoteChange();
   } catch (error) {
