@@ -31,7 +31,7 @@
               density="compact">
               <div class="d-flex flex-row   cursor-pointer"
                 @click="toggleRecipeSelection(recipe)">
-                <select-rating :rating="recipe?.rating?.[userStore.account] ?? 0" :ratingList="recipe?.rating ?? {}"
+                <select-rating :rating="recipe?.rating?.[userStore.account] ?? {value: 0}" :ratingList="recipe?.rating ?? {}"
                  :readonly="true"></select-rating>
                 <v-list-item-title class=" ml-3 text-wrap">
                   <span class="checkmark-container">
