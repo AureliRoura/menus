@@ -18,10 +18,10 @@
                   <v-icon v-if="!editNote[index]">mdi-pencil</v-icon>
                   <v-icon v-else>mdi-pencil-off</v-icon>
                 </v-btn>
-                <v-btn v-if="editNote[index]" class="ml-1" icon @click="updateNote(note, index)">
+                <v-btn v-if="editNote[index]" class="ml-1" icon @click="updateNote(note)">
                   <v-icon>mdi-content-save</v-icon>
                 </v-btn>
-                <v-btn v-if="editNote[index]" class="ml-1" icon @click="deleteNote(note._id)">
+                <v-btn v-if="editNote[index]" class="ml-1" icon @click="deleteNote(note._id, index)">
                   <v-icon color="red">mdi-delete</v-icon>
                 </v-btn>
                 <span class="ml-2">
@@ -53,6 +53,10 @@ const props = defineProps({
   recipeId: {
     type: String,
     required: true
+  },
+  onNoteChange: {
+    type: Function,
+    required: true
   }
 });
 
@@ -80,6 +84,8 @@ const addNote = async () => {
     };
     const response = await arrxios.post(`/api/recipes/${recipeId}/notes`, note);
     notes.value.unshift(response.data);
+    editNote.value.unshift(false);
+    props.onNoteChange();
     newNoteContent.value = '';
   } catch (error) {
     console.error('Error adding note:', error);
@@ -98,7 +104,9 @@ const deleteNote = async (noteId, index) => {
   try {
     await arrxios.delete(`/api/recipes/${recipeId}/notes/${noteId}`);
     notes.value = notes.value.filter(note => note._id !== noteId);
+    console.log('deleteNote', index);
     editNote.value.splice(index, 1);
+    props.onNoteChange();
   } catch (error) {
     console.error('Error deleting note:', error);
   }

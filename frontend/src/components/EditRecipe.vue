@@ -88,7 +88,7 @@
                   :readonly="readonly"></edit-steps>
               </v-tabs-window-item>
               <v-tabs-window-item value="notes">
-                <edit-notes v-model:recipe-id="state.recipe._id"></edit-notes>
+                <edit-notes v-model:recipe-id="state.recipe._id" :onNoteChange="onNoteChange"></edit-notes>
               </v-tabs-window-item>
 
             </v-tabs-window>
@@ -209,6 +209,10 @@ const fetchNoteCount = async (value) => {
     console.error('Error fetching note count:', error);
     numNotes.value = 0;
   }
+};
+
+const onNoteChange = () => {
+  fetchNoteCount(state.recipe);
 };
 
 const emit = defineEmits(['update:dialog', 'submit']);
