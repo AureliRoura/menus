@@ -39,14 +39,12 @@
     "otplib": "^12.0.1",
     "pstree.remy": "^1.1.8",
     "qrcode": "^1.5.4",
-    "simple-update-notifier": "^2.0.0",
     "supports-color": "^9.4.0",
     "touch": "^3.1.1",
     "typescript": "^5.5.4",
     "undefsafe": "^2.0.5",
     "v8-compile-cache-lib": "^3.0.1",
-    "winston": "^3.15.0",
-    "yn": "^5.0.0"
+    "winston": "^3.15.0"
   },
   "scripts": {
     "build": "tsc",
