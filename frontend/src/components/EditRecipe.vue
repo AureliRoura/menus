@@ -22,11 +22,39 @@
         </div>
       </div>
       <v-tabs v-model="tab" bg-color="primary" show-arrows>
-        <v-tab value="general">General </v-tab>
-        <v-tab value="steps">Passos ({{ numSteps }})</v-tab>
-        <v-tab value="category">Cats ({{ numCategories }})</v-tab>
-        <v-tab value="notes">Notes ({{ numNotes }})</v-tab>
-        <!--         <v-tab value="images">Imatges</v-tab>  -->
+        <v-tab value="general">
+          <template v-if="!isMdAndUp">
+            <v-icon >mdi-home</v-icon>
+          </template>
+          <template v-else>
+            General
+          </template>
+        </v-tab>
+        <v-tab value="steps">
+          <template v-if="!isMdAndUp">
+            <v-icon  :color="numSteps > 0 ? 'red' : ''">mdi-format-list-bulleted</v-icon>
+          </template>
+          <template v-else>
+            Passos ({{ numSteps }})
+          </template>
+        </v-tab>
+        <v-tab value="category">
+          <template v-if="!isMdAndUp">
+            <v-icon :color="numCategories > 0 ? 'red' : ''">mdi-tag-multiple</v-icon>
+          </template>
+          <template v-else>
+            Cats ({{ numCategories }})
+          </template>
+        </v-tab>
+        <v-tab value="notes">
+          <template v-if="!isMdAndUp">
+            <v-icon :color="numNotes > 0 ? 'red' : ''">mdi-note</v-icon>
+          </template>
+          <template v-else>
+            Notes ({{ numNotes }})
+          </template>
+        </v-tab>
+        <!-- <v-tab value="images">Imatges</v-tab> -->
       </v-tabs>
       <div class="content-container">
         <v-card-text>
@@ -129,9 +157,6 @@ import arrxios from '@/modules/arrxios';
 
 const userStore = useUserStore();
 const { isMdAndUp } = useBreakpoint();
-
-
-
 
 const props = defineProps({
   dialog: Boolean,
