@@ -38,14 +38,16 @@ export const updateIngredient = async (data) => {
 export const deleteIngredient = async (_id, index) => {
   console.log(_id, index)
   const ingredientsStore = useIngredientsStore();
-  console.log(_id)
   return arrxios.delete('/api/ingredients/' + _id)
     .then(response => {
       if (response.status !== 204) {
         throw new Error('Failed to delete ingredient');
       }
-      ingredientsStore.removeIngredient(index);
-      return index;
+      const IngredientIndex = ingredientsStore.getIndexById(_id);
+      if (IngredientIndex !== -1) {
+        ingredientsStore.removeIngredient(IngredientIndex)
+        };
+      return IngredientIndex;
     })
     .catch(error => {
       console.error(error);
