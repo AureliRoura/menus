@@ -76,10 +76,10 @@ function getWeekDays() {
 }
 
 const updateMenus = (newMenusDay, day) => {
-  console.log('newMenu', newMenusDay);
-  console.log('day', day);
+//  console.log('newMenu', newMenusDay);
+//  console.log('day', day);
   menu.value[day] = newMenusDay;
-  console.log('menu', menu.value);
+//  console.log('menu', menu.value);
   arrxios.put(`/api/menus/day/${menuId}/${day}`, newMenusDay)
     .then((response) => {
       addMessage('Menu actualitzat');

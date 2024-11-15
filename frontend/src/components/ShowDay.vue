@@ -40,7 +40,7 @@ const updateMenusDay = (newMenusDay) => {
   menusDay.value = newMenusDay;
   lunch.value = menusDay.value.lunch;
   dinner.value = menusDay.value.dinner;
-  console.log('updateMenusDay', newMenusDay);
+//  console.log('updateMenusDay', newMenusDay);
   emit('update:menusDay', menusDay.value);
 };
 </script>

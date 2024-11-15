@@ -1,25 +1,35 @@
-<template>
-  <v-dialog v-model="state.dialog">
-    <v-card fluid fill-height class="d-flex flex-column">
-      <v-card-title>
+<template >
+  <v-dialog v-model="state.dialog" >
+    <v-card  fluid fill-height ref="dialogRef">
+      <v-card-title class="d-flex align-center wrap">
         <span>
-          <slot name="day" class="display-1">hola</slot>
+          <slot name="day" class="display-1"></slot>
         </span>
+        <v-tabs v-model="tab" bg-color="primary" grow rounded class="ml-2">
+        <v-tab value="lunch">Dinar</v-tab>
+        <v-tab value="dinner">Sopar</v-tab>
+      </v-tabs>
       </v-card-title>
-      <v-card-text>
-        <v-row class="flex-grow-1">
-          <v-col cols="12" sm="6">
-            <edit-menu :menu="lunch" #title>
-              Dinar
-            </edit-menu>
-          </v-col>
-          <v-col cols="12" sm="6">
-            <edit-menu :menu="dinner" #title>
-              Sopar
-            </edit-menu>
-          </v-col>
-        </v-row>
-      </v-card-text>
+      <v-tabs-window v-model="tab">
+        <v-tabs-window-item value="lunch">
+        <v-card-item>
+          <recipe-filter v-model:selectedRecipes="lunch">
+            <template v-slot:action>
+              <span></span>
+            </template>
+          </recipe-filter>
+        </v-card-item>
+        </v-tabs-window-item>
+        <v-tabs-window-item value="dinner">
+        <v-card-item>
+          <recipe-filter v-model:selectedRecipes="dinner">
+            <template v-slot:action>
+              <span></span>
+            </template>
+          </recipe-filter>
+        </v-card-item>
+        </v-tabs-window-item>
+      </v-tabs-window>
       <v-card-actions class="absolute bottom-0 w-full justify-end">
         <v-chip class="mr-2" color="red darken-1" @click="cancelMenu">Cancel</v-chip>
         <v-chip class="mr-2" color="green darken-1" @click="saveMenu">Save</v-chip>
@@ -29,8 +39,8 @@
 </template>
 
 <script setup>
-import EditMenu from '@/components/EditMenu.vue';
-import { ref, reactive, watch } from 'vue';
+import RecipeFilter from './RecipeFilter.vue';
+import { ref, reactive, watch, onMounted, nextTick } from 'vue';
 
 const props = defineProps({
   dialog: Boolean,
@@ -40,20 +50,37 @@ const props = defineProps({
   },
 });
 
-
-
 const menusDay = ref(props.menusDay || {});
-const lunch = ref(JSON.parse(JSON.stringify(menusDay.value['lunch'] || [])));
-const dinner = ref(JSON.parse(JSON.stringify(menusDay.value['dinner'] || [])));
+const lunch = ref([]);
+const dinner = ref([]);
+const tab = ref('lunch');
+const dialogRef = ref(null);
+const dialogHeight = ref(0);
 
 let state = reactive({
   dialog: props.dialog,
 });
+
+onMounted(() => {
+  tab.value = 'lunch';
+  lunch.value = menusDay.value['lunch'] || [];
+  dinner.value = menusDay.value['dinner'] || [];
+/*   watch(() => state.dialog, async (value) => {
+    if (value) {
+      await nextTick();
+      if (dialogRef.value) {
+        dialogHeight.value = dialogRef.value.$el.clientHeight;
+        console.log('Dialog height 1:', dialogHeight.value);
+      }
+    }
+  }); */
+});
+
 watch(() => props.dialog, (value) => {
   state.dialog = value;
   if (value) {
-    lunch.value = JSON.parse(JSON.stringify(menusDay.value['lunch'] || []));
-    dinner.value = JSON.parse(JSON.stringify(menusDay.value['dinner'] || []));
+    lunch.value = menusDay.value['lunch'] || [];
+    dinner.value = menusDay.value['dinner'] || [];
   }
 });
 
@@ -66,7 +93,6 @@ watch(() => props.menusDay, (value) => {
 watch(() => state.dialog, (value) => {
   emit('update:dialog', value);
 });
-
 
 
 const emit = defineEmits(['update:dialog', 'submit', 'update:menusDay']);

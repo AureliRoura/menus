@@ -52,7 +52,7 @@
 
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import RecipeSelect from './RecipeSelect.vue';
 import SelectRating from './SelectRating.vue';
 import { useUserStore } from '@/stores/userStore';
@@ -67,6 +67,10 @@ let dialog = ref(false);
 const props = defineProps({
   selectedRecipes: Array,
   dialog: Boolean,
+});
+
+onMounted(() => {
+  selectedRecipes.value = props.selectedRecipes;
 });
 
 const emit = defineEmits(['update:selectedRecipes'], ['update:dialog']);

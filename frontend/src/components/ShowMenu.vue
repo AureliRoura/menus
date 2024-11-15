@@ -20,8 +20,4 @@ const props = defineProps({
   menu: Array,
 });
 
-watch(props.menu, (newMenu) => {
-  console.log('New menu', newMenu);
-});
-
 </script>
