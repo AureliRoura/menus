@@ -27,7 +27,7 @@
             </v-autocomplete>
           </v-col>
           <v-col cols="12" sm="3" md="3">
-            <v-text-field v-model="newIngredient.quantity" label="Quantitat" type="number" required
+            <v-text-field v-model="newIngredient.quantity" label="Quantitat" type="number" 
               @change="fixDecimals" style="min-width: 100px;"></v-text-field>
           </v-col>
           <v-col cols="12" sm="3" md="3">
@@ -36,7 +36,7 @@
               @keyup.enter="addIngredient"></v-autocomplete>
           </v-col>
           <v-col cols="12" sm="12" md="2" style="min-width: 100px;" class="d-flex align-self-center mb-3">
-            <v-chip @click="addIngredient" color="primary" :disabled="!valid" class="mr-3">Add</v-chip>
+            <v-chip @click="addIngredient" color="primary" :disabled="!valid" class="mr-3">Afegir</v-chip>
           </v-col>
         </v-row>
       </div>
@@ -106,7 +106,8 @@ watch(() => props.readonly, (newVal) => {
 let valid = computed(() => {
   //search if ingredient exists in Ingredients
 
-  return Object.values(newIngredient).every(value => value !== '');
+  //return Object.values(newIngredient).every(value => value !== '');
+  return newIngredient._id !== '' && newIngredient.unit !== '' && (newIngredient.quantity !== '' || newIngredient.unit === 'al gust');
 });
 
 const ingredientsStore = useIngredientsStore();
