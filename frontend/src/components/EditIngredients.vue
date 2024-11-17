@@ -1,10 +1,10 @@
 <template>
   <v-card>
     <v-card-title>Ingredients
-      <v-tooltip text="Afegeix Ingredients" v-if="!props.readonly" >
+      <v-tooltip text="Afegeix Ingredients" v-if="!props.readonly">
         <template v-slot:activator="{ props }">
-          <v-btn   icon size="x-small" density="comfortable" @click="selectionActive = !selectionActive" color="primary"
-            class="ml-1" v-bind="props" >
+          <v-btn icon size="x-small" density="comfortable" @click="selectionActive = !selectionActive" color="primary"
+            class="ml-1" v-bind="props">
             <v-icon v-if="!selectionActive">mdi-plus</v-icon>
             <v-icon v-else>mdi-minus</v-icon>
           </v-btn>
@@ -27,8 +27,8 @@
             </v-autocomplete>
           </v-col>
           <v-col cols="12" sm="3" md="3">
-            <v-text-field v-model="newIngredient.quantity" label="Quantitat" type="number" 
-              @change="fixDecimals" style="min-width: 100px;"></v-text-field>
+            <v-text-field v-model="newIngredient.quantity" label="Quantitat" type="number" @change="fixDecimals"
+              style="min-width: 100px;"></v-text-field>
           </v-col>
           <v-col cols="12" sm="3" md="3">
             <v-autocomplete v-model="newIngredient.unit" :items="units" item-title="unit" item-value="unit"
@@ -46,6 +46,7 @@
             <span>{{ ingredient.name }} - {{ ingredient.quantity }} {{ ingredient.unit }}
             </span>
             <v-list-item-action v-if="!props.readonly">
+              <v-icon color="blue" @click="editCurrentIngredient(ingredient, index)" class="mr-2">mdi-pencil</v-icon>
               <v-icon color="red" @click="removeIngredient(index)">mdi-delete</v-icon>
             </v-list-item-action>
           </div>
@@ -53,6 +54,23 @@
       </v-list>
     </v-card-text>
   </v-card>
+  <v-dialog v-model="mDialog" max-width="500px">
+    <v-card>
+      <v-card-title>Editar Ingredient</v-card-title>
+      <v-card-text>
+        <v-autocomplete v-model="selectedIngredient._id" :items="filteredIngredients" item-title="name" item-value="_id"
+          label="Ingredient" auto-select-first required style="min-width: 200px;" @update:menu="nameUpdate"></v-autocomplete>
+        <v-text-field v-model="selectedIngredient.quantity" label="Quantitat" type="number" @change="fixDecimals"
+          style="min-width: 100px;"></v-text-field>
+        <v-autocomplete v-model="selectedIngredient.unit" :items="units" item-title="unit" item-value="unit"
+          label="Unitats" auto-select-first required style="min-width: 100px;"></v-autocomplete>
+      </v-card-text>
+      <v-card-actions>
+        <v-chip color="red" @click="restoreCurrentIngredient()">Cancel·lar</v-chip>
+        <v-chip color="blue" :disabled="!updateValidation" @click="mDialog = false">Desar</v-chip>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
   <edit-ingredient v-model:dialog="dialog" :ingredient="selectedIngredient" @submit="handleFormSubmit">
   </edit-ingredient>
 </template>
@@ -60,7 +78,7 @@
 <script setup>
 
 
-import { ref, reactive, watch, computed, toRef, nextTick } from 'vue';
+import { ref, reactive, watch, computed, toRef, nextTick, onMounted } from 'vue';
 import { useIngredientsStore } from '@/stores/ingredientsStore';
 import { useUnitsStore } from '@/stores/unitsStore';
 
@@ -81,17 +99,25 @@ let ingredients = toRef(props, 'ingredients');
 
 let newIngredient = reactive({ _id: '', name: '', quantity: '', unit: '' });
 const selectedIngredient = ref(null);
+const savedIngredient = ref(null);
 const searchInput = ref('');
 const dialog = ref(false);
+const mDialog = ref(false);
 const refIngredient = ref(null);
 const selectionActive = ref(false);
 let operation = '';
+let currentIndex = -1;
 
 const unitsStore = useUnitsStore();
 
 let units = unitsStore.units;
 
 const emit = defineEmits(['update:ingredients']);
+
+onMounted(() => {
+  mDialog.value = false;
+  dialog.value = false;
+});
 
 watch(() => ingredients.value, (newIngredients) => {
   emit('update:ingredients', newIngredients);
@@ -108,6 +134,11 @@ let valid = computed(() => {
 
   //return Object.values(newIngredient).every(value => value !== '');
   return newIngredient._id !== '' && newIngredient.unit !== '' && (newIngredient.quantity !== '' || newIngredient.unit === 'al gust');
+});
+
+let updateValidation = computed(() => {
+  console.log('selectedIngredient.value:', selectedIngredient.value);
+  return selectedIngredient.value._id !== null && selectedIngredient.value.unit !== null && (selectedIngredient.value.quantity !== "" || selectedIngredient.value.unit === 'al gust');
 });
 
 const ingredientsStore = useIngredientsStore();
@@ -206,6 +237,28 @@ const updateSearchInput = (value) => {
 const removeIngredient = (index) => {
   ingredients.value.splice(index, 1);
 };
+
+const editCurrentIngredient = (ingredient, index) => {
+  selectedIngredient.value = ingredient;
+  savedIngredient.value = { ...ingredient };
+  currentIndex = index;
+  mDialog.value = true;
+};
+
+const restoreCurrentIngredient = () => {
+  ingredients.value[currentIndex] = { ...savedIngredient.value };
+  mDialog.value = false;
+};
+
+const nameUpdate = () => {
+  if (selectedIngredient.value._id === null) {
+    selectedIngredient.value.name = '';
+    return;
+  }
+  const ingredient = ingredientsStore.searchById(selectedIngredient.value._id)[0];
+  selectedIngredient.value.name = ingredient ? ingredient.name : '';
+};
+
 </script>
 
 <style scoped>

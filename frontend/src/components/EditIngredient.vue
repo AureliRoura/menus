@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="state.dialog">
     <v-card>
-      <v-card-title>Edit Ingredient</v-card-title>
+      <v-card-title>Edita Ingredient</v-card-title>
       <v-card-text>
         <v-form  v-model="valid" @submit.prevent="submit">
           <v-text-field v-model="state.ingredient.name" label="Name" required></v-text-field>
