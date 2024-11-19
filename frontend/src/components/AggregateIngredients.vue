@@ -4,6 +4,9 @@
       <v-card-title class="d-flex justify-space-between align-center bg-blue">
         Llista d'ingredients
         <v-spacer></v-spacer>
+        <v-btn icon @click="copyToClipboard" class="mr-2">
+          <v-icon>mdi-content-copy</v-icon>
+        </v-btn>
         <v-btn icon @click="dialog = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -23,6 +26,18 @@
       </v-card-text>
     </v-card>
   </v-dialog>
+  <v-dialog v-model="dialogList" max-width="400">
+    <v-card>
+      <v-card-title>Llista</v-card-title>
+      <v-card-text>
+        <v-textarea v-model="listText" readonly></v-textarea>
+      </v-card-text>
+      <v-card-actions>
+        <v-chip class="mr-2" color="green darken-1" text @click="dialogList = false">Tanca</v-chip>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+
 </template>
 
 <script setup>
@@ -46,8 +61,9 @@ const props = defineProps({
 
 // Data
 const dialog = ref(props.dialog);
+const dialogList = ref(false);
 const numberOfPersons = ref(1);
-
+const listText = ref('');
 const emit = defineEmits(['update:dialog']);
 
 watch(() => props.dialog, (value) => {
@@ -58,6 +74,14 @@ watch(dialog, (value) => {
   emit('update:dialog', value);
 });
 
+const copyToClipboard = () => {
+  try {
+  listText.value = aggregatedIngredients.value.map(ingredient => `${ingredient.name}: ${ingredient.quantity} ${ingredient.unit}`).join('\n');
+  navigator.clipboard.writeText(listText.value);
+  } catch (error) {
+    dialogList.value = true;
+  }
+};
 
 // Validation rules
 const rules = {
