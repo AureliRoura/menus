@@ -137,7 +137,6 @@ let valid = computed(() => {
 });
 
 let updateValidation = computed(() => {
-  console.log('selectedIngredient.value:', selectedIngredient.value);
   return selectedIngredient.value._id !== null && selectedIngredient.value.unit !== null && (selectedIngredient.value.quantity !== "" || selectedIngredient.value.unit === 'al gust');
 });
 
