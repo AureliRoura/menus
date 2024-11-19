@@ -15,8 +15,6 @@
         <v-text-field v-model="numberOfPersons" label="Number of Persons" type="number"
           :rules="[rules.required]"></v-text-field>
         <v-list style="max-height: 300px; overflow-y: auto;">
-
-
           <v-list-item v-for="(ingredient, index) in aggregatedIngredients" :key="index">
             <v-list-item-title>
               {{ ingredient.name }}: {{ ingredient.quantity }} {{ ingredient.unit }}
@@ -43,10 +41,12 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import aggregateIngredients from '@/modules/aggregateIngredients';
+import { addMessage } from '@/modules/arrMessage';
+
 // Props
 const props = defineProps({
   dialog: Boolean,
-  menu: 
+  menu:
   {
     type: Object,
     default: () => null
@@ -76,8 +76,9 @@ watch(dialog, (value) => {
 
 const copyToClipboard = () => {
   try {
-  listText.value = aggregatedIngredients.value.map(ingredient => `${ingredient.name}: ${ingredient.quantity} ${ingredient.unit}`).join('\n');
-  navigator.clipboard.writeText(listText.value);
+    listText.value = aggregatedIngredients.value.map(ingredient => `${ingredient.name}: ${ingredient.quantity} ${ingredient.unit}`).join('\n');
+    navigator.clipboard.writeText(listText.value);
+    addMessage('Ingredients copiats al porta-retalls', 'success');
   } catch (error) {
     dialogList.value = true;
   }
