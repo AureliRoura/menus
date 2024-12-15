@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>Passos
-      <v-tooltip text="Edita Passos" v-if="!props.readonly" >
+      <v-tooltip text="Edita Passos" v-if="!props.readonly">
         <template v-slot:activator="{ props }">
           <v-btn icon size="x-small" density="comfortable" @click="selectionActive = !selectionActive" color="primary"
             class="ml-1" v-bind="props">
@@ -35,10 +35,18 @@
               </v-row>
             </template>
             <template v-else>
-              <v-col @click="stepDone[index] = !stepDone[index]" :class="{'text-decoration-line-through text-red-lighten-1': stepDone[index], 'cursor-pointer': true}">
+              <v-col
+                :class="{ 'text-decoration-line-through text-red-lighten-1': stepDone[index], 'cursor-pointer': true }">
                 <span>
-                {{ index + 1 }}. {{ step }}
-                <v-tooltip v-if="ingredientsList(step)" location="bottom" activator="parent" >{{ingredientsList(step)}}</v-tooltip>
+                  <v-icon @click="showToolTip[index] = !showToolTip[index]">mdi-format-list-bulleted class = "mr-2"
+                  </v-icon>
+                </span>
+                <span @click="stepDone[index] = !stepDone[index]">
+                  {{ index + 1 }}.
+                  {{ step }}
+                  <v-tooltip v-model=showToolTip[index] v-if="ingredientsList(step)" location="top"
+                    :disabled="!showToolTip" activator="parent">{{
+                      ingredientsList(step) }}</v-tooltip>
                 </span>
               </v-col>
               <v-list-item-action v-if="selectionActive">
@@ -86,6 +94,7 @@ const editIndex = ref(-1);
 let editedStep = ref('');
 const selectionActive = ref(false);
 const stepDone = ref([]);
+const showToolTip = ref([]);
 
 const emit = defineEmits(['update:steps']);
 
@@ -149,12 +158,22 @@ const downStep = (index) => {
 };
 
 const ingredientsList = (step) => {
-  // Implement your logic to find texts from the array in the step string
+  // Convert the step string to lowercase
   const lowerCaseStep = step.toLowerCase();
-  return props.ingredients
-    .filter(ingredient => lowerCaseStep.includes(ingredient.name.toLowerCase()))
+
+  // Filter ingredients that match any word in the step string
+  let list = props.ingredients
+    .filter(ingredient => {
+      const words = ingredient.name.toLowerCase().split(' ');
+      return words.some(word => {
+        const regex = new RegExp(`\\b${word}\\b`, 'g');
+        return regex.test(lowerCaseStep);
+      });
+    })
     .map(ingredient => `${ingredient.name} (${ingredient.quantity} ${ingredient.unit})`)
     .join(', ');
+
+  return list;
 };
 
 </script>
