@@ -237,6 +237,17 @@ jobs:
         remote_user: ${{ secrets.SSH_USER }}
         remote_key: ${{ secrets.SSH_KEY }}
 
+    - name: send docker-compose via rsync
+      uses: burnett01/rsync-deployments@7.0.1
+      with:
+        switches: -avzr --delete
+        path: ./docker-compose.yaml
+        remote_path: ./deploy
+        remote_host: ${{ secrets.SSH_HOST }}
+        remote_user: ${{ secrets.SSH_USER }}
+        remote_key: ${{ secrets.SSH_KEY }}
+
+
     - name: send dist frontend to temp folder via rsync
       uses: burnett01/rsync-deployments@7.0.1
       with:
