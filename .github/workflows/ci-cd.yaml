@@ -166,7 +166,7 @@ jobs:
         retention-days: 1
         
   sftp-upload:
-    needs: [build-docker-frontend, build-docker-server]
+    needs: [build-docker-frontend, build-docker-backend]
 
     runs-on: ubuntu-latest
 
