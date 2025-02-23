@@ -1,0 +1,32 @@
+
+services:
+  backend:
+    build: ./server
+    image: menu-server:latest
+    restart: always
+    ports:
+      - "3000:3000"
+      - "3443:3443"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - MONGODB_DB=menudb
+    volumes:
+      - ./cert:/app/cert
+    networks:
+      - menus-network
+
+  nginx:
+    build: ./frontend
+    image: menu-frontend:latest
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - menus-network
+
+networks:
+  menus-network:
+    driver: bridge
