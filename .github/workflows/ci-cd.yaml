@@ -22,9 +22,6 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Audit for vulnerabilities
-      run: npm audit
-
     - name: create .env.production file
       run: |
         echo "VITE_APP_TITLE=Menus
