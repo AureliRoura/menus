@@ -121,7 +121,6 @@ jobs:
 
   build-docker-frontend:
     runs-on: ubuntu-latest
-    needs: [build-frontend]
 
     steps:
     - name: Checkout code
@@ -144,7 +143,6 @@ jobs:
 
   build-docker-backend:
     runs-on: ubuntu-latest
-    needs: [build-server, server-tests]
 
     steps:
     - name: Checkout code
@@ -166,7 +164,7 @@ jobs:
         retention-days: 1
         
   sftp-upload:
-    needs: [build-docker-frontend, build-docker-backend]
+    needs: [build-docker-frontend, build-docker-backend, build-server, server-tests, build-frontend]
 
     runs-on: ubuntu-latest
 
