@@ -191,11 +191,13 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: menu-frontend-docker
+        path: menu-frontend-docker
 
     - name: Download menu-backend docker
       uses: actions/download-artifact@v4
       with:
         name: menu-backend-docker
+        path: menu-server-docker
 
     - name: Install OpenVPN
       run: sudo apt-get update && sudo apt-get install -y openvpn
@@ -249,7 +251,7 @@ jobs:
       uses: burnett01/rsync-deployments@7.0.1
       with:
         switches: -avzr --delete
-        path: menu-frontend-docker/*
+        path: menu-frontend-docker
         remote_path: ./deploy
         remote_host: ${{ secrets.SSH_HOST }}
         remote_user: ${{ secrets.SSH_USER }}
@@ -259,7 +261,7 @@ jobs:
       uses: burnett01/rsync-deployments@7.0.1
       with:
         switches: -avzr --delete
-        path: menu-server-docker/*
+        path: menu-server-docker
         remote_path: ./deploy
         remote_host: ${{ secrets.SSH_HOST }}
         remote_user: ${{ secrets.SSH_USER }}
