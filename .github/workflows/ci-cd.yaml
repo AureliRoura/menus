@@ -128,8 +128,10 @@ jobs:
 
     - name: Build frontend image
       run: |
-        docker build -t menu-frontend:latest ./frontend
-        docker save menu-frontend:latest -o menu-frontend.tar
+        docker buildx create --use
+        docker buildx inspect --bootstrap
+        docker buildx build --platform linux/arm64 -t menu-frontend:latest ./frontend --load
+        docker save -o menu-frontend.tar menu-frontend:latest
 
     - name: Save menu-frontend docker as artifact
       uses: actions/upload-artifact@v4
@@ -150,9 +152,10 @@ jobs:
 
     - name: Build backend image
       run: |
-        docker build -t menu-server:latest ./server
-        docker save menu-server:latest -o menu-server.tar
-
+        docker buildx create --use
+        docker buildx inspect --bootstrap
+        docker buildx build --platform linux/arm64 -t menu-server:latest ./server --load
+        docker save -o menu-server.tar menu-server:latest
     - name: Save menu-backend docker as artifact
       uses: actions/upload-artifact@v4
       with:
