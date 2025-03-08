@@ -1,6 +1,6 @@
 
 services:
-  backend:
+  menus-backend:
     build: ./server
     image: menu-server:latest
     restart: always
@@ -8,22 +8,22 @@ services:
       - "3000:3000"
       - "3443:3443"
     env_file:
-      - .env
+      - ./server/.env
     environment:
       - NODE_ENV=production
       - MONGODB_DB=menudb
     volumes:
-      - ./cert:/app/cert
+      - ./server/cert:/app/cert
     networks:
       - menus-network
 
-  nginx:
+  menus-frontend:
     build: ./frontend
     image: menu-frontend:latest
     ports:
-      - "80:80"
+      - "9092:80"
     depends_on:
-      - backend
+      - menus-backend
     networks:
       - menus-network
 
