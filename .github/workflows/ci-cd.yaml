@@ -128,9 +128,11 @@ jobs:
 
     - name: Build frontend image
       run: |
+        cd frontend
         docker buildx create --use
         docker buildx inspect --bootstrap
-        docker buildx build --platform linux/arm64 -t menu-frontend:latest ./frontend --load
+        docker buildx build --platform linux/arm64 -t menu-frontend:latest . --load
+        cd ..
         docker save -o menu-frontend.tar menu-frontend:latest
 
     - name: Save menu-frontend docker as artifact
@@ -152,9 +154,11 @@ jobs:
 
     - name: Build backend image
       run: |
+        cd server
         docker buildx create --use
         docker buildx inspect --bootstrap
-        docker buildx build --platform linux/arm64 -t menu-server:latest ./server --load
+        docker buildx build --platform linux/arm64 -t menu-server:latest . --load
+        cd ..
         docker save -o menu-server.tar menu-server:latest
     - name: Save menu-backend docker as artifact
       uses: actions/upload-artifact@v4
