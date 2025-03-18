@@ -21,12 +21,16 @@ FROM node:22-alpine AS runner
 
 WORKDIR /app
 
+# Ensure node is available in the PATH
+ENV PATH=/usr/local/bin:$PATH
+
 # 7️⃣ Copiar només el codi compilat i les dependències de producció
 COPY package*.json ./
 RUN npm install --only=production
 COPY --from=builder /app/dist/src ./src
+# Ensure the entry point file exists
+RUN ls -l ./src/app.js || (echo "Entry point file not found!" && exit 1)
 #COPY ./cert ./cert
-
 
 # 8️⃣ Definir variables d'entorn
 ENV ENTORN=production
@@ -36,10 +40,9 @@ ENV SERVER_PORT=3000
 ENV SERVER_KEY=./cert/server.key
 ENV SERVER_CERT=./cert/server.cert
 
-
 # 9️⃣ Exposar el port
 EXPOSE 3000 3443
 
 # 🔟 Comanda d'inici
-CMD ["node", "./src/app.js"]
+CMD ["node", "/app/src/app.js"]
 
