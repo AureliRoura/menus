@@ -29,7 +29,7 @@ describe('Menus API', () => {
 
   describe('GET /menus', () => {
     it('should retrieve all menus', async () => {
-      const mockMenus: IMenu[] = [{ _id: 'afafafasfasfas', name: 'Menu 1', menu: { monday: { lunch: [], dinner: [] }, tuesday: { lunch: [], dinner: [] }, wednesday: { lunch: [], dinner: [] }, thursday: { lunch: [], dinner: [] }, friday: { lunch: [], dinner: [] }, saturday: { lunch: [], dinner: [] }, sunday: { lunch: [], dinner: [] } } }, { _id: 'bdfsdbdfbsdsdb', name: 'Menu 2', menu: { monday: { lunch: [], dinner: [] }, tuesday: { lunch: [], dinner: [] }, wednesday: { lunch: [], dinner: [] }, thursday: { lunch: [], dinner: [] }, friday: { lunch: [], dinner: [] }, saturday: { lunch: [], dinner: [] }, sunday: { lunch: [], dinner: [] } } }];
+      const mockMenus: IMenu[] = [{ _id: 'afafafasfasfas', name: 'Menu 1', items: [], menu: { monday: { lunch: [], dinner: [] }, tuesday: { lunch: [], dinner: [] }, wednesday: { lunch: [], dinner: [] }, thursday: { lunch: [], dinner: [] }, friday: { lunch: [], dinner: [] }, saturday: { lunch: [], dinner: [] }, sunday: { lunch: [], dinner: [] } } }, { _id: 'bdfsdbdfbsdsdb', name: 'Menu 2', items: [], menu: { monday: { lunch: [], dinner: [] }, tuesday: { lunch: [], dinner: [] }, wednesday: { lunch: [], dinner: [] }, thursday: { lunch: [], dinner: [] }, friday: { lunch: [], dinner: [] }, saturday: { lunch: [], dinner: [] }, sunday: { lunch: [], dinner: [] } } }];
       dbMock.getMenus.mockResolvedValue(mockMenus);
 
       const response = await request(app)
@@ -54,7 +54,7 @@ describe('Menus API', () => {
 
   describe('GET /menus/byname/:nom', () => {
     it('should retrieve a menu by name', async () => {
-      const mockMenu = { _id: 'afafafasfasfas', name: 'Menu 1', menu: { monday: { lunch: [], dinner: [] }, tuesday: { lunch: [], dinner: [] }, wednesday: { lunch: [], dinner: [] }, thursday: { lunch: [], dinner: [] }, friday: { lunch: [], dinner: [] }, saturday: { lunch: [], dinner: [] }, sunday: { lunch: [], dinner: [] } } };
+      const mockMenu = { _id: 'afafafasfasfas', name: 'Menu 1', items: [], menu: { monday: { lunch: [], dinner: [] }, tuesday: { lunch: [], dinner: [] }, wednesday: { lunch: [], dinner: [] }, thursday: { lunch: [], dinner: [] }, friday: { lunch: [], dinner: [] }, saturday: { lunch: [], dinner: [] }, sunday: { lunch: [], dinner: [] } } };
       dbMock.getMenuByName.mockResolvedValue(mockMenu);
 
       const response = await request(app)
@@ -90,7 +90,7 @@ describe('Menus API', () => {
 
   describe('POST /menus', () => {
     it('should create a new menu', async () => {
-      const mockMenu = { _id: 'afafafasfasfas', name: 'Menu 1', menu: { monday: { lunch: [], dinner: [] }, tuesday: { lunch: [], dinner: [] }, wednesday: { lunch: [], dinner: [] }, thursday: { lunch: [], dinner: [] }, friday: { lunch: [], dinner: [] }, saturday: { lunch: [], dinner: [] }, sunday: { lunch: [], dinner: [] } } };
+      const mockMenu = { _id: 'afafafasfasfas', name: 'Menu 1', items: [], menu: { monday: { lunch: [], dinner: [] }, tuesday: { lunch: [], dinner: [] }, wednesday: { lunch: [], dinner: [] }, thursday: { lunch: [], dinner: [] }, friday: { lunch: [], dinner: [] }, saturday: { lunch: [], dinner: [] }, sunday: { lunch: [], dinner: [] } } };
       dbMock.getMenuByName.mockResolvedValue(null);
       dbMock.createMenu.mockResolvedValue(mockMenu);
 
@@ -114,7 +114,7 @@ describe('Menus API', () => {
     });
 
     it('should return a 409 error if the menu already exists', async () => {
-      const mockMenu = { _id: 'afafafasfasfas', name: 'Menu 1', menu: { monday: { lunch: [], dinner: [] }, tuesday: { lunch: [], dinner: [] }, wednesday: { lunch: [], dinner: [] }, thursday: { lunch: [], dinner: [] }, friday: { lunch: [], dinner: [] }, saturday: { lunch: [], dinner: [] }, sunday: { lunch: [], dinner: [] } } };
+      const mockMenu = { _id: 'afafafasfasfas', name: 'Menu 1', items: [], menu: { monday: { lunch: [], dinner: [] }, tuesday: { lunch: [], dinner: [] }, wednesday: { lunch: [], dinner: [] }, thursday: { lunch: [], dinner: [] }, friday: { lunch: [], dinner: [] }, saturday: { lunch: [], dinner: [] }, sunday: { lunch: [], dinner: [] } } };
       dbMock.getMenuByName.mockResolvedValue(mockMenu);
 
       const response = await request(app)

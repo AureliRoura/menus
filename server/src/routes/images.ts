@@ -8,30 +8,33 @@ const SALT_ROUNDS = 10;
 
 export const imagesRouter = Router();
 
-imagesRouter.post('/image', basicAuthMiddleware, async (req: Request, res: Response) => {
-  try {
-    const db = (req.app.locals.db as BaseDatabase);
-    const { fileName, imageStream } = req.body;
+imagesRouter.post('/image', basicAuthMiddleware, (req: Request, res: Response) => {
+  (async () => {
+    try {
+      const db = (req.app.locals.db as BaseDatabase);
+      const { fileName, imageStream } = req.body;
 
-    // Validacions senzilles
-    if (!fileName || !imageStream) {
-      console.log('fileName:', fileName);
-      return res.status(400).json({ error: 'Falten dades de la imatge.' });
+      // Validacions senzilles
+      if (!fileName || !imageStream) {
+        console.log('fileName:', fileName);
+        res.status(400).json({ error: 'Falten dades de la imatge.' });
+        return;
+      }
+      // imageStream és un string codificat en base64
+      // Convertim a un buffer
+      const imageBuffer = Buffer.from(imageStream, 'base64');
+      // Convertim a un stream de lectura
+      const imageStreamNew = new Readable();
+      imageStreamNew.push(imageBuffer);
+      imageStreamNew.push(null);
+
+      const id = await db.insertImage(fileName, imageStreamNew);
+      res.status(201).json({ message: 'Imatge inserida correctament.', id: id });
+    } catch (error) {
+      console.error('Error en inserir la imatge:', error);
+      res.status(500).json({ error: 'Error en inserir la imatge.' });
     }
-    // imageStream és un string codificat en base64
-    // Convertim a un buffer
-    const imageBuffer = Buffer.from(imageStream, 'base64');
-    // Convertim a un stream de lectura
-    const imageStreamNew = new Readable();
-    imageStreamNew.push(imageBuffer);
-    imageStreamNew.push(null);
-
-    const id = await db.insertImage(fileName, imageStreamNew);
-    res.status(201).json({ message: 'Imatge inserida correctament.', id: id });
-  } catch (error) {
-    console.error('Error en inserir la imatge:', error);
-    res.status(500).json({ error: 'Error en inserir la imatge.' });
-  }
+  })();
 });
 
 async function streamToString(stream: GridFSBucketReadStream): Promise<string> {
