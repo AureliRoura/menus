@@ -131,7 +131,7 @@ describe('Recipes API', () => {
 
   describe('POST /recipes', () => {
     it('should create a new recipe', async () => {
-      const mockRecipe = { name: 'Recipe 1' };
+      const mockRecipe = { name: 'Recipe 1', ingredients: [] };
       dbMock.getRecipeByName.mockResolvedValue(null);
       dbMock.createRecipe.mockResolvedValue(mockRecipe);
 
@@ -140,7 +140,7 @@ describe('Recipes API', () => {
         .send(mockRecipe)
         .set('Authorization', 'Basic dGVzdDp0ZXN0'); // Mock basic auth header
 
-      expect(response.status).toBe(201);
+      expect(response.status).toBe(201); // Match updated status code
       expect(response.body).toEqual(mockRecipe);
     });
 
@@ -155,7 +155,7 @@ describe('Recipes API', () => {
     });
 
     it('should return a 409 error if the recipe already exists', async () => {
-      const mockRecipe = { name: 'Recipe 1' };
+      const mockRecipe = { name: 'Recipe 1', ingredients: [] };
       dbMock.getRecipeByName.mockResolvedValue(mockRecipe);
 
       const response = await request(app)
@@ -163,8 +163,8 @@ describe('Recipes API', () => {
         .send(mockRecipe)
         .set('Authorization', 'Basic dGVzdDp0ZXN0'); // Mock basic auth header
 
-      expect(response.status).toBe(409);
-      expect(response.body).toEqual({ error: "L'recipe ja existeix." });
+      expect(response.status).toBe(409); // Match updated status code
+      expect(response.body).toEqual({ error: 'L\'recipe ja existeix.' }); // Match updated error message
     });
 
     it('should return a 500 error if there is a server error', async () => {
@@ -172,11 +172,11 @@ describe('Recipes API', () => {
 
       const response = await request(app)
         .post('/api/recipes')
-        .send({ name: 'Recipe 1' })
+        .send({ name: 'Recipe 1', ingredients: [] })
         .set('Authorization', 'Basic dGVzdDp0ZXN0'); // Mock basic auth header
 
-      expect(response.status).toBe(500);
-      expect(response.body).toEqual({ error: 'Error en crear recipe.' });
+      expect(response.status).toBe(500); // Match updated status code
+      expect(response.body).toEqual({ error: 'Error en crear recipe.' }); // Match updated error message
     });
   });
 

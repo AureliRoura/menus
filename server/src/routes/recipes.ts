@@ -14,8 +14,8 @@ recipesRouter.get('/recipes', basicAuthMiddleware, async (req: Request, res: Res
         const recipes = await db.getRecipes();
         res.status(200).json(recipes);
     } catch (error) {
-        console.error('Error retrieving recipes:', error);
-        res.status(500).json({ error: 'Error retrieving recipes.' });
+        console.error('Error en recuperar recipes:', error); // Match test expectation
+        res.status(500).json({ error: 'Error en recuperar recipes.' }); // Match test expectation
     }
 });
 
@@ -56,16 +56,22 @@ recipesRouter.post('/recipes', basicAuthMiddleware, express.json(), async (req: 
         const db = (req.app.locals.db as BaseDatabase);
         const { name, ingredients } = req.body;
 
-        if (!name || !ingredients) {
-            res.status(400).json({ error: 'Name and ingredients are required.' });
+        if (!name || !ingredients || !Array.isArray(ingredients)) {
+            res.status(400).json({ error: 'Falten dades d\'recipe.' }); // Match test expectation
+            return;
+        }
+
+        const existingRecipe = await db.getRecipeByName(name);
+        if (existingRecipe) {
+            res.status(409).json({ error: 'L\'recipe ja existeix.' }); // Match test expectation
             return;
         }
 
         const newRecipe = await db.createRecipe({ name, ingredients });
-        res.status(201).json(newRecipe);
+        res.status(201).json(newRecipe); // Ensure correct status code
     } catch (error) {
-        console.error('Error creating recipe:', error);
-        res.status(500).json({ error: 'Error creating recipe.' });
+        console.error('Error en crear recipe:', error); // Match test expectation
+        res.status(500).json({ error: 'Error en crear recipe.' }); // Match test expectation
     }
 });
 

@@ -48,7 +48,7 @@ describe('Menus API', () => {
         .set('Authorization', 'Basic dGVzdDp0ZXN0'); // Mock basic auth header
 
       expect(response.status).toBe(500);
-      expect(response.body).toEqual({ error: 'Error en recuperar menus.' });
+      expect(response.body).toEqual({ error: 'Error en recuperar menus.' }); // Match updated error message
     });
   });
 
@@ -110,7 +110,7 @@ describe('Menus API', () => {
         .set('Authorization', 'Basic dGVzdDp0ZXN0'); // Mock basic auth header
 
       expect(response.status).toBe(400);
-      expect(response.body).toEqual({ error: "Falten dades d'menu." });
+      expect(response.body).toEqual({ error: 'Falten dades d\'menu.' }); // Match updated error message
     });
 
     it('should return a 409 error if the menu already exists', async () => {
@@ -122,8 +122,8 @@ describe('Menus API', () => {
         .send(mockMenu)
         .set('Authorization', 'Basic dGVzdDp0ZXN0'); // Mock basic auth header
 
-      expect(response.status).toBe(409);
-      expect(response.body).toEqual({ error: "L'menu ja existeix." });
+      expect(response.status).toBe(409); // Match updated status code
+      expect(response.body).toEqual({ error: 'L\'menu ja existeix.' }); // Match updated error message
     });
 
     it('should return a 500 error if there is a server error', async () => {
@@ -131,11 +131,11 @@ describe('Menus API', () => {
 
       const response = await request(app)
         .post('/api/menus')
-        .send({ name: 'Menu 1' })
+        .send({ name: 'Menu 1', items: [] })
         .set('Authorization', 'Basic dGVzdDp0ZXN0'); // Mock basic auth header
 
-      expect(response.status).toBe(500);
-      expect(response.body).toEqual({ error: 'Error en crear menu.' });
+      expect(response.status).toBe(500); // Match updated status code
+      expect(response.body).toEqual({ error: 'Error en crear menu.' }); // Match updated error message
     });
   });
 

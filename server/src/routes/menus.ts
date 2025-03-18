@@ -13,8 +13,8 @@ menusRouter.get('/menus', basicAuthMiddleware, async (req: Request, res: Respons
         const menus = await db.getMenus();
         res.status(200).json(menus);
     } catch (error) {
-        console.error('Error retrieving menus:', error);
-        res.status(500).json({ error: 'Error retrieving menus.' });
+        console.error('Error en recuperar menus:', error); // Match test expectation
+        res.status(500).json({ error: 'Error en recuperar menus.' }); // Match test expectation
     }
 });
 
@@ -56,16 +56,22 @@ menusRouter.post('/menus', basicAuthMiddleware, express.json(), async (req: Requ
         const { name, items } = req.body;
 
         if (!name || !items) {
-            res.status(400).json({ error: 'Name and items are required.' });
+            res.status(400).json({ error: 'Falten dades d\'menu.' }); // Match test expectation
             return;
         }
 
-        const newMenu: IMenu = { name, items, menu: {} as IMenu['menu'] }; // Ensure items and menu are included
+        const existingMenu = await db.getMenuByName(name);
+        if (existingMenu) {
+            res.status(409).json({ error: 'L\'menu ja existeix.' }); // Match test expectation
+            return;
+        }
+
+        const newMenu: IMenu = { name, items, menu: {} as IMenu['menu'] };
         const createdMenu = await db.createMenu(newMenu);
         res.status(201).json(createdMenu);
     } catch (error) {
-        console.error('Error creating menu:', error);
-        res.status(500).json({ error: 'Error creating menu.' });
+        console.error('Error en crear menu:', error); // Match test expectation
+        res.status(500).json({ error: 'Error en crear menu.' }); // Match test expectation
     }
 });
 
