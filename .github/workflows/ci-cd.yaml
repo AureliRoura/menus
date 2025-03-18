@@ -126,12 +126,12 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
-    - name: Build frontend image
+    - name: Build frontend image for Raspberry Pi (32-bit)
       run: |
         cd frontend
         docker buildx create --use
         docker buildx inspect --bootstrap
-        docker buildx build --platform linux/arm64 -t menu-frontend:latest -f Dockerfile . --load
+        docker buildx build --platform linux/arm/v7 -t menu-frontend:latest -f Dockerfile . --load
         cd ..
         docker save -o menu-frontend.tar menu-frontend:latest
 
@@ -152,12 +152,12 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
-    - name: Build backend image
+    - name: Build backend image for Raspberry Pi (32-bit)
       run: |
         cd server
         docker buildx create --use
         docker buildx inspect --bootstrap
-        docker buildx build --platform linux/arm64 -t menu-server:latest -f dockerfile . --load
+        docker buildx build --platform linux/arm/v7 -t menu-server:latest -f dockerfile . --load
         cd ..
         docker save -o menu-server.tar menu-server:latest
 
