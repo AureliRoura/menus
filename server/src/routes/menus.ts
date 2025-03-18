@@ -2,25 +2,23 @@
 import express, { Request, Response, Router } from 'express';
 import { MongoDatabase as BaseDatabase } from '../lib/mongo-database';
 import { basicAuthMiddleware } from '../lib/basicauth';
-import { Menu } from '../lib/menus';
+import { IMenu } from '../lib/menus';
 import uploadMenu from '../lib/uploadMenu';
-
-
 
 export const menusRouter = Router();
 
-menusRouter.get('/menus', basicAuthMiddleware, async (req: Request, res: Response) => {
+menusRouter.get('/menus', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const menus = await db.getMenus();
-        res.json(menus.map((menu) => menu));
+        res.status(200).json(menus);
     } catch (error) {
-        console.error('Error en recuperar menus:', error);
-        res.status(500).json({ error: 'Error en recuperar menus.' });
+        console.error('Error retrieving menus:', error);
+        res.status(500).json({ error: 'Error retrieving menus.' });
     }
 });
 
-menusRouter.get('/menus/byname/:nom', basicAuthMiddleware, async (req: Request, res: Response) => {
+menusRouter.get('/menus/byname/:nom', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const nom = req.params.nom;
@@ -36,7 +34,7 @@ menusRouter.get('/menus/byname/:nom', basicAuthMiddleware, async (req: Request, 
     }
 });
 
-menusRouter.get('/menus/byid/:_id', basicAuthMiddleware, async (req: Request, res: Response) => {
+menusRouter.get('/menus/byid/:_id', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const _id = req.params._id;
@@ -52,78 +50,65 @@ menusRouter.get('/menus/byid/:_id', basicAuthMiddleware, async (req: Request, re
     }
 });
 
-menusRouter.post('/menus', express.json(), async (req: Request, res: Response) => {
+menusRouter.post('/menus', basicAuthMiddleware, express.json(), async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
-        var menuObj = new Menu(req.body)
+        const { name, items } = req.body;
 
-        // Validacions senzilles
-        if (!menuObj.info.name) {
-            return res.status(400).json({ error: 'Falten dades d\'menu.' });
+        if (!name || !items) {
+            res.status(400).json({ error: 'Name and items are required.' });
+            return;
         }
 
-        // Comprova que l'menu no existeixi ja
-        const existingMenu = await db.getMenuByName(menuObj.info.name);
-        if (existingMenu !== null) {
-            return res.status(409).json({ error: 'L\'menu ja existeix.' });
-        }
-
-        // Crea l'menu
-        //  async createMenu(Menu: IMenu): Promise<IMenu> {
-        if (!menuObj.info._id || menuObj.info._id === '') {
-            menuObj.info._id = undefined;
-        }
-        const menu = await db.createMenu(menuObj.info);
-        res.status(201).json(menu);
+        const newMenu: IMenu = { name, items, menu: {} as IMenu['menu'] }; // Ensure items and menu are included
+        const createdMenu = await db.createMenu(newMenu);
+        res.status(201).json(createdMenu);
     } catch (error) {
-        console.error('Error en crear menu:', error);
-        res.status(500).json({ error: 'Error en crear menu.' });
+        console.error('Error creating menu:', error);
+        res.status(500).json({ error: 'Error creating menu.' });
     }
 });
 
-menusRouter.put('/menus/:_id', basicAuthMiddleware, express.json(), async (req: Request, res: Response) => {
+menusRouter.put('/menus/:_id', basicAuthMiddleware, express.json(), async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const _id = req.params._id;
-        var menuObj = new Menu(req.body)
-        menuObj.update({ _id: _id })
+        const { name, items } = req.body;
 
-        // Comprova que l'menu existeixi
-        const menu = await db.getMenuById(_id);
-        if (menu === null) {
-            return res.status(404).json({ error: 'menu no trobat.' });
+        if (!name || !items) {
+            res.status(400).json({ error: 'Name and items are required.' });
+            return;
         }
-        await db.updateMenuById(menu._id as string, menuObj.info);
-        res.json({ _id: menu._id });
+
+        const updatedMenu: Partial<IMenu> = { name, items }; // Ensure items is included
+        await db.updateMenuById(_id, updatedMenu);
+        res.status(200).json({ success: true });
     } catch (error) {
-        console.error('Error en actualitzar menu:', error);
-        res.status(500).json({ error: 'Error en actualitzar menu.' });
+        console.error('Error updating menu:', error);
+        res.status(500).json({ error: 'Error updating menu.' });
     }
 });
 
-menusRouter.delete('/menus/:_id', basicAuthMiddleware, async (req: Request, res: Response) => {
+menusRouter.delete('/menus/:_id', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const _id = req.params._id;
 
-        // Comprova que l'menu existeixi
         const menu = await db.getMenuById(_id);
-        if (menu === null) {
-            return res.status(404).json({ error: 'menu no trobat.' });
+        if (!menu) {
+            res.status(404).json({ error: 'Menu not found.' });
+            return;
         }
 
-        // Elimina l'menu
-        if (menu.name !== null) {
-            await db.deleteMenu(_id);
-            res.status(204).json({ _id: menu._id });
-        }
+        await db.deleteMenu(_id);
+        res.status(204).json({ success: true });
     } catch (error) {
-        console.error('Error en eliminar menu:', error);
-        res.status(500).json({ error: 'Error en eliminar menu.' });
+        console.error('Error deleting menu:', error);
+        res.status(500).json({ error: 'Error deleting menu.' });
     }
 });
 
-menusRouter.get('/menus/withrecipes/:_id', basicAuthMiddleware, async (req: Request, res: Response) => {
+menusRouter.get('/menus/withrecipes/:_id', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const _id = req.params._id;
@@ -132,7 +117,6 @@ menusRouter.get('/menus/withrecipes/:_id', basicAuthMiddleware, async (req: Requ
         if (menus === null) {
             res.status(404).json({ error: 'menu no trobat.' });
         } else {
-            // console.log('menus:', JSON.stringify(menus));
             res.status(200).json(menus);
         }
     } catch (error) {
@@ -141,16 +125,16 @@ menusRouter.get('/menus/withrecipes/:_id', basicAuthMiddleware, async (req: Requ
     }
 });
 
-menusRouter.put('/menus/simplerecipes/:_id', basicAuthMiddleware, express.json(), async (req: Request, res: Response) => {
+menusRouter.put('/menus/simplerecipes/:_id', basicAuthMiddleware, express.json(), async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const _id = req.params._id;
         const { menuToUpdate } = req.body;
 
-        // Comprova que l'menu existeixi
         const menu = await db.getMenuById(_id);
         if (menu === null) {
-            return res.status(404).json({ error: 'menu no trobat.' });
+            res.status(404).json({ error: 'menu no trobat.' });
+            return;
         }
 
         const newMenu = await db.updateMenuSimpleRecipes(_id, menuToUpdate);
@@ -161,7 +145,7 @@ menusRouter.put('/menus/simplerecipes/:_id', basicAuthMiddleware, express.json()
     }
 });
 
-menusRouter.put('/menus/day/:_id/:day', basicAuthMiddleware, express.json(), async (req: Request, res: Response) => {
+menusRouter.put('/menus/day/:_id/:day', basicAuthMiddleware, express.json(), async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const _id = req.params._id;
@@ -177,23 +161,21 @@ menusRouter.put('/menus/day/:_id/:day', basicAuthMiddleware, express.json(), asy
     }
 });
 
-menusRouter.get('/menus/list', basicAuthMiddleware, async (req: Request, res: Response) => {
+menusRouter.get('/menus/list', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const menus = await db.getMenusList();
         res.status(200).json(menus);
-
     } catch (error) {
         console.error('Error en recuperar noms de menus:', error);
         res.status(500).json({ error: 'Error en recuperar noms de menus.' });
     }
 });
 
-menusRouter.post('/menus/upload', basicAuthMiddleware, express.json(), async (req: Request, res: Response) => {
+menusRouter.post('/menus/upload', basicAuthMiddleware, express.json(), async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const jsonMenu = req.body.data;
-        //console.log('jsonMenu:', jsonMenu);
 
         await uploadMenu.uploadMenu(db, jsonMenu);
         res.status(200).json({ message: 'Menu carregat correctament.' });

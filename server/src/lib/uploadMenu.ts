@@ -68,6 +68,7 @@ const validateMenu = (data: string) => {
       // Set menu to a default value or handle the error as needed
       menuJson = {
         name: '',
+        items: [],
         menu: {
           monday: {
             lunch: [],

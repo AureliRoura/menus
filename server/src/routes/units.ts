@@ -3,33 +3,33 @@ import express, { Request, Response, Router } from 'express';
 import { MongoDatabase as BaseDatabase } from '../lib/mongo-database';
 import { basicAuthMiddleware } from '../lib/basicauth';
 
-
 export const UnitsRouter = Router();
 
-UnitsRouter.get('/units', basicAuthMiddleware, async (req: Request, res: Response) => {
+UnitsRouter.get('/units', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
-        const Units = await db.getUnits();
-        res.status(200).json(Units);
+        const units = await db.getUnits();
+        res.status(200).json(units);
     } catch (error) {
         console.error('Error en recuperar Units:', error);
         res.status(500).json({ error: 'Error en recuperar Units.' });
     }
 });
 
-UnitsRouter.post('/units', basicAuthMiddleware, async (req: Request, res: Response) => {
+UnitsRouter.post('/units', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const { unit } = req.body as { unit: string };
 
-        // Verify that name is provided
         if (!unit) {
-            return res.status(400).json({ message: "name is required." });
+            res.status(400).json({ message: "name is required." });
+            return;
         }
-        //Verify that the unit does not exist
+
         const unitExists = await db.getUnit(unit);
         if (unitExists) {
-            return res.status(400).json({ message: "Unit already exists." });
+            res.status(400).json({ message: "Unit already exists." });
+            return;
         }
         await db.createUnit(unit);
         res.status(201).json({ success: true });
@@ -39,14 +39,14 @@ UnitsRouter.post('/units', basicAuthMiddleware, async (req: Request, res: Respon
     }
 });
 
-UnitsRouter.put('/units/rename', basicAuthMiddleware, async (req: Request, res: Response) => {
+UnitsRouter.put('/units/rename', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const { oldUnitName, newUnitName } = req.body as { oldUnitName: string, newUnitName: string };
 
-        // Verify that both oldUnitName and newUnitName are provided
         if (!oldUnitName || !newUnitName) {
-            return res.status(400).json({ message: "Both oldUnitName and newUnitName are required." });
+            res.status(400).json({ message: "Both oldUnitName and newUnitName are required." });
+            return;
         }
 
         await db.changeRecipesIngredientUnit(oldUnitName, newUnitName)

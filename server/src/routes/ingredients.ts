@@ -6,12 +6,11 @@ import { IIngredient, Ingredient } from '../lib/ingredients';
 import bcrypt from 'bcrypt';
 import logger from '../lib/logger';
 
-
 const SALT_ROUNDS = 10;
 
 export const ingredientRouter = Router();
 
-ingredientRouter.get('/ingredients', basicAuthMiddleware, async (req: Request, res: Response) => {
+ingredientRouter.get('/ingredients', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const ingredients = await db.getIngredients();
@@ -22,7 +21,7 @@ ingredientRouter.get('/ingredients', basicAuthMiddleware, async (req: Request, r
     }
 });
 
-ingredientRouter.get('/ingredients/byname/:nom', basicAuthMiddleware, async (req: Request, res: Response) => {
+ingredientRouter.get('/ingredients/byname/:nom', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const nom = req.params.nom;
@@ -37,7 +36,8 @@ ingredientRouter.get('/ingredients/byname/:nom', basicAuthMiddleware, async (req
         res.status(500).json({ error: 'Error en recuperar ingredient.' });
     }
 });
-ingredientRouter.get('/ingredients/:id', basicAuthMiddleware, async (req: Request, res: Response) => {
+
+ingredientRouter.get('/ingredients/:id', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const id = req.params.id;
@@ -53,25 +53,25 @@ ingredientRouter.get('/ingredients/:id', basicAuthMiddleware, async (req: Reques
     }
 });
 
-ingredientRouter.post('/ingredients', express.json(), async (req: Request, res: Response) => {
+ingredientRouter.post('/ingredients', express.json(), async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         var ingredientObj = new Ingredient(req.body)
 
-
         // Validacions senzilles
         if (!ingredientObj.info.name) {
-            return res.status(400).json({ error: 'Falten dades d\'ingredient.' });
+            res.status(400).json({ error: 'Falten dades d\'ingredient.' });
+            return;
         }
 
         // Comprova que l'ingredient no existeixi ja
         const existingIngredient = await db.getIngredientByName(ingredientObj.info.name);
         if (existingIngredient !== null) {
-            return res.status(409).json({ error: 'L\'ingredient ja existeix.' });
+            res.status(409).json({ error: 'L\'ingredient ja existeix.' });
+            return;
         }
 
         // Crea l'ingredient
-        //  async createIngredient(Ingredient: IIngredient): Promise<IIngredient> {
         if (!ingredientObj.info._id || ingredientObj.info._id === '') {
             ingredientObj.info._id = undefined;
         }
@@ -83,30 +83,30 @@ ingredientRouter.post('/ingredients', express.json(), async (req: Request, res: 
     }
 });
 
-ingredientRouter.put('/ingredients/:_id', basicAuthMiddleware, express.json(), async (req: Request, res: Response) => {
+ingredientRouter.put('/ingredients/:_id', basicAuthMiddleware, express.json(), async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const _id = req.params._id;
-        var ingredientObj = new Ingredient(req.body)
+        var ingredientObj = new Ingredient(req.body);
+
         // Comprova que l'ingredient existeixi
         const ingredient = await db.getIngredientById(_id);
         if (ingredient === null) {
-            return res.status(404).json({ error: 'ingredient no trobat.' });
+            res.status(404).json({ error: 'ingredient no trobat.' });
+            return;
         }
-        ingredientObj.info._id = ingredient?._id
-        await db.updateIngredientById(ingredient._id as string, ingredientObj.info)
-            .then((result) => {
-                logger.info("result", result)
-                res.status(200).json({ _id: ingredient._id });
-            });
 
+        ingredientObj.info._id = ingredient._id;
+        await db.updateIngredientById(ingredient._id as string, ingredientObj.info);
+        logger.info("Ingredient updated successfully");
+        res.status(200).json({ _id: ingredient._id });
     } catch (error) {
         logger.error('Error en actualitzar ingredient:', error);
         res.status(500).json({ error: 'Error en actualitzar ingredient.' });
     }
 });
 
-ingredientRouter.delete('/ingredients/:_id', basicAuthMiddleware, async (req: Request, res: Response) => {
+ingredientRouter.delete('/ingredients/:_id', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const _id = req.params._id;
@@ -114,7 +114,8 @@ ingredientRouter.delete('/ingredients/:_id', basicAuthMiddleware, async (req: Re
         // Comprova que l'ingredient existeixi
         const ingredient = await db.getIngredientById(_id);
         if (ingredient === null) {
-            return res.status(404).json({ error: 'ingredient no trobat.' });
+            res.status(404).json({ error: 'ingredient no trobat.' });
+            return;
         }
 
         // Elimina l'ingredient
@@ -128,14 +129,15 @@ ingredientRouter.delete('/ingredients/:_id', basicAuthMiddleware, async (req: Re
     }
 });
 
-ingredientRouter.post('/ingredients/rename', basicAuthMiddleware, async (req: Request, res: Response) => {
+ingredientRouter.post('/ingredients/rename', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const { oldName, newName } = req.body as { oldName: string, newName: string };
 
         // Verifica que oldName i newName siguin proporcionats
         if (!oldName || !newName) {
-            return res.status(400).json({ message: "Cal proporcionar oldName i newName." });
+            res.status(400).json({ message: "Cal proporcionar oldName i newName." });
+            return;
         }
         const retValue = await db.changeRecipesIngredientName(oldName, newName)
         if (!retValue) {
@@ -148,6 +150,5 @@ ingredientRouter.post('/ingredients/rename', basicAuthMiddleware, async (req: Re
         res.status(500).json({ error: 'Error en renombrar recipe.' });
     }
 });
-
 
 export default ingredientRouter;

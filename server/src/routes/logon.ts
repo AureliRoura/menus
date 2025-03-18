@@ -7,7 +7,7 @@ import { MongoDatabase } from '../lib/mongo-database';
 export const logonRouter = Router();
 
 // Ruta per autenticar un usuari
-logonRouter.post('/logon', json(), async (req: Request, res: Response) => {
+logonRouter.post('/logon', json(), async (req: Request, res: Response): Promise<void> => {
   try {
     const db = (req.app.locals.db as MongoDatabase);
     // Validacions senzilles
@@ -19,7 +19,7 @@ logonRouter.post('/logon', json(), async (req: Request, res: Response) => {
     // Recupera l'usuari de la base de dades
     const user : IUser | null = await db.getUserByName(nom);
     if (user === null) {
-      return res.status(404).json({ error: 'Usuari no trobat.' });
+      res.status(404).json({ error: 'Usuari no trobat.' });
     } else {
       // Verifica la contrasenya
       const isValid = await db.checkPassword(nom, password);

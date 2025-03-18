@@ -8,18 +8,18 @@ import logger from '../lib/logger';
 
 export const recipesRouter = Router();
 
-recipesRouter.get('/recipes', basicAuthMiddleware, async (req: Request, res: Response) => {
+recipesRouter.get('/recipes', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const recipes = await db.getRecipes();
-        res.json(recipes.map((recipe) => recipe));
+        res.status(200).json(recipes);
     } catch (error) {
-        console.error('Error en recuperar recipes:', error);
-        res.status(500).json({ error: 'Error en recuperar recipes.' });
+        console.error('Error retrieving recipes:', error);
+        res.status(500).json({ error: 'Error retrieving recipes.' });
     }
 });
 
-recipesRouter.get('/recipes/byname/:nom', basicAuthMiddleware, async (req: Request, res: Response) => {
+recipesRouter.get('/recipes/byname/:nom', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const nom = req.params.nom;
@@ -35,7 +35,7 @@ recipesRouter.get('/recipes/byname/:nom', basicAuthMiddleware, async (req: Reque
     }
 });
 
-recipesRouter.get('/recipes/byid/:_id', basicAuthMiddleware, async (req: Request, res: Response) => {
+recipesRouter.get('/recipes/byid/:_id', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const _id = req.params._id;
@@ -51,36 +51,25 @@ recipesRouter.get('/recipes/byid/:_id', basicAuthMiddleware, async (req: Request
     }
 });
 
-recipesRouter.post('/recipes', express.json(), async (req: Request, res: Response) => {
+recipesRouter.post('/recipes', basicAuthMiddleware, express.json(), async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
-        var recipeObj = new Recipe(req.body)
+        const { name, ingredients } = req.body;
 
-        // Validacions senzilles
-        if (!recipeObj.info.name) {
-            return res.status(400).json({ error: 'Falten dades d\'recipe.' });
+        if (!name || !ingredients) {
+            res.status(400).json({ error: 'Name and ingredients are required.' });
+            return;
         }
 
-        // Comprova que l'recipe no existeixi ja
-        const existingRecipe = await db.getRecipeByName(recipeObj.info.name);
-        if (existingRecipe !== null) {
-            return res.status(409).json({ error: 'L\'recipe ja existeix.' });
-        }
-
-        // Crea l'recipe
-        //  async createRecipe(Recipe: IRecipe): Promise<IRecipe> {
-        if (!recipeObj.info._id || recipeObj.info._id === '') {
-            recipeObj.info._id = undefined;
-        }
-        const recipe = await db.createRecipe(recipeObj.info);
-        res.status(201).json(recipe);
+        const newRecipe = await db.createRecipe({ name, ingredients });
+        res.status(201).json(newRecipe);
     } catch (error) {
-        console.error('Error en crear recipe:', error);
-        res.status(500).json({ error: 'Error en crear recipe.' });
+        console.error('Error creating recipe:', error);
+        res.status(500).json({ error: 'Error creating recipe.' });
     }
 });
 
-recipesRouter.put('/recipes/:_id', basicAuthMiddleware, express.json(), async (req: Request, res: Response) => {
+recipesRouter.put('/recipes/:_id', basicAuthMiddleware, express.json(), async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const _id = req.params._id;
@@ -90,7 +79,8 @@ recipesRouter.put('/recipes/:_id', basicAuthMiddleware, express.json(), async (r
         // Comprova que l'recipe existeixi
         const recipe = await db.getRecipeById(_id);
         if (recipe === null) {
-            return res.status(404).json({ error: 'recipe no trobat.' });
+            res.status(404).json({ error: 'recipe no trobat.' });
+            return;
         }
         await db.updateRecipeById(recipe._id as string, recipeObj.info);
         res.json({ _id: recipe._id });
@@ -100,7 +90,7 @@ recipesRouter.put('/recipes/:_id', basicAuthMiddleware, express.json(), async (r
     }
 });
 
-recipesRouter.delete('/recipes/:_id', basicAuthMiddleware, async (req: Request, res: Response) => {
+recipesRouter.delete('/recipes/:_id', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const _id = req.params._id;
@@ -108,7 +98,8 @@ recipesRouter.delete('/recipes/:_id', basicAuthMiddleware, async (req: Request, 
         // Comprova que l'recipe existeixi
         const recipe = await db.getRecipeById(_id);
         if (recipe === null) {
-            return res.status(404).json({ error: 'recipe no trobat.' });
+            res.status(404).json({ error: 'recipe no trobat.' });
+            return;
         }
 
         // Elimina l'recipe
@@ -123,14 +114,15 @@ recipesRouter.delete('/recipes/:_id', basicAuthMiddleware, async (req: Request, 
 });
 
 // Renombrar recipe a tots els menus que l'inclouen
-recipesRouter.get('/recipes/rename', basicAuthMiddleware, async (req: Request, res: Response) => {
+recipesRouter.get('/recipes/rename', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const { oldName, newName } = req.body as { oldName: string, newName: string };
 
         // Verifica que oldName i newName siguin proporcionats
         if (!oldName || !newName) {
-            return res.status(400).json({ message: "Cal proporcionar oldName i newName." });
+            res.status(400).json({ message: "Cal proporcionar oldName i newName." });
+            return;
         }
 
         await db.changeRecipeName(oldName, newName)
@@ -141,7 +133,7 @@ recipesRouter.get('/recipes/rename', basicAuthMiddleware, async (req: Request, r
     }
 });
 
-recipesRouter.get('/recipes/ingredient/:_id', basicAuthMiddleware, async (req: Request, res: Response) => {
+recipesRouter.get('/recipes/ingredient/:_id', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const _id = req.params._id;
@@ -149,7 +141,8 @@ recipesRouter.get('/recipes/ingredient/:_id', basicAuthMiddleware, async (req: R
         // Comprova que el parametre existeixi
 
         if (_id === null) {
-            return res.status(400).json({ error: 'Falta id de l\'ingredient.' });
+            res.status(400).json({ error: 'Falta id de l\'ingredient.' });
+            return;
         } else {
             let recipes = await db.getRecipesWithIngredient(_id);
             res.status(200).json(recipes.map((recipe) => recipe));
@@ -163,7 +156,7 @@ recipesRouter.get('/recipes/ingredient/:_id', basicAuthMiddleware, async (req: R
 });
 
 // Get notes for a recipe
-recipesRouter.get('/recipes/:recipeId/notes', basicAuthMiddleware, async (req: Request, res: Response) => {
+recipesRouter.get('/recipes/:recipeId/notes', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const recipeId = req.params.recipeId;
@@ -176,7 +169,7 @@ recipesRouter.get('/recipes/:recipeId/notes', basicAuthMiddleware, async (req: R
 });
 
 // Add a note to a recipe
-recipesRouter.post('/recipes/:recipeId/notes', basicAuthMiddleware, express.json(), async (req: Request, res: Response) => {
+recipesRouter.post('/recipes/:recipeId/notes', basicAuthMiddleware, express.json(), async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const note = req.body;
@@ -190,7 +183,7 @@ recipesRouter.post('/recipes/:recipeId/notes', basicAuthMiddleware, express.json
 });
 
 // Update a note in a recipe
-recipesRouter.put('/recipes/:recipeId/notes/:noteId', basicAuthMiddleware, express.json(), async (req: Request, res: Response) => {
+recipesRouter.put('/recipes/:recipeId/notes/:noteId', basicAuthMiddleware, express.json(), async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const noteId = req.params.noteId;
@@ -204,7 +197,7 @@ recipesRouter.put('/recipes/:recipeId/notes/:noteId', basicAuthMiddleware, expre
 });
 
 // Delete a note from a recipe
-recipesRouter.delete('/recipes/:recipeId/notes/:noteId', basicAuthMiddleware, async (req: Request, res: Response) => {
+recipesRouter.delete('/recipes/:recipeId/notes/:noteId', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const noteId = req.params.noteId;
@@ -216,10 +209,11 @@ recipesRouter.delete('/recipes/:recipeId/notes/:noteId', basicAuthMiddleware, as
     }
 });
 
-recipesRouter.get('/recipes/countnotes/:recipeId', basicAuthMiddleware, async (req: Request, res: Response) => {
+recipesRouter.get('/recipes/countnotes/:recipeId', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     const recipeId = req.params.recipeId;
     if (!recipeId || recipeId === '' || recipeId === 'undefined') {
-        return res.status(400).json({ error: 'Missing recipeId.' });
+        res.status(400).json({ error: 'Missing recipeId.' });
+        return;
     }
     try {
         const db = (req.app.locals.db as BaseDatabase);

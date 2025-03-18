@@ -1,6 +1,4 @@
-
 import { IRecipe } from "./recipes";
-
 
 interface IMeal {
   lunch: IRecipe[];
@@ -10,6 +8,7 @@ interface IMeal {
 interface IMenu {
   _id?: string;
   name: string;
+  items: any[]; // Ensure this property is defined to represent menu items
   menu: {
       monday: IMeal;
       tuesday: IMeal;
@@ -21,20 +20,20 @@ interface IMenu {
   };
 }
   
-  class Menu {
-    private data: IMenu;
-  
-    constructor(data: IMenu) {
-      this.data = data;
-    }
-  
-    get info(): IMenu {
-      return this.data;
-    }
-  
-    update(details: Partial<IMenu>) {
-      this.data = { ...this.data, ...details };
-    }
+class Menu {
+  private data: IMenu;
+
+  constructor(data: IMenu) {
+    this.data = data;
   }
-  
-  export { Menu, IMenu };
+
+  get info(): IMenu {
+    return this.data;
+  }
+
+  update(details: Partial<IMenu>) {
+    this.data = { ...this.data, ...details };
+  }
+}
+
+export { Menu, IMenu };

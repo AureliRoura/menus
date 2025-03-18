@@ -8,12 +8,11 @@ import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
 import logger from '../lib/logger';
 
-
 const SALT_ROUNDS = 10;
 
 export const usersRouter = Router();
 
-usersRouter.get('/checksession', basicAuthMiddleware, async (req: Request, res: Response) => {
+usersRouter.get('/checksession', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         res.status(200).json({ message: 'Sessió vàlida' });
     } catch (error) {
@@ -22,7 +21,7 @@ usersRouter.get('/checksession', basicAuthMiddleware, async (req: Request, res: 
     }
 });
 
-usersRouter.get('/users', basicAuthMiddleware, async (req: Request, res: Response) => {
+usersRouter.get('/users', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const users = await db.getUsers();
@@ -33,7 +32,7 @@ usersRouter.get('/users', basicAuthMiddleware, async (req: Request, res: Respons
     }
 });
 
-usersRouter.get('/users/:nom', basicAuthMiddleware, async (req: Request, res: Response) => {
+usersRouter.get('/users/:nom', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const nom = req.params.nom;
@@ -49,33 +48,35 @@ usersRouter.get('/users/:nom', basicAuthMiddleware, async (req: Request, res: Re
     }
 });
 
-usersRouter.post('/users', express.json(), async (req: Request, res: Response) => {
+usersRouter.post('/users', express.json(), async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const { nom, email, password } = req.body;
 
         // Validacions senzilles
         if (!nom || !email || !password) {
-            return res.status(400).json({ error: 'Falten dades d\'usuari.' });
+            res.status(400).json({ error: 'Falten dades d\'usuari.' });
+            return;
         }
 
         // Comprova que l'usuari no existeixi ja
         const usuari = await db.getUserByName(nom);
         if (usuari !== null) {
-            return res.status(409).json({ error: 'L\'usuari ja existeix.' });
+            res.status(409).json({ error: 'L\'usuari ja existeix.' });
+            return;
         }
 
         // Crea l'usuari
         //  async createUser(user: IUser): Promise<IUser> {
         const id = await db.createUser({ '_id': '', 'name': nom, 'email': email, 'password': password });
-        res.status(201).json( id );
+        res.status(201).json(id);
     } catch (error) {
         logger.error('Error en crear usuari:', error);
         res.status(500).json({ error: 'Error en crear usuari.' });
     }
 });
 
-usersRouter.put('/users/:nom', basicAuthMiddleware, express.json(), async (req: Request, res: Response) => {
+usersRouter.put('/users/:nom', basicAuthMiddleware, express.json(), async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const nom = req.params.nom;
@@ -83,13 +84,15 @@ usersRouter.put('/users/:nom', basicAuthMiddleware, express.json(), async (req: 
 
         // Validacions senzilles
         if (!email || !password) {
-            return res.status(400).json({ error: 'Falten dades d\'usuari.' });
+            res.status(400).json({ error: 'Falten dades d\'usuari.' });
+            return;
         }
 
         // Comprova que l'usuari existeixi
         const usuari = await db.getUserByName(nom);
         if (usuari === null) {
-            return res.status(404).json({ error: 'Usuari no trobat.' });
+            res.status(404).json({ error: 'Usuari no trobat.' });
+            return;
         }
 
         // Actualitza l'usuari
@@ -102,7 +105,7 @@ usersRouter.put('/users/:nom', basicAuthMiddleware, express.json(), async (req: 
     }
 });
 
-usersRouter.delete('/users/:nom', basicAuthMiddleware, async (req: Request, res: Response) => {
+usersRouter.delete('/users/:nom', basicAuthMiddleware, async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const nom = req.params.nom;
@@ -110,7 +113,8 @@ usersRouter.delete('/users/:nom', basicAuthMiddleware, async (req: Request, res:
         // Comprova que l'usuari existeixi
         const usuari = await db.getUserByName(nom);
         if (usuari === null) {
-            return res.status(404).json({ error: 'Usuari no trobat.' });
+            res.status(404).json({ error: 'Usuari no trobat.' });
+            return;
         }
 
         // Elimina l'usuari
@@ -124,7 +128,7 @@ usersRouter.delete('/users/:nom', basicAuthMiddleware, async (req: Request, res:
     }
 });
 
-usersRouter.post('/users/register', express.json(), async (req: Request, res: Response) => {
+usersRouter.post('/users/register', express.json(), async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const { username } = req.body;
@@ -132,7 +136,8 @@ usersRouter.post('/users/register', express.json(), async (req: Request, res: Re
         const secret = authenticator.generateSecret();
         const usuari = await db.getUserByName(username);
         if (usuari === null) {
-            return res.status(404).json({ error: 'Usuari no trobat.' });
+            res.status(404).json({ error: 'Usuari no trobat.' });
+            return;
         }
         usuari.secret = secret;
         await db.updateUserById(usuari._id as string, usuari);
@@ -143,17 +148,19 @@ usersRouter.post('/users/register', express.json(), async (req: Request, res: Re
     }
 });
 
-usersRouter.post('/users/verify', basicAuthMiddleware, express.json(), async (req: Request, res: Response) => {
+usersRouter.post('/users/verify', basicAuthMiddleware, express.json(), async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const { username, token } = req.body;
 
         const usuari = await db.getUserByName(username);
         if (usuari === null) {
-            return res.status(404).json({ error: 'Usuari no trobat.' });
+            res.status(404).json({ error: 'Usuari no trobat.' });
+            return;
         }
         if (!usuari.secret || usuari.secret === '') {
-            return res.status(400).json({ error: 'Usuari sense secret.' });
+            res.status(400).json({ error: 'Usuari sense secret.' });
+            return;
         }
         const isValid = authenticator.verify({ token: token, secret: usuari.secret });
         res.status(201).json({ isValid });
@@ -162,16 +169,18 @@ usersRouter.post('/users/verify', basicAuthMiddleware, express.json(), async (re
     }
 });
 
-usersRouter.get('/users/mfa/:username', async (req: Request, res: Response) => {
+usersRouter.get('/users/mfa/:username', async (req: Request, res: Response): Promise<void> => {
     try {
         const db = (req.app.locals.db as BaseDatabase);
         const username = req.params.username;
         if (!username) {
-            return res.status(400).json({ error: 'Falta el nom d\'usuari.' });
+            res.status(400).json({ error: 'Falta el nom d\'usuari.' });
+            return;
         }
         const usuari = await db.getUserByName(username);
         if (usuari === null) {
-            return res.status(404).json({ error: 'Usuari no trobat.' });
+            res.status(404).json({ error: 'Usuari no trobat.' });
+            return;
         }
         const hasMfa = !!usuari.secret && usuari.secret !== '';
         res.json({ mfa: hasMfa });
@@ -180,6 +189,5 @@ usersRouter.get('/users/mfa/:username', async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Error en recuperar usuari.' });
     }
 });
-
 
 export default usersRouter;

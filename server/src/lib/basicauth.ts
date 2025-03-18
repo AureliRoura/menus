@@ -14,47 +14,48 @@ declare global {
 }
 
 // Exemple de com s'inicialitza el middleware d'autenticació bàsica
-export const basicAuthMiddleware: express.RequestHandler = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader: string | undefined = req.headers.authorization;
-  //  console.log ("basicAuthMiddleware");
-  //  console.log (authHeader);
-  if (!authHeader) {
-    return res.status(401).json({ error: 'Accés no autoritzat. Falta l\'encapçalament d\'autorització.' });
-  }
-
-  const [type, token] = authHeader.split(' ');
-  if (type.toLowerCase() !== 'bearer') {
-    return res.status(401).json({ error: 'Accés no autoritzat. Tipus d\'autorització no vàlid.' });
-  }
-
-  // const decodedToken = Buffer.from(token, 'base64').toString('utf-8');
-  jwt.verify(token, secretKey, (error, decoded: string | jwt.JwtPayload | undefined) => {
-    if (error) {
-      return res.status(401).json({ error: 'Token no vàlid.' });
+export const basicAuthMiddleware: express.RequestHandler = (req: Request, res: Response, next: NextFunction): void => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      res.status(401).json({ error: 'Authorization header missing' });
+      return;
     }
 
-    if (typeof decoded === 'object') {
-      if (decoded.nom && decoded.password && decoded.exp) {
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+      res.status(401).json({ error: 'Token missing' });
+      return;
+    }
+
+    jwt.verify(token, secretKey, (err, decoded) => {
+      if (err) {
+        res.status(403).json({ error: 'Invalid token' });
+        return;
+      }
+
+      if (typeof decoded === 'object' && decoded.nom && decoded.password && decoded.exp) {
         const { nom, password, exp } = decoded;
-        // Verifica que el token no hagi caducat
+
+        // Verify token expiration
         if (exp && Date.now() >= exp * 1000) {
-          console.log('Token caducat:', new Date(exp * 1000));
-          return res.status(401).json({ error: 'Accés no autoritzat. El token ha caducat.' });
+          res.status(401).json({ error: 'Token expired' });
+          return;
         }
-        // Afegeix l'usuari a la petició per a ús posterior
-        const token = createToken(nom, password);
+
+        // Attach user to the request object
         req.user = { nom, password };
 
-        // Adjunta el token a la resposta (pots utilitzar cookies o un encapçalament personalitzat)
-        res.setHeader('Authorization', `Bearer ${token}`);
-
-        // Continua amb la següent funció de middleware o ruta
+        // Call the next middleware
         next();
       } else {
-        return res.status(401).json({ error: 'Accés no autoritzat. Credencials incorrectes.' });
+        res.status(401).json({ error: 'Invalid credentials' });
       }
-    }
-  });
+    });
+  } catch (error) {
+    console.error('Authentication error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
 export const createToken = (nom: string, password: string): string => {
