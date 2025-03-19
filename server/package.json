@@ -21,7 +21,7 @@
     "@dotenvx/dotenvx": "^1.39.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.10",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
@@ -37,8 +37,7 @@
     "build": "tsc",
     "test": "jest",
     "start": "dotenvx run -f .env.production -- ts-node src/app.ts",
-    "dev": "dotenvx run -f .env.development -- nodemon",
-    "postinstall": "npm rebuild bcrypt --build-from-source"
+    "dev": "dotenvx run -f .env.development -- nodemon"
   },
   "engines": {
     "node": ">=18.0.0"

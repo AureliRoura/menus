@@ -3,7 +3,6 @@ import express, { Request, Response, Router } from 'express';
 import { MongoDatabase as BaseDatabase } from '../lib/mongo-database';
 import { basicAuthMiddleware } from '../lib/basicauth';
 import { IIngredient, Ingredient } from '../lib/ingredients';
-import bcrypt from 'bcrypt';
 import logger from '../lib/logger';
 
 const SALT_ROUNDS = 10;

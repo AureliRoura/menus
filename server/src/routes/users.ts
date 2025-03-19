@@ -2,7 +2,7 @@
 import express, { Request, Response, Router } from 'express';
 import { MongoDatabase as BaseDatabase } from '../lib/mongo-database';
 import { basicAuthMiddleware } from '../lib/basicauth';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import bodyParser from 'body-parser';
 import { authenticator } from 'otplib';
 import qrcode from 'qrcode';
