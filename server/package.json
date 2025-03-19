@@ -37,7 +37,11 @@
     "build": "tsc",
     "test": "jest",
     "start": "dotenvx run -f .env.production -- ts-node src/app.ts",
-    "dev": "dotenvx run -f .env.development -- nodemon"
+    "dev": "dotenvx run -f .env.development -- nodemon",
+    "postinstall": "npm rebuild bcrypt --build-from-source"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "keywords": [],
   "author": "",
