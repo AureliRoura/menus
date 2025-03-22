@@ -164,9 +164,11 @@ jobs:
         docker buildx create --use
         docker buildx inspect --bootstrap
         docker buildx build --platform linux/arm/v7 -t menu-server:latest -f dockerfile . --load
-        docker push  ${{ secrets.GITHUB_USERNAME }}/menu-server:latest
         cd ..
         docker save -o menu-server.tar menu-server:latest
+
+    - name: Push Docker image
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/menu-server:latest
 
     - name: Save menu-backend docker as artifact
       uses: actions/upload-artifact@v4
