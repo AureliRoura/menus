@@ -19,7 +19,7 @@ services:
 
   menus-frontend:
     build: ./frontend
-    image: menu-frontend:latest
+    image: aureliroura/menu-frontend:latest
     ports:
       - "9092:80"
     depends_on:
