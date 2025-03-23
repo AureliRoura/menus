@@ -5,8 +5,8 @@ services:
     container_name: menu-backend
     restart: always
     ports:
-      - "0.0.0.0:3000:3000"
-      - "0.0.0.0:3443:3443"
+      - "3000:3000"
+      - "3443:3443"
     env_file:
       - ./server/.env
     environment:
@@ -21,7 +21,7 @@ services:
     build: ./frontend
     image: menu-frontend:latest
     ports:
-      - "0.0.0.0:9092:80"
+      - "9092:80"
     depends_on:
       - menus-backend
     networks:
