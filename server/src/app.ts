@@ -19,8 +19,8 @@ if (uri === undefined) {
 
 const app = express();
 app.use(express.json());
-const port = process.env.SERVER_PORT||3000;
-const httpsPort = process.env.SERVER_PORT_HTTPS||3443;
+const port = parseInt(process.env.SERVER_PORT || '3000', 10);
+const httpsPort = parseInt(process.env.SERVER_PORT_HTTPS || '3443', 10);
 const certKey = process.env.SERVER_KEY;
 const cert = process.env.SERVER_CERT;
 
@@ -94,11 +94,11 @@ app.use('/api', allergenicsRouter);
 import { categoriesRouter } from './routes/categories';
 app.use('/api', categoriesRouter);
 
-httpServer.listen(port, () => {
-  logger.info(`Server is running at http://localhost:${port}`);
+httpServer.listen(port, '0.0.0.0', () => {
+  logger.info(`Server is running at http://0.0.0.0:${port}`);
 });
 
-httpsServer.listen(httpsPort, () => {
-  logger.info(`Server is running at https://localhost:${httpsPort}`);
+httpsServer.listen(httpsPort, '0.0.0.0', () => {
+  logger.info(`Server is running at https://0.0.0.0:${httpsPort}`);
 });
 

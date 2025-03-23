@@ -2,7 +2,7 @@
 services:
   menus-backend:
     build: ./server
-    image: menu-server:latest
+    image: aureliroura/menu-server:latest
     restart: always
     ports:
       - "3000:3000"
