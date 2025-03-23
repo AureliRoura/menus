@@ -20,6 +20,8 @@ services:
   menus-frontend:
     build: ./frontend
     image: aureliroura/menu-frontend:latest
+    container_name: menu-frontend
+    restart: always
     ports:
       - "9092:80"
     depends_on:

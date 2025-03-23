@@ -267,7 +267,7 @@ jobs:
           cd deploy
           docker compose down
           docker compose pull
-          docker compose up -d
+          docker compose up -d --rmove-orphans
           # sh ./install.sh
           exit
 
