@@ -94,11 +94,11 @@ app.use('/api', allergenicsRouter);
 import { categoriesRouter } from './routes/categories';
 app.use('/api', categoriesRouter);
 
-httpServer.listen(port, '0.0.0.0', () => {
-  logger.info(`Server is running at http://0.0.0.0:${port}`);
+httpServer.listen(port, () => {
+  logger.info(`Server is running at http://localhost:${port}`);
 });
 
-httpsServer.listen(httpsPort, '0.0.0.0', () => {
-  logger.info(`Server is running at https://0.0.0.0:${httpsPort}`);
+httpsServer.listen(httpsPort, () => {
+  logger.info(`Server is running at https://localhost:${httpsPort}`);
 });
 
