@@ -29,7 +29,16 @@ export class MongoDatabase {
   private GridFSBucket?: GridFSBucket;
 
   constructor(mongoURI: string) {
+    if (!mongoURI) {
+      throw new Error('MongoDB URI is required');
+    }
+    try {
     this.client = new MongoClient(mongoURI);
+    } catch (error) {
+      logger.error('Error creating MongoClient:', error);
+      logger.error(`MongoDB URI: ${mongoURI}`);
+      throw error;
+    }
   }
 
   async init() {
@@ -67,6 +76,7 @@ export class MongoDatabase {
       logger.info('Connected to database');
     } catch (error) {
       logger.error('Error connecting to database:', error);
+      logger.error(`MongoDB URI: ${dbName}`);
       throw error;
     }
   }
