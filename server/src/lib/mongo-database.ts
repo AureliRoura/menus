@@ -33,6 +33,7 @@ export class MongoDatabase {
       throw new Error('MongoDB URI is required');
     }
     try {
+    console.log('MongoDB URI:', mongoURI);
     this.client = new MongoClient(mongoURI);
     } catch (error) {
       logger.error('Error creating MongoClient:', error);
