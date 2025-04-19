@@ -178,6 +178,9 @@ const valid = ref(false);
 const tab = ref('general');
 let url = '';
 
+const emit = defineEmits(['update:dialog', 'submit']); // Ensure emits are properly defined
+
+// Ensure props are correctly passed and reactive
 watch(() => props.dialog, (value) => {
   state.dialog = value;
   if (value) {
@@ -185,20 +188,15 @@ watch(() => props.dialog, (value) => {
   }
 });
 
+// Ensure props.recipe is properly initialized
 watch(() => props.recipe, (value) => {
-  state.recipe = value;
-  if (state.recipe.categories === undefined) {
-    state.recipe.categories = [];
-  }
-  if (state.recipe.rating === undefined) {
-    state.recipe.rating = {};
-  }
-  if (state.recipe.rating[userStore.account] === undefined) {
+  state.recipe = value || { name: '', desc: '', time: '', ingredients: [], categories: [], steps: [], rating: [], difficulty: '', servings: 1 };
+  if (!state.recipe.categories) state.recipe.categories = [];
+  if (!state.recipe.rating) state.recipe.rating = {};
+  if (!state.recipe.rating[userStore.account]) {
     state.recipe.rating[userStore.account] = { value: 0, date: new Date().toISOString() };
   }
-  if (state.recipe.steps === undefined) {
-    state.recipe.steps = [];
-  }
+  if (!state.recipe.steps) state.recipe.steps = [];
 });
 
 watch(() => props.readonly, (value) => {
@@ -220,6 +218,11 @@ const numNotes = ref(0);
 
 const fetchNoteCount = async (value) => {
   try {
+    if (!value || !value._id) {
+      numNotes.value = 0;
+      return;
+    }
+    // Fetch the number of notes for the recipe
     const response = await arrxios.get(`/api/recipes/countnotes/${value._id}`);
     numNotes.value = response.data;
   } catch (error) {
@@ -232,7 +235,7 @@ const onNoteChange = () => {
   fetchNoteCount(state.recipe);
 };
 
-const emit = defineEmits(['update:dialog', 'submit']);
+// Removed duplicate declaration of emit
 
 const submit = () => {
   if (valid.value) {

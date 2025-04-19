@@ -38,7 +38,6 @@ export const updateRecipe = async (data) => {
 export const deleteRecipe = async (_id, index) => {
   console.log(_id, index)
   const recipesStore = useRecipesStore();
-  console.log(_id)
   return arrxios.delete('/api/recipes/' + _id)
     .then(response => {
       if (response.status !== 204) {

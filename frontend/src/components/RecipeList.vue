@@ -116,7 +116,7 @@ const addRecipe = () => {
   const recipe = reactive({
     id: '',
     name: '',
-    description: '',
+    desc: '',
     time: '',
     ingredients: [],
     categories: [],
