@@ -67,7 +67,7 @@ recipesRouter.post('/recipes', basicAuthMiddleware, express.json(), async (req: 
             return;
         }
 
-        const newRecipe = await db.createRecipe({ name, ingredients });
+        const newRecipe = await db.createRecipe( req.body );
         res.status(201).json(newRecipe); // Ensure correct status code
     } catch (error) {
         console.error('Error en crear recipe:', error); // Match test expectation
