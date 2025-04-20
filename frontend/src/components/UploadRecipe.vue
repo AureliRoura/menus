@@ -13,7 +13,7 @@
       <v-chip class="mr-2" color="green darken-1" text :disabled="!valid" @click="submitForm">Upload</v-chip>
     </v-form>
   </v-container>
-  <edit-recipe v-model:dialog="dialog" :recipe="selectedRecipe" @submit="handleFormSubmit" />
+  <edit-recipe v-model:dialog="dialog" :recipe="selectedRecipe" :showStepsIngredients=false @submit="handleFormSubmit" />
 </template>
 
 <script setup>
@@ -96,7 +96,6 @@ const handleFileUpload = (file) => {
 
 const handleTextInput = (value) => {
   try {
-    //console.log('value', value);
     json = JSON.parse(value);
     // Handle text input logic here
   }

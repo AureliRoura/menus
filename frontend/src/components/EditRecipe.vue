@@ -104,13 +104,12 @@
                 <edit-categories v-model:categories="state.recipe.categories" :readonly="readonly"></edit-categories>
               </v-tabs-window-item>
               <v-tabs-window-item value="steps">
-                <edit-steps v-model:steps="state.recipe.steps" :ingredients="state.recipe.ingredients"
+                <edit-steps v-model:steps="state.recipe.steps" :ingredients="state.recipe.ingredients" :showIngredients="showStepsIngredients"
                   :readonly="readonly"></edit-steps>
               </v-tabs-window-item>
               <v-tabs-window-item value="notes">
                 <edit-notes v-model:recipe-id="state.recipe._id" :onNoteChange="onNoteChange"></edit-notes>
               </v-tabs-window-item>
-
             </v-tabs-window>
           </v-form>
         </v-card-text>
@@ -164,10 +163,15 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  showStepsIngredients: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 const readonly = ref(props.readonly);
 const editable = ref(props.editable);
+const showStepsIngredients = ref(props.showStepsIngredients);
 
 let state = reactive({
   dialog: props.dialog,

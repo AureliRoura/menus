@@ -32,7 +32,7 @@
             </v-list-item>
           </div>
         </v-list>
-        <edit-recipe v-model:dialog="dialog" :recipe="selectedRecipe" :readonly="readonly" @submit="handleFormSubmit" />
+        <edit-recipe v-model:dialog="dialog" :recipe="selectedRecipe" :readonly="readonly" :showStepsIngredients=true @submit="handleFormSubmit" />
       </template>
     </recipe-select>
 
