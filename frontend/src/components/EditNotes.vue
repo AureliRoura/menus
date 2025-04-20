@@ -3,8 +3,8 @@
     <v-card-title>
       Notes
     </v-card-title>
-    <v-card-text >
-      <v-textarea v-model="newNoteContent" label="New Note" outlined :disabled=false></v-textarea>
+    <v-card-text>
+      <v-textarea v-model="newNoteContent" label="New Note" outlined :disabled=disableNote></v-textarea>
       <v-btn @click="addNote" :disabled="newNoteContent.length == 0">Add Note</v-btn>
     </v-card-text>
     <v-card-text>
@@ -14,7 +14,8 @@
             <v-card variant="tonal">
               <v-card-title class="d-flex align-center">
                 <v-chip>{{ note.user }}</v-chip>
-                <v-btn v-if="note.user === userStore.account" class="ml-1" icon @click="editNote[index] = !editNote[index]">
+                <v-btn v-if="note.user === userStore.account" class="ml-1" icon
+                  @click="editNote[index] = !editNote[index]">
                   <v-icon v-if="!editNote[index]">mdi-pencil</v-icon>
                   <v-icon v-else>mdi-pencil-off</v-icon>
                 </v-btn>
@@ -29,8 +30,8 @@
                 </span>
               </v-card-title>
               <v-card-text class="bg-surface-light pt-2">
-                <v-textarea v-if="editNote[index]" class="ml-2" v-model="note.content" label="Note"
-                  outlined :disabled="note.user !== userStore.account">
+                <v-textarea v-if="editNote[index]" class="ml-2" v-model="note.content" label="Note" outlined
+                  :disabled="note.user !== userStore.account">
                 </v-textarea>
                 <span v-else class="ml-2">
                   {{ note.content }}
@@ -51,8 +52,6 @@ import { useUserStore } from '@/stores/userStore';
 
 const props = defineProps({
   recipeId: {
-    type: String,
-    required: true
   },
   onNoteChange: {
     type: Function,
@@ -66,13 +65,20 @@ const recipeId = props.recipeId;
 const notes = ref([]);
 const newNoteContent = ref('');
 const editNote = ref([]);
+const disableNote = ref(false);
 
 const fetchNotes = async () => {
   try {
-    const response = await arrxios.get(`/api/recipes/${recipeId}/notes`);
-    notes.value = response.data;
+    if (recipeId) {
+      // Fetch notes for the recipe from the API
+      const response = await arrxios.get(`/api/recipes/${recipeId}/notes`);
+      notes.value = response.data;
+    } else {
+      disableNote.value = true;
+    }
   } catch (error) {
     console.error('Error fetching notes:', error);
+
   }
 };
 
