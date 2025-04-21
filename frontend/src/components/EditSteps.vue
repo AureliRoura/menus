@@ -46,11 +46,13 @@
                   <span @click="stepDone[index] = !stepDone[index]">
                     {{ index + 1 }}.
                     {{ step }}
+
                     <template v-if="props.showIngredients">
                       <v-tooltip v-model=showToolTip[index] v-if="ingredientsList(step)" location="top"
                         :disabled="!showToolTip" activator="parent">{{
                           ingredientsList(step) }}</v-tooltip>
                     </template>
+                    
                   </span>
                 </v-col>
                 <v-list-item-action v-if="selectionActive">
@@ -178,14 +180,32 @@ const downStep = (index) => {
 };
 
 const ingredientsList = (step) => {
-  const lowerCaseStep = step.toLowerCase();
-  return props.ingredients
-    .filter(ingredient => {
-      const words = ingredient.name.toLowerCase().split(' ');
-      return words.some(word => new RegExp(`\\b${word}\\b`, 'g').test(lowerCaseStep));
-    })
-    .map(ingredient => `${ingredient.name} (${ingredient.quantity} ${ingredient.unit})`)
-    .join(', ');
+  try {
+    const lowerCaseStep = step.toLowerCase();
+
+    // Escape special characters in the ingredient name
+    const escapeRegExp = (string) => {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape special characters
+    };
+
+    return props.ingredients
+      .filter(ingredient => {
+        const words = ingredient.name.toLowerCase().split(' ');
+        return words.some(word => {
+          const escapedWord = escapeRegExp(word); // Escape the word
+          const regex = new RegExp(`\\b${escapedWord}\\b`, 'g');
+          return regex.test(lowerCaseStep);
+        });
+      })
+      .map(ingredient => {
+        const quantity = ingredient.quantity ? `${ingredient.quantity} ` : ''; // Exclude null quantities
+        return `${ingredient.name} (${quantity}${ingredient.unit})`;
+      })
+      .join(', ');
+  } catch (error) {
+    console.error('Error in ingredientsList:', error);
+    return ''; // Return an empty string or handle the error as needed
+  }
 };
 </script>
 
