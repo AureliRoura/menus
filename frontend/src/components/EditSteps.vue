@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>Passos
-      <v-tooltip text="Edita Passos" v-if="!props.readonly && props.showIngredients"  location="top" open-delay="500">
+      <v-tooltip text="Edita Passos" v-if="!props.readonly && props.showIngredients" location="top" open-delay="500">
         <template v-slot:activator="{ props }">
           <v-btn icon size="x-small" density="comfortable" @click="selectionActive = !selectionActive" color="primary"
             class="ml-1" v-bind="props">
@@ -40,7 +40,8 @@
                 <v-col
                   :class="{ 'text-decoration-line-through text-red-lighten-1': stepDone[index], 'cursor-pointer': true }">
                   <span>
-                    <v-icon @click="showToolTip[index] = !showToolTip[index]">mdi-format-list-bulleted class = "mr-2"
+                    <v-icon @click="deactivateAllTooltips(index); showToolTip[index] = !showToolTip[index]">
+                      mdi-format-list-bulleted class = "mr-2"
                     </v-icon>
                   </span>
                   <span @click="stepDone[index] = !stepDone[index]">
@@ -52,7 +53,7 @@
                         :disabled="!showToolTip" activator="parent">{{
                           ingredientsList(step) }}</v-tooltip>
                     </template>
-                    
+
                   </span>
                 </v-col>
                 <v-list-item-action v-if="selectionActive">
@@ -183,11 +184,11 @@ const ingredientsList = (step) => {
   try {
     // List of stop words (articles, prepositions, and adjectives) in Catalan
     const stopWords = [
-      'a', 'amb', 'd', 'de', 'del', 'dels', 'el', 'els', 'en', 'entre', 'i', 'l', 'la', 'les', 'o', 'per', 'pel', 'pels', 
-      'que', 'se', 'un', 'una', 'uns', 'unes', 'sobre', 'sota', 'fins', 'cap', 'contra', 'durant', 'abans', 'després', 
+      'a', 'amb', 'd', 'de', 'del', 'dels', 'el', 'els', 'en', 'entre', 'i', 'l', 'la', 'les', 'o', 'per', 'pel', 'pels',
+      'que', 'se', 'un', 'una', 'uns', 'unes', 'sobre', 'sota', 'fins', 'cap', 'contra', 'durant', 'abans', 'després',
       'entre', 'sense', 'vers', 'malgrat', 'segons',
       // Common Catalan adjectives
-      'gran', 'petit', 'llarg', 'curt', 'alt', 'baix', 'nou', 'vell', 'bo', 'dolent', 'calent', 'fred', 'clar', 'fosc', 
+      'gran', 'petit', 'llarg', 'curt', 'alt', 'baix', 'nou', 'vell', 'bo', 'dolent', 'calent', 'fred', 'clar', 'fosc',
       'sec', 'humit', 'dur', 'tou', 'lleuger', 'pesat', 'ràpid', 'lent', 'fort', 'feble', 'ample', 'estret'
     ];
 
@@ -231,6 +232,10 @@ const ingredientsList = (step) => {
     console.error('Error in ingredientsList:', error);
     return ''; // Return an empty string or handle the error as needed
   }
+};
+
+const deactivateAllTooltips = (index) => {
+  showToolTip.value = showToolTip.value.map((_, i) => i === index ? showToolTip.value[i] : false); // Skip the specified index
 };
 </script>
 
