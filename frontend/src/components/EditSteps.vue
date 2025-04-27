@@ -181,20 +181,45 @@ const downStep = (index) => {
 
 const ingredientsList = (step) => {
   try {
-    const lowerCaseStep = step.toLowerCase();
+    // List of stop words (articles, prepositions, and adjectives) in Catalan
+    const stopWords = [
+      'a', 'amb', 'd', 'de', 'del', 'dels', 'el', 'els', 'en', 'entre', 'i', 'l', 'la', 'les', 'o', 'per', 'pel', 'pels', 
+      'que', 'se', 'un', 'una', 'uns', 'unes', 'sobre', 'sota', 'fins', 'cap', 'contra', 'durant', 'abans', 'després', 
+      'entre', 'sense', 'vers', 'malgrat', 'segons',
+      // Common Catalan adjectives
+      'gran', 'petit', 'llarg', 'curt', 'alt', 'baix', 'nou', 'vell', 'bo', 'dolent', 'calent', 'fred', 'clar', 'fosc', 
+      'sec', 'humit', 'dur', 'tou', 'lleuger', 'pesat', 'ràpid', 'lent', 'fort', 'feble', 'ample', 'estret'
+    ];
 
-    // Escape special characters in the ingredient name
+    // Escape special characters in a string
     const escapeRegExp = (string) => {
-      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape special characters
+      return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     };
+
+    // Normalize words by removing plural suffixes
+    const normalizeWord = (word) => {
+      return word.replace(/(es|s)$/i, ''); // Remove common plural suffixes
+    };
+
+    // Normalize the step text
+    const normalizedStep = step
+      .toLowerCase()
+      .split(' ')
+      .filter(word => !stopWords.includes(word)) // Remove stop words
+      .map(normalizeWord) // Normalize words
+      .join(' ');
 
     return props.ingredients
       .filter(ingredient => {
-        const words = ingredient.name.toLowerCase().split(' ');
+        const words = ingredient.name
+          .toLowerCase()
+          .split(' ')
+          .filter(word => !stopWords.includes(word)) // Remove stop words
+          .map(normalizeWord); // Normalize words
         return words.some(word => {
           const escapedWord = escapeRegExp(word); // Escape the word
           const regex = new RegExp(`\\b${escapedWord}\\b`, 'g');
-          return regex.test(lowerCaseStep);
+          return regex.test(normalizedStep); // Compare with normalized step
         });
       })
       .map(ingredient => {
