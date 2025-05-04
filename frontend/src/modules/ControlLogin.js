@@ -37,7 +37,7 @@ export default function ControlLogin() {
                     router.push({ path: '/verifyToken' });
                   } else {
                     userStore.setLoggedIn(true);
-                    router.push({ path: '/menuweeklist' });
+                    router.push({ path: '/editrecipes' });
                     loadAllData();
                   }
                 } else {
