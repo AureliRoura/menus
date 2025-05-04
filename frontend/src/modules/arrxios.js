@@ -23,8 +23,11 @@ instance.interceptors.response.use((response) => {
   //store = useStore();
   const userStore = useUserStore();
   const authenticate = response.headers['authorization']; // Get the header
+  console.log('response authentication:', authenticate);
   if (authenticate) {
     userStore.setAuthentication(authenticate); // Set the store
+    // store autentica tion in local storage
+    localStorage.setItem('MenuAuthentication', authenticate); // Set the store
 //    store.commit('setAuthentication', authenticate); // Set the store
   }
   return response;

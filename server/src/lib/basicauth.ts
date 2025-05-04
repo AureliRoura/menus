@@ -45,7 +45,9 @@ export const basicAuthMiddleware: express.RequestHandler = (req: Request, res: R
 
         // Attach user to the request object
         req.user = { nom, password };
-
+        // set respones header with token
+        const newToken = createToken(nom, password);
+        res.setHeader('Authorization', `Bearer ${newToken}`);
         // Call the next middleware
         next();
       } else {
