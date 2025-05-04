@@ -54,23 +54,7 @@
       </v-list>
     </v-card-text>
   </v-card>
-  <v-dialog v-model="mDialog" max-width="500px">
-    <v-card>
-      <v-card-title>Editar Ingredient</v-card-title>
-      <v-card-text>
-        <v-autocomplete v-model="selectedIngredient._id" :items="filteredIngredients" item-title="name" item-value="_id"
-          label="Ingredient" auto-select-first required style="min-width: 200px;" @update:menu="nameUpdate"></v-autocomplete>
-        <v-text-field v-model="selectedIngredient.quantity" label="Quantitat" type="number" @change="fixDecimals"
-          style="min-width: 100px;"></v-text-field>
-        <v-autocomplete v-model="selectedIngredient.unit" :items="units" item-title="unit" item-value="unit"
-          label="Unitats" auto-select-first required style="min-width: 100px;"></v-autocomplete>
-      </v-card-text>
-      <v-card-actions>
-        <v-chip color="red" @click="restoreCurrentIngredient()">Cancel·lar</v-chip>
-        <v-chip color="blue" :disabled="!updateValidation" @click="mDialog = false">Desar</v-chip>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+  <edit-ingredient-recipe v-model:dialog="mDialog" v-model:ingredient="updateIngredient" ></edit-ingredient-recipe>
   <edit-ingredient v-model:dialog="dialog" :ingredient="selectedIngredient" @submit="handleFormSubmit">
   </edit-ingredient>
 </template>
@@ -85,6 +69,7 @@ import { useUnitsStore } from '@/stores/unitsStore';
 import EditIngredient from './EditIngredient.vue';
 import { addMessage } from '@/modules/arrMessage';
 import apiIngredients from '@/modules/apiIngredients';
+import EditIngredientRecipe from './EditIngredientRecipe.vue';
 
 const props = defineProps({
   ingredients: Array,
@@ -99,6 +84,7 @@ let ingredients = toRef(props, 'ingredients');
 
 let newIngredient = reactive({ _id: '', name: '', quantity: '', unit: '' });
 const selectedIngredient = ref(null);
+const updateIngredient = ref(null);
 const savedIngredient = ref(null);
 const searchInput = ref('');
 const dialog = ref(false);
@@ -136,14 +122,8 @@ let valid = computed(() => {
   return newIngredient._id !== '' && newIngredient.unit !== '' && (newIngredient.quantity !== '' || newIngredient.unit === 'al gust');
 });
 
-let updateValidation = computed(() => {
-  return selectedIngredient.value._id !== null && selectedIngredient.value.unit !== null && (selectedIngredient.value.quantity !== "" || selectedIngredient.value.unit === 'al gust');
-});
-
 const ingredientsStore = useIngredientsStore();
 let globalIngredients = ingredientsStore.ingredients;
-
-
 
 const filteredIngredients = computed(() => {
   return globalIngredients.filter(ingredient =>
@@ -161,6 +141,12 @@ watch(() => newIngredient._id, (newId) => {
   newIngredient.name = ingredient ? ingredient.name : '';
 });
 
+watch(() => updateIngredient.value, (newVal) => {
+  if (newVal) {
+    ingredients.value[currentIndex] = { ...newVal };
+  }
+});
+
 const appendButton = () => {
   operation = 'add';
   selectedIngredient.value = { _id: '', name: searchInput.value, allergenics: [] };
@@ -176,7 +162,6 @@ const fixDecimals = () => {
     newIngredient.quantity = parseFloat(quantity.toFixed(2));
   }
 };
-
 
 const handleFormSubmit = (formData) => {
   const api = apiIngredients();
@@ -238,25 +223,12 @@ const removeIngredient = (index) => {
 };
 
 const editCurrentIngredient = (ingredient, index) => {
-  selectedIngredient.value = ingredient;
-  savedIngredient.value = { ...ingredient };
   currentIndex = index;
+  updateIngredient.value = ingredient;
+  savedIngredient.value = { ...ingredient };
   mDialog.value = true;
 };
 
-const restoreCurrentIngredient = () => {
-  ingredients.value[currentIndex] = { ...savedIngredient.value };
-  mDialog.value = false;
-};
-
-const nameUpdate = () => {
-  if (selectedIngredient.value._id === null) {
-    selectedIngredient.value.name = '';
-    return;
-  }
-  const ingredient = ingredientsStore.searchById(selectedIngredient.value._id)[0];
-  selectedIngredient.value.name = ingredient ? ingredient.name : '';
-};
 
 </script>
 
