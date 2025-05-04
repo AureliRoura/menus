@@ -147,7 +147,6 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const isLoggedIn = !!localStorage.getItem('MenuAuthentication'); // Check if the user is logged in
-  console.log('MenuAuthentication:', localStorage.getItem('MenuAuthentication'));
   if (to.name === 'Login') {
     if (isLoggedIn) {
       next({ name: 'Edita Receptes' }); // Redirect to the ingredients list if logged in
