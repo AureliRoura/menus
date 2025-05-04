@@ -146,24 +146,37 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.name === 'Login' || to.name == 'Logout' || to.name === 'Nou Usuari' || to.name === 'MFA' ||
-    to.name === 'Mostra Recepta' || to.name === 'Verifica Token') {
-    next()
-    return
+  const isLoggedIn = !!localStorage.getItem('MenuAuthentication'); // Check if the user is logged in
+  console.log('MenuAuthentication:', localStorage.getItem('MenuAuthentication'));
+  if (to.name === 'Login') {
+    if (isLoggedIn) {
+      next({ name: 'Edita Receptes' }); // Redirect to the ingredients list if logged in
+      return;
+    }
+    next();
+    return;
   }
+
+  if (to.name === 'Logout' || to.name === 'Nou Usuari' || to.name === 'MFA' ||
+    to.name === 'Mostra Recepta' || to.name === 'Verifica Token') {
+    next();
+    return;
+  }
+
   arrxios.get('/api/checksession')
     .then(response => {
       if (response.status !== 200) {
-        next({ name: 'Login' })
-      }
-      else {
+        next({ name: 'Login' });
+      } else {
         localStorage.setItem('MenuAuthentication', response.headers.authorization);
-        next()
+        next();
       }
     })
     .catch(error => {
-      next({ name: 'Login' })
-    })
-})
+      // remove loacal storage MenuAuthentication
+      localStorage.removeItem('MenuAuthentication');
+      next({ name: 'Login' });
+    });
+});
 
 export default router
