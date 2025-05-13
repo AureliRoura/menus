@@ -56,7 +56,7 @@ const verifyMFA = () => {
           loadAllData();
           addMessage('Verificació MFA correcte', 'success');
           userStore.setLoggedIn(true);
-          router.push({ path: '/menuweeklist' });
+          router.push({ path: '/editrecipes' });
 
         } else {
           addMessage('Verificació del MFA incorrecte', 'error');
