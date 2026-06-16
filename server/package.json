@@ -39,6 +39,9 @@
     "start": "dotenvx run -f .env.production -- ts-node src/app.ts",
     "dev": "dotenvx run -f .env.development -- nodemon"
   },
+  "overrides": {
+    "js-yaml": "^4.1.1"
+  },
   "engines": {
     "node": ">=18.0.0"
   },
