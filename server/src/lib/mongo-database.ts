@@ -16,8 +16,10 @@ type MealType = 'lunch' | 'dinner';
 type DayType = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
 
 export class MongoDatabase {
+  private mongoURI: string;
   private client: MongoClient;
   private db?: Db;
+  private dbName: string = 'testdb';
   private session?: any;
   private usersCollection?: Collection<IUser>;
   private ingredientsCollection?: Collection<IIngredient>;
@@ -32,6 +34,7 @@ export class MongoDatabase {
     if (!mongoURI) {
       throw new Error('MongoDB URI is required');
     }
+    this.mongoURI = mongoURI;
     try {
     console.log('MongoDB URI:', mongoURI);
     this.client = new MongoClient(mongoURI);
@@ -39,6 +42,48 @@ export class MongoDatabase {
       logger.error('Error creating MongoClient:', error);
       logger.error(`MongoDB URI: ${mongoURI}`);
       throw error;
+    }
+  }
+
+  private bindCollections() {
+    if (!this.db) {
+      throw new Error('Database not connected');
+    }
+
+    this.usersCollection = this.db.collection('users');
+    this.ingredientsCollection = this.db.collection('ingredients');
+    this.unitsCollection = this.db.collection('units');
+    this.recipesCollection = this.db.collection('recipes');
+    this.menusCollection = this.db.collection('menus');
+    this.allergenicsCollection = this.db.collection('allergenics');
+    this.notesCollection = this.db.collection('notes');
+    this.GridFSBucket = new GridFSBucket(this.db, { bucketName: 'images' });
+  }
+
+  private isRetryableTopologyError(error: unknown): boolean {
+    const message = error instanceof Error ? error.message : String(error);
+    return /primary marked stale|ReplicaSetNoPrimary|Server selection timed out/i.test(message);
+  }
+
+  private async reconnect(): Promise<void> {
+    await this.client.close().catch(() => undefined);
+    this.client = new MongoClient(this.mongoURI);
+    await this.client.connect();
+    this.db = this.client.db(this.dbName);
+    this.bindCollections();
+  }
+
+  private async withTopologyRetry<T>(operation: () => Promise<T>): Promise<T> {
+    try {
+      return await operation();
+    } catch (error) {
+      if (!this.isRetryableTopologyError(error)) {
+        throw error;
+      }
+
+      logger.warn('MongoDB topology changed, reconnecting and retrying once');
+      await this.reconnect();
+      return operation();
     }
   }
 
@@ -60,20 +105,11 @@ export class MongoDatabase {
   async connect(dbName?: string) {
     logger.info('Connecting to database...');
     try {
+      this.dbName = dbName || 'testdb';
       await this.client.connect();
-      if (!dbName) {
-        dbName = 'testdb';
-      }
-      this.db = this.client.db(dbName);
+      this.db = this.client.db(this.dbName);
       this.session = this.client.startSession();
-      this.usersCollection = this.db.collection('users');
-      this.ingredientsCollection = this.db.collection('ingredients');
-      this.unitsCollection = this.db.collection('units');
-      this.recipesCollection = this.db.collection('recipes');
-      this.menusCollection = this.db.collection('menus');
-      this.allergenicsCollection = this.db.collection('allergenics');
-      this.notesCollection = this.db.collection('notes');
-      this.GridFSBucket = new GridFSBucket(this.db, { bucketName: 'images' });
+      this.bindCollections();
       logger.info('Connected to database');
     } catch (error) {
       logger.error('Error connecting to database:', error);
@@ -113,7 +149,7 @@ export class MongoDatabase {
     if (!this.usersCollection) {
       throw new Error('Database not connected');
     }
-    return this.usersCollection.findOne({ name });
+    return this.withTopologyRetry(() => this.usersCollection!.findOne({ name }));
   }
 
   async getUserById(_id: string): Promise<IUser | null> {
@@ -158,7 +194,7 @@ export class MongoDatabase {
     if (!this.usersCollection) {
       throw new Error('Database not connected');
     }
-    const user = await this.usersCollection.findOne({ name });
+    const user = await this.withTopologyRetry(() => this.usersCollection!.findOne({ name }));
     return user ? user.password === password : false;
   }
 
