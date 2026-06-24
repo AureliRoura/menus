@@ -73,7 +73,47 @@ export class MongoDatabase {
     this.bindCollections();
   }
 
-  private async withTopologyRetry<T>(operation: () => Promise<T>): Promise<T> {
+  private get usersCol(): Collection<IUser> {
+    if (!this.usersCollection) throw new Error('Database not connected');
+    return this.usersCollection;
+  }
+
+  private get ingredientsCol(): Collection<IIngredient> {
+    if (!this.ingredientsCollection) throw new Error('Database not connected');
+    return this.ingredientsCollection;
+  }
+
+  private get unitsCol(): Collection<IUnit> {
+    if (!this.unitsCollection) throw new Error('Database not connected');
+    return this.unitsCollection;
+  }
+
+  private get recipesCol(): Collection<IRecipe> {
+    if (!this.recipesCollection) throw new Error('Database not connected');
+    return this.recipesCollection;
+  }
+
+  private get menusCol(): Collection<IMenu> {
+    if (!this.menusCollection) throw new Error('Database not connected');
+    return this.menusCollection;
+  }
+
+  private get allergenicsCol(): Collection<IAllergenic> {
+    if (!this.allergenicsCollection) throw new Error('Database not connected');
+    return this.allergenicsCollection;
+  }
+
+  private get notesCol(): Collection<INote> {
+    if (!this.notesCollection) throw new Error('Database not connected');
+    return this.notesCollection;
+  }
+
+  private get gridFS(): GridFSBucket {
+    if (!this.GridFSBucket) throw new Error('Database not connected');
+    return this.GridFSBucket;
+  }
+
+  private async retry<T>(operation: () => Promise<T>): Promise<T> {
     try {
       return await operation();
     } catch (error) {
@@ -83,7 +123,7 @@ export class MongoDatabase {
 
       logger.warn('MongoDB topology changed, reconnecting and retrying once');
       await this.reconnect();
-      return operation();
+      return await operation();
     }
   }
 
@@ -139,83 +179,56 @@ export class MongoDatabase {
   }
 
   async getUsers(): Promise<IUser[]> {
-    if (!this.usersCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.usersCollection.find().toArray();
+    return this.retry(() => this.usersCol.find().toArray());
   }
 
   async getUserByName(name: string): Promise<IUser | null> {
-    if (!this.usersCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.withTopologyRetry(() => this.usersCollection!.findOne({ name }));
+    return this.retry(() => this.usersCol.findOne({ name }));
   }
 
   async getUserById(_id: string): Promise<IUser | null> {
-    if (!this.usersCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.usersCollection.findOne({ _id: new ObjectId(_id) as any });
+    return this.retry(() => this.usersCol.findOne({ _id: new ObjectId(_id) as any }));
   }
 
   async updateUserById(_id: string, update: Partial<IUser>): Promise<IUser | null> {
-    if (!this.usersCollection) {
-      throw new Error('Database not connected');
-    }
-    const result = await this.usersCollection.findOneAndUpdate(
+    const result = await this.retry(() => this.usersCol.findOneAndUpdate(
       { _id: new ObjectId(_id) as any },
       { $set: update },
       { returnDocument: 'after' }
-    );
+    ));
     return result ? { ...result, _id: result._id.toString() } : null;
   }
+
   async updateUserByName(name: string, update: Partial<IUser>): Promise<IUser | null> {
-    if (!this.usersCollection) {
-      throw new Error('Database not connected');
-    }
-    const result = await this.usersCollection.findOneAndUpdate(
+    const result = await this.retry(() => this.usersCol.findOneAndUpdate(
       { name },
       { $set: update },
       { returnDocument: 'after' }
-    );
+    ));
     return result ? { ...result, _id: result._id.toString() } : null;
   }
 
   async deleteUser(name: string): Promise<boolean> {
-    if (!this.usersCollection) {
-      throw new Error('Database not connected');
-    }
-    const result = await this.usersCollection.deleteOne({ name });
+    const result = await this.retry(() => this.usersCol.deleteOne({ name }));
     return result.deletedCount === 1;
   }
 
   async checkPassword(name: string, password: string): Promise<boolean> {
-    if (!this.usersCollection) {
-      throw new Error('Database not connected');
-    }
-    const user = await this.withTopologyRetry(() => this.usersCollection!.findOne({ name }));
+    const user = await this.retry(() => this.usersCol.findOne({ name }));
     return user ? user.password === password : false;
   }
 
   async upadatePassword(name: string, password: string): Promise<boolean> {
-    if (!this.usersCollection) {
-      throw new Error('Database not connected');
-    }
-    const result = await this.usersCollection.findOneAndUpdate(
+    const result = await this.retry(() => this.usersCol.findOneAndUpdate(
       { name },
       { $set: { password } },
       { returnDocument: 'after' }
-    );
+    ));
     return result ? result.password === password : false;
   }
 
   async getCategories(): Promise<ICategories[]> {
-    if (!this.recipesCollection) {
-      throw new Error('Database not connected');
-    }
-
-    const cursor = this.recipesCollection.aggregate([
+    const cursor = this.recipesCol.aggregate([
       {
         $unwind: "$categories"
       },
@@ -246,138 +259,90 @@ export class MongoDatabase {
   }
 
   async createIngredient(ingredient: IIngredient): Promise<IIngredient> {
-    if (this.ingredientsCollection) {
-      const result = await this.ingredientsCollection.insertOne(ingredient);
-      return { ...ingredient, _id: result.insertedId.toString() };
-    } else {
-      throw new Error('Database not connected');
-    }
+    const result = await this.ingredientsCol.insertOne(ingredient);
+    return { ...ingredient, _id: result.insertedId.toString() };
   }
 
   async getIngredients(): Promise<IIngredient[]> {
-    if (!this.ingredientsCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.ingredientsCollection.find().sort({ name: 1 }).toArray();
+    return this.retry(() => this.ingredientsCol.find().sort({ name: 1 }).toArray());
   }
 
   async getIngredientByName(name: string): Promise<IIngredient | null> {
-    if (!this.ingredientsCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.ingredientsCollection.findOne({ name });
+    return this.retry(() => this.ingredientsCol.findOne({ name }));
   }
 
   async getIngredientById(_id: string | ObjectId): Promise<IIngredient | null> {
-    if (!this.ingredientsCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.ingredientsCollection.findOne({ _id: new ObjectId(_id) as any });
+    return this.retry(() => this.ingredientsCol.findOne({ _id: new ObjectId(_id) as any }));
   }
 
   async updateIngredientById(_id: string | ObjectId, update: Partial<IIngredient>): Promise<IIngredient | null> {
-    if (!this.ingredientsCollection) {
-      throw new Error('Database not connected');
-    }
-    const result = await this.ingredientsCollection.findOneAndUpdate(
+    const result = await this.retry(() => this.ingredientsCol.findOneAndUpdate(
       { _id: new ObjectId(_id) as any },
       { $set: update },
       { returnDocument: 'after' }
-    );
+    ));
     return result ? { ...result, _id: result._id.toString() } : null;
   }
 
   async updateIngredientByName(name: string, update: Partial<IIngredient>): Promise<IIngredient | null> {
-    if (!this.ingredientsCollection) {
-      throw new Error('Database not connected');
-    }
-    const result = await this.ingredientsCollection.findOneAndUpdate(
+    const result = await this.retry(() => this.ingredientsCol.findOneAndUpdate(
       { name },
       { $set: update },
       { returnDocument: 'after' }
-    );
+    ));
     return result ? { ...result, _id: result._id.toString() } : null;
   }
 
   async deleteIngredient(_id: string | ObjectId): Promise<boolean> {
-    if (!this.ingredientsCollection) {
-      throw new Error('Database not connected');
-    }
-    const result = await this.ingredientsCollection.deleteOne({ _id: new ObjectId(_id) as any });
+    const result = await this.retry(() => this.ingredientsCol.deleteOne({ _id: new ObjectId(_id) as any }));
     return result.deletedCount === 1;
   }
 
   async checkAlergenics(_id: string | ObjectId, allergenics: string[]): Promise<boolean> {
-    if (!this.ingredientsCollection) {
-      throw new Error('Database not connected');
-    }
-    const ingredient = await this.ingredientsCollection.findOne({ _id: new ObjectId(_id) as any });
+    const ingredient = await this.retry(() => this.ingredientsCol.findOne({ _id: new ObjectId(_id) as any }));
     return ingredient ? ingredient.allergenics === allergenics : false;
   }
 
   async updateAlergenics(_id: string | ObjectId, allergenics: string[]): Promise<boolean> {
-    if (!this.ingredientsCollection) {
-      throw new Error('Database not connected');
-    }
-    const result = await this.ingredientsCollection.findOneAndUpdate(
+    const result = await this.retry(() => this.ingredientsCol.findOneAndUpdate(
       { _id: new ObjectId(_id) as any },
       { $set: { allergenics } },
       { returnDocument: 'after' }
-    );
+    ));
     return result ? result.allergenics === allergenics : false;
   }
 
   async deleteAlergenics(_id: string): Promise<boolean> {
-    if (!this.ingredientsCollection) {
-      throw new Error('Database not connected');
-    }
-    const result = await this.ingredientsCollection.findOneAndUpdate(
+    const result = await this.retry(() => this.ingredientsCol.findOneAndUpdate(
       { id: new ObjectId(_id) as any },
       { $unset: { allergenics: '' } },
       { returnDocument: 'after' }
-    );
+    ));
     return result ? result.allergenics === undefined : false;
   }
 
   async getUnits(): Promise<IUnit[]> {
-    if (!this.unitsCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.unitsCollection.find().sort({ unit: 1 }).toArray();
+    return this.retry(() => this.unitsCol.find().sort({ unit: 1 }).toArray());
   }
 
   async createUnit(unit: string): Promise<IUnit> {
-    if (this.unitsCollection) {
-      const result = await this.unitsCollection.insertOne({ unit: unit });
-      return { unit: unit, _id: result.insertedId.toString() };
-    }
-    else {
-      throw new Error('Database not connected');
-    }
+    const result = await this.unitsCol.insertOne({ unit });
+    return { unit, _id: result.insertedId.toString() };
   }
 
   async getUnit(unit: string): Promise<IUnit | null> {
-    if (!this.unitsCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.unitsCollection ? this.unitsCollection.findOne({ unit }) : null;
+    return this.retry(() => this.unitsCol.findOne({ unit }));
   }
 
   async getRecipes(): Promise<IRecipe[]> {
-    if (!this.recipesCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.recipesCollection.find().sort({ name: 1 }).toArray();
+    return this.retry(() => this.recipesCol.find().sort({ name: 1 }).toArray());
   }
 
   async getRecipesWithIngredient(ingredientId: string): Promise<Document[]> {
-    if (!this.ingredientsCollection) {
-      throw new Error('Database not connected');
-    }
-    const result = this.ingredientsCollection.aggregate([
+    const result = await this.retry(() => this.ingredientsCol.aggregate([
       {
         $match: {
-          _id: new ObjectId(ingredientId) // Replace with the actual ObjectId of the ingredient you want to filter for
+          _id: new ObjectId(ingredientId)
         }
       },
       {
@@ -401,7 +366,7 @@ export class MongoDatabase {
           }
         }
       }
-    ]).toArray();
+    ]).toArray());
     return result;
   }
 
@@ -440,37 +405,25 @@ export class MongoDatabase {
   }
 
   async getRecipeByName(name: string): Promise<IRecipe | null> {
-    if (!this.recipesCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.recipesCollection.findOne({ name });
+    return this.retry(() => this.recipesCol.findOne({ name }));
   }
 
   async getRecipeById(_id: string | ObjectId): Promise<IRecipe | null> {
-    if (!this.recipesCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.recipesCollection.findOne({ _id: new ObjectId(_id) as any });
+    return this.retry(() => this.recipesCol.findOne({ _id: new ObjectId(_id) as any }));
   }
 
   async updateRecipeById(_id: string | ObjectId, update: Partial<IRecipe>): Promise<IRecipe | null> {
-    if (!this.recipesCollection) {
-      throw new Error('Database not connected');
-    }
     update._id = new ObjectId(_id);
-    const result = await this.recipesCollection.findOneAndUpdate(
+    const result = await this.retry(() => this.recipesCol.findOneAndUpdate(
       { _id: new ObjectId(_id) },
       { $set: update },
       { returnDocument: 'after' }
-    );
+    ));
     return result ? { ...result, _id: result._id.toString() } : null;
   }
 
   async deleteRecipe(_id: string | ObjectId): Promise<boolean> {
-    if (!this.recipesCollection) {
-      throw new Error('Database not connected');
-    }
-    const result = await this.recipesCollection.deleteOne({ _id: new ObjectId(_id) as any });
+    const result = await this.retry(() => this.recipesCol.deleteOne({ _id: new ObjectId(_id) as any }));
     return result.deletedCount === 1;
   }
 
@@ -636,10 +589,7 @@ export class MongoDatabase {
   }
 
   async getAlergenics(): Promise<IAllergenic[]> {
-    if (!this.allergenicsCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.allergenicsCollection.find().toArray();
+    return this.retry(() => this.allergenicsCol.find().toArray());
   }
 
   async createNote(note: INote): Promise<INote> {
@@ -654,40 +604,25 @@ export class MongoDatabase {
   }
 
   async getNotesByUser(userId: string): Promise<INote[]> {
-    if (!this.notesCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.notesCollection.find({ userId }).toArray();
+    return this.retry(() => this.notesCol.find({ userId }).toArray());
   }
 
   async getNote(noteId: string): Promise<INote | null> {
-    if (!this.notesCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.notesCollection.findOne({ _id: new ObjectId(noteId) });
+    return this.retry(() => this.notesCol.findOne({ _id: new ObjectId(noteId) }));
   }
 
   async getNoteByRecipeId(recipeId: string): Promise<INote[]> {
-    if (!this.notesCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.notesCollection
+    return this.retry(() => this.notesCol
       .find({ recipeId: new ObjectId(recipeId) })
       .sort({ recipeId: 1, createdAt: -1 })
-      .toArray();
+      .toArray());
   }
 
   async countNotesByRecipeId(recipeId: string): Promise<number> {
-    if (!this.notesCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.notesCollection.countDocuments({ recipeId: new ObjectId(recipeId) });
+    return this.retry(() => this.notesCol.countDocuments({ recipeId: new ObjectId(recipeId) }));
   }
 
   async updateNote(noteId: string, updatedNote: Partial<INote>): Promise<void> {
-    if (!this.notesCollection) {
-      throw new Error('Database not connected');
-    }
     updatedNote.updatedAt = new Date();
     if (updatedNote._id) {
       delete updatedNote._id;
@@ -698,82 +633,54 @@ export class MongoDatabase {
     if (typeof updatedNote.createdAt === 'string') {
       updatedNote.createdAt = new Date(updatedNote.createdAt);
     }
-    await this.notesCollection.updateOne(
+    await this.retry(() => this.notesCol.updateOne(
       { _id: new ObjectId(noteId) },
       { $set: updatedNote }
-    );
+    ));
   }
 
   async deleteNote(noteId: string): Promise<void> {
-    if (!this.notesCollection) {
-      throw new Error('Database not connected');
-    }
-    await this.notesCollection.deleteOne({ _id: new ObjectId(noteId) });
+    await this.retry(() => this.notesCol.deleteOne({ _id: new ObjectId(noteId) }));
   }
 
   async getMenus(): Promise<IMenu[]> {
-    if (!this.menusCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.menusCollection.find().toArray();
+    return this.retry(() => this.menusCol.find().toArray());
   }
 
   async getMenusList(): Promise<IMenu[]> {
-    if (!this.menusCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.menusCollection.find({}, { projection: { _id: 1, name: 1 } }).toArray();
+    return this.retry(() => this.menusCol.find({}, { projection: { _id: 1, name: 1 } }).toArray());
   }
 
   async createMenu(menu: IMenu): Promise<IMenu> {
-    if (this.menusCollection) {
-      const result = await this.menusCollection.insertOne(menu);
-      return { ...menu, _id: result.insertedId.toString() };
-    } else {
-      throw new Error('Database not connected');
-    }
+    const result = await this.menusCol.insertOne(menu);
+    return { ...menu, _id: result.insertedId.toString() };
   }
 
   async getMenuByName(name: string): Promise<IMenu | null> {
-    if (!this.menusCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.menusCollection.findOne({ name });
+    return this.retry(() => this.menusCol.findOne({ name }));
   }
 
   async getMenuById(_id: string | ObjectId): Promise<IMenu | null> {
-    if (!this.menusCollection) {
-      throw new Error('Database not connected');
-    }
-    return this.menusCollection.findOne({ _id: new ObjectId(_id) as any });
+    return this.retry(() => this.menusCol.findOne({ _id: new ObjectId(_id) as any }));
   }
 
   async updateMenuById(_id: string | ObjectId, update: Partial<IMenu>): Promise<IMenu | null> {
-    if (!this.menusCollection) {
-      throw new Error('Database not connected');
-    }
-    const result = await this.menusCollection.findOneAndUpdate(
+    const result = await this.retry(() => this.menusCol.findOneAndUpdate(
       { _id: new ObjectId(_id) as any },
       { $set: update },
       { returnDocument: 'after' }
-    );
+    ));
     return result ? { ...result, _id: result._id.toString() } : null;
   }
 
   async deleteMenu(_id: string | ObjectId): Promise<boolean> {
-    if (!this.menusCollection) {
-      throw new Error('Database not connected');
-    }
-    const result = await this.menusCollection.deleteOne({ _id: new ObjectId(_id) as any });
+    const result = await this.retry(() => this.menusCol.deleteOne({ _id: new ObjectId(_id) as any }));
     return result.deletedCount === 1;
   }
 
   // get a complete menu with join integration of recipes and ingredients to menu whrough _id of recipe
   async getMenuWithRecipes(_id: string | ObjectId): Promise<IMenu | null> {
-    if (!this.menusCollection) {
-      throw new Error('Database not connected');
-    }
-    const menu = await this.menusCollection.findOne({ _id: new ObjectId(_id) as any });
+    const menu = await this.retry(() => this.menusCol.findOne({ _id: new ObjectId(_id) as any }));
     if (!menu) {
       return null;
     }
@@ -800,10 +707,6 @@ export class MongoDatabase {
   }
 
   async insertMenuSimpleRecipes(menu: IMenu): Promise<IMenu> {
-    if (!this.menusCollection) {
-      throw new Error('Database not connected');
-    }
-
     const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as DayType[];
     for (const day of days) {
       if (menu.menu[day]) {
@@ -814,13 +717,13 @@ export class MongoDatabase {
             for (let i = 0; i < recipes.length; i++) {
               if (recipes[i] && recipes[i]._id && recipes[i]._id !== undefined) {
                 const recipeId = recipes[i]._id as string;
-                const recipe = await this.recipesCollection.findOne({ _id: recipeId });
+                const recipe = await this.recipesCol.findOne({ _id: recipeId });
                 if (recipe) {
                   recipes[i] = { _id: recipe._id, name: recipe.name };
                 }
               } else {
                 if (recipes[i] && recipes[i]._id && recipes[i].name) {
-                  const recipe = await this.recipesCollection.findOne({ name: recipes[i].name });
+                  const recipe = await this.recipesCol.findOne({ name: recipes[i].name });
                   if (recipe) {
                     recipes[i] = { _id: recipe._id, name: recipe.name };
                   }
@@ -831,16 +734,12 @@ export class MongoDatabase {
         }
       }
     }
-    const result = await this.menusCollection.insertOne(menu);
+    const result = await this.menusCol.insertOne(menu);
     return { ...menu, _id: result.insertedId.toString() };
   }
 
   // update a menu with only _id and name of recipes
   async updateMenuSimpleRecipes(_id: string | ObjectId, update: Partial<IMenu>): Promise<IMenu | null> {
-    if (!this.menusCollection) {
-      throw new Error('Database not connected');
-    }
-
     const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as DayType[];
     for (const day of days) {
       if (update.menu && update.menu[day]) {
@@ -851,7 +750,7 @@ export class MongoDatabase {
             for (let i = 0; i < recipes.length; i++) {
               if (recipes[i] && recipes[i]._id && recipes[i]._id !== undefined) {
                 const recipeId = new ObjectId(recipes[i]._id as string).toString();
-                const recipe = await this.recipesCollection.findOne({ _id: recipeId });
+                const recipe = await this.recipesCol.findOne({ _id: recipeId });
                 if (recipe) {
                   recipes[i] = { _id: recipe._id, name: recipe.name };
                 }
@@ -862,18 +761,15 @@ export class MongoDatabase {
       }
     }
     logger.info('update:', update);
-    const result = await this.menusCollection.findOneAndUpdate(
+    const result = await this.retry(() => this.menusCol.findOneAndUpdate(
       { _id: new ObjectId(_id) as any },
       { $set: update },
       { returnDocument: 'after' }
-    );
+    ));
     return result ? { ...result, _id: result._id.toString() } : null;
   }
 
   async updateMenuDay(_id: string | ObjectId, day: String, recipesDay: any): Promise<IMenu | null> {
-    if (!this.menusCollection) {
-      throw new Error('Database not connected');
-    }
     const menuId = typeof _id === 'string' ? new ObjectId(_id) : _id;
     var simplifiedRecipesDay = {
       lunch: [],
@@ -886,16 +782,12 @@ export class MongoDatabase {
 
     const update = { $set: { [`menu.${day}`]: simplifiedRecipesDay } };
 
-    const result = await this.menusCollection.findOneAndUpdate({ _id: menuId as any }, update, { returnDocument: 'after' });
+    const result = await this.retry(() => this.menusCol.findOneAndUpdate({ _id: menuId as any }, update, { returnDocument: 'after' }));
     return result ? { ...result, _id: result._id.toString() } : null;
   }
 
   async insertImage(imageName: string, imageStream: Readable): Promise<ObjectId> {
-
-    if (!this.GridFSBucket) {
-      throw new Error('Database not connected');
-    }
-    const uploadStream = this.GridFSBucket.openUploadStream(imageName);
+    const uploadStream = this.gridFS.openUploadStream(imageName);
     const id = uploadStream.id;
     await new Promise((resolve, reject) => {
       ((imageStream as unknown) as NodeJS.ReadableStream).pipe(uploadStream)
@@ -906,12 +798,8 @@ export class MongoDatabase {
   }
 
   async getImage(id: string) {
-    if (!this.GridFSBucket) {
-      throw new Error('Database not connected');
-    }
-
     try {
-      const downloadStream = this.GridFSBucket.openDownloadStream(new ObjectId(id));
+      const downloadStream = this.gridFS.openDownloadStream(new ObjectId(id));
       return downloadStream;
     } catch (error) {
       const err = error as Error & { code?: string; name?: string };
@@ -924,9 +812,6 @@ export class MongoDatabase {
   }
 
   async deleteImage(id: string): Promise<void> {
-    if (!this.GridFSBucket) {
-      throw new Error('Database not connected');
-    }
-    return this.GridFSBucket.delete(new ObjectId(id));
+    return this.gridFS.delete(new ObjectId(id));
   }
 }
